@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/ziwang/Desktop/CPSC 5042/Project/GuessWhoProject/milestone1/src/Server/server.cpp
+unistd.h
+-
+stdio.h
+-
+sys/socket.h
+-
+stdlib.h
+-
+netinet/in.h
+-
+string.h
+-
+iostream
+-
+

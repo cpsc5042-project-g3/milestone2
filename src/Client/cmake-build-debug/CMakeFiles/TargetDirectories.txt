@@ -1,0 +1,3 @@
+/Users/ziwang/Desktop/CPSC 5042/Project/GuessWhoProject/milestone1/src/Client/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/ziwang/Desktop/CPSC 5042/Project/GuessWhoProject/milestone1/src/Client/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/ziwang/Desktop/CPSC 5042/Project/GuessWhoProject/milestone1/src/Client/cmake-build-debug/CMakeFiles/Client.dir
