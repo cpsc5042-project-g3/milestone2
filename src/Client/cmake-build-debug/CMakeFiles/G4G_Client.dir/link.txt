@@ -1,0 +1,1 @@
+/usr/bin/c++.exe -g  -Wl,--enable-auto-import CMakeFiles/G4G_Client.dir/client.cpp.o  -o G4G_Client.exe -Wl,--out-implib,libG4G_Client.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
