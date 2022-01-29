@@ -1,0 +1,5 @@
+src/.idea
+src/Client/.idea
+src/Server/.idea
+.DS_Store
+src/Client/cmake-build-debug
