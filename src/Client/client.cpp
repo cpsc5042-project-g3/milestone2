@@ -4,29 +4,16 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string.h>
-#include <iostream>
-#define PORT 8080
+#define PORT 10326
 
-
-using namespace std;
-/*
- * Socket connection: exactly same as the server's socket creation.
- */
-int main(int argc, char const *argv[]) {
-
-    // TEST OUTPUT
-    cout << "args = " << argc << endl;
-    cout << "argv = "<< argv[1] << " " << argv[2] << " " << argv[3]
-         << " " <<  argv[4] << endl;
-
-
-    int sock;
+int main(int argc, char const *argv[])
+{
+    int sock = 0, valread;
     struct sockaddr_in serv_addr;
+    char *hello = "Hello from client";
     char buffer[1024] = {0};
-    char *RPC1 = "rpc=connect";
-
-    // Create connection socket file descriptor.
-    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    {
         printf("\n Socket creation error \n");
         return -1;
     }
@@ -35,20 +22,20 @@ int main(int argc, char const *argv[]) {
     serv_addr.sin_port = htons(PORT);
 
     // Convert IPv4 and IPv6 addresses from text to binary form
-    if(inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)<=0) {
+    if(inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)<=0)
+    {
         printf("\nInvalid address/ Address not supported \n");
         return -1;
     }
-    cout << "USER > Default IP: 127.0.0.1 | Default PORT: " << PORT << endl;
 
-    if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
+    if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
+    {
         printf("\nConnection Failed \n");
         return -1;
     }
-
-    send(sock , RPC1 , strlen(RPC1) , 0 );
-
-
+    send(sock , hello , strlen(hello) , 0 );
+    printf("Hello message sent\n");
+    valread = read( sock , buffer, 1024);
+    printf("%s\n",buffer );
     return 0;
 }
-

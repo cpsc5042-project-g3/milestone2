@@ -1,0 +1,4 @@
+/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/src/Server/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/src/Server/cmake-build-debug/CMakeFiles/edit_cache.dir
+/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/src/Server/cmake-build-debug/CMakeFiles/Server.dir
+/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/src/Server/cmake-build-debug/CMakeFiles/G4G_Server.dir
