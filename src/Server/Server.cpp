@@ -60,12 +60,12 @@ bool Server::StartServer() {
     cout << ">> Bind successful." << endl;
 
     // Start listening
-    cout << ">> Starting listening for clients." << endl;
+    cout << ">> Listening process started." << endl;
     if (listen(server_fd, BACKLOG) < 0) {
         perror("Listening process failed");
         exit(EXIT_FAILURE);
     }
-    cout << ">> Server startup complete.  Listening for clients." << endl << endl;
+    cout << ">> Waiting for client." << endl << endl;
 
     return true;
 }
@@ -78,13 +78,10 @@ bool Server::ListenForClient() {
         exit(EXIT_FAILURE);
     }
     cout << ">> Client successfully connected." << endl;
+    cout << ">> Waiting for client RPC." << endl << endl;
 
-    cout << ">> Entering RPC mode" << endl;
     this->rpcProcess();
-
-    cout << ">> RPC mode finished." << endl;
-    cout << ">> Client disconnected." << endl << endl;
-
+    cout << ">> End of client RPC processing." << endl;
     return true;
 }
 
@@ -92,11 +89,10 @@ void Server::ParseTokens(char *buffer, std::vector<std::string> &a) {
     char* token;
     char* rest = (char*) buffer;
 
+    cout << ">> Parsing tokens." << endl;
     while ((token = strtok_r(rest, ";", &rest))) {
-        printf("%s\n", token);
-        a.push_back(token);
+        a.emplace_back(token);
     }
-    return;
 }
 
 bool Server::rpcProcess()
@@ -105,12 +101,13 @@ bool Server::rpcProcess()
     char buffer[1024] = { 0 };
     std::vector<std::string> arrayTokens;
     int valread = 0;
-    bool bConnected = false;
-    bool bStatusOk = true;
-    bool bContinue = true;
+    bool connected = false;
+    bool statusOk = true;
+    bool continueOn = true;
     const int RPCTOKEN = 0;
 
-    while ((bContinue) && (bStatusOk))
+
+    while ((continueOn) && (statusOk))
     {
         // Should be blocked when a new RPC has not called us yet
         if ((valread = read(this->socketID, buffer, sizeof(buffer))) <= 0)
@@ -118,32 +115,37 @@ bool Server::rpcProcess()
             printf("errno is %d\n", errno);
             break;
         }
+        cout << ">> Client RPC received: ";
         printf("%s\n", buffer);
 
         arrayTokens.clear();
         this->ParseTokens(buffer, arrayTokens);
 
         // Enumerate through the tokens. The first token is always the specific RPC
-        for (vector<string>::iterator t = arrayTokens.begin(); t != arrayTokens.end(); ++t) {
-            printf("Debugging our tokens\n");
-            printf("token = %s\n", t);
+        cout << ">> Token(s) received: ";
+        for (auto t = arrayTokens.begin(); t != arrayTokens.end(); ++t) {
+            printf("\n\ttoken = %s", t);
         }
+        cout << endl;
 
         // string statements are not supported with a switch, so using if/else logic to dispatch
         string aString = arrayTokens[RPCTOKEN];
 
-        if ((bConnected == false) && (aString == "connect")) {
-            bStatusOk = rpcConnect(arrayTokens);  // Connect RPC
-            if (bStatusOk == true) {
-                bConnected = true;
+        if (!connected && (aString == "connect")) {
+            statusOk = rpcConnect(arrayTokens);  // Connect RPC
+            if (statusOk) {
+                connected = true;
             }
-        } else if ((bConnected == true) && (aString == "disconnect")) {
-            bStatusOk = rpcDisconnect();
-            printf("We are going to terminate this endless loop\n");
-            bContinue = false; // We are going to leave this loop, as we are done
-        } else if ((bConnected == true) && (aString == "status")) {
-            bStatusOk = rpcStatus();   // Status RPC
-        } else {
+        }
+        else if (connected && (aString == "disconnect")) {
+            statusOk = rpcDisconnect();
+            continueOn = false; // We are going to leave this loop, as we are done
+        }
+        else if (connected && (aString == "status")) {
+            statusOk = rpcStatus();   // Status RPC
+        }
+        else {
+            cout << ">> Unrecognized RPC." << endl;
             // Not in our list, perhaps, print out what was sent
         }
     }
@@ -151,6 +153,8 @@ bool Server::rpcProcess()
 }
 
 bool Server::rpcConnect(std::vector<std::string> & arrayTokens) {
+    cout << ">> Confirm RPC: Connect" << endl << endl;
+
     const int USERNAMETOKEN = 1;
     const int PASSWORDTOKEN = 2;
 
@@ -175,10 +179,12 @@ bool Server::rpcConnect(std::vector<std::string> & arrayTokens) {
 }
 
 bool Server::rpcStatus() {
+    cout << ">> Confirm RPC: Status" << endl << endl;
     return true;
 }
 
 bool Server::rpcDisconnect() {
+    cout << ">> Confirm RPC: Disconnect" << endl << endl;
     char szBuffer[16];
     strcpy(szBuffer, "disconnect");
 
