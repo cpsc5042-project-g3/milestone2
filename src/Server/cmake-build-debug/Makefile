@@ -68,10 +68,10 @@ RM = /cygdrive/c/Users/candr/AppData/Local/JetBrains/CLion2020.3/cygwin_cmake/bi
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/src/Server"
+CMAKE_SOURCE_DIR = "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/src/Server/cmake-build-debug"
+CMAKE_BINARY_DIR = "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/cmake-build-debug"
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -100,9 +100,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/src/Server/cmake-build-debug/CMakeFiles" "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/src/Server/cmake-build-debug/CMakeFiles/progress.marks"
+	$(CMAKE_COMMAND) -E cmake_progress_start "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/cmake-build-debug/CMakeFiles" "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/cmake-build-debug/CMakeFiles/progress.marks"
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/src/Server/cmake-build-debug/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/cmake-build-debug/CMakeFiles" 0
 .PHONY : all
 
 # The main clean target
@@ -143,72 +143,59 @@ Server/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/build
 .PHONY : Server/fast
 
-#=============================================================================
-# Target rules for targets named G4G_Server
+Server.o: Server.cpp.o
 
-# Build rule for target.
-G4G_Server: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 G4G_Server
-.PHONY : G4G_Server
-
-# fast build rule for target.
-G4G_Server/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/G4G_Server.dir/build.make CMakeFiles/G4G_Server.dir/build
-.PHONY : G4G_Server/fast
-
-server.o: server.cpp.o
-
-.PHONY : server.o
+.PHONY : Server.o
 
 # target to build an object file
-server.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/G4G_Server.dir/build.make CMakeFiles/G4G_Server.dir/server.cpp.o
-.PHONY : server.cpp.o
+Server.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/Server.cpp.o
+.PHONY : Server.cpp.o
 
-server.i: server.cpp.i
+Server.i: Server.cpp.i
 
-.PHONY : server.i
+.PHONY : Server.i
 
 # target to preprocess a source file
-server.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/G4G_Server.dir/build.make CMakeFiles/G4G_Server.dir/server.cpp.i
-.PHONY : server.cpp.i
+Server.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/Server.cpp.i
+.PHONY : Server.cpp.i
 
-server.s: server.cpp.s
+Server.s: Server.cpp.s
 
-.PHONY : server.s
+.PHONY : Server.s
 
 # target to generate assembly for a file
-server.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/G4G_Server.dir/build.make CMakeFiles/G4G_Server.dir/server.cpp.s
-.PHONY : server.cpp.s
+Server.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/Server.cpp.s
+.PHONY : Server.cpp.s
 
-server2.o: server2.cpp.o
+main.o: main.cpp.o
 
-.PHONY : server2.o
+.PHONY : main.o
 
 # target to build an object file
-server2.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/server2.cpp.o
-.PHONY : server2.cpp.o
+main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/main.cpp.o
+.PHONY : main.cpp.o
 
-server2.i: server2.cpp.i
+main.i: main.cpp.i
 
-.PHONY : server2.i
+.PHONY : main.i
 
 # target to preprocess a source file
-server2.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/server2.cpp.i
-.PHONY : server2.cpp.i
+main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/main.cpp.i
+.PHONY : main.cpp.i
 
-server2.s: server2.cpp.s
+main.s: main.cpp.s
 
-.PHONY : server2.s
+.PHONY : main.s
 
 # target to generate assembly for a file
-server2.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/server2.cpp.s
-.PHONY : server2.cpp.s
+main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/main.cpp.s
+.PHONY : main.cpp.s
 
 # Help Target
 help:
@@ -218,14 +205,13 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... G4G_Server"
 	@echo "... Server"
-	@echo "... server.o"
-	@echo "... server.i"
-	@echo "... server.s"
-	@echo "... server2.o"
-	@echo "... server2.i"
-	@echo "... server2.s"
+	@echo "... Server.o"
+	@echo "... Server.i"
+	@echo "... Server.s"
+	@echo "... main.o"
+	@echo "... main.i"
+	@echo "... main.s"
 .PHONY : help
 
 

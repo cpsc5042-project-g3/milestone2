@@ -6,8 +6,12 @@
 
 #IncludeRegexTransform: 
 
-/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/src/Client/client2.cpp
-stdio.h
+/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Client/Client.cpp
+Client.h
+/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Client/Client.h
+iostream
+-
+cstring
 -
 sys/socket.h
 -
@@ -15,8 +19,10 @@ arpa/inet.h
 -
 unistd.h
 -
-string.h
+sstream
 -
-iostream
+
+/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Client/Client.h
+cstring
 -
 
