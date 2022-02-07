@@ -1,4 +1,4 @@
-# Install script for directory: /cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server
+# Install script for directory: /Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

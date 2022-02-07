@@ -4,8 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/Server.cpp" "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/cmake-build-debug/CMakeFiles/Server.dir/Server.cpp.o"
-  "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/main.cpp" "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/cmake-build-debug/CMakeFiles/Server.dir/main.cpp.o"
+  "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/Server.cpp" "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/cmake-build-debug/CMakeFiles/Server.dir/Server.cpp.o"
+  "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/main.cpp" "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/cmake-build-debug/CMakeFiles/Server.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

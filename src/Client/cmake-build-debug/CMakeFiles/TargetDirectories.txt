@@ -1,3 +1,3 @@
-/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Client/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Client/cmake-build-debug/CMakeFiles/edit_cache.dir
-/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Client/cmake-build-debug/CMakeFiles/Client.dir
+/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/cmake-build-debug/CMakeFiles/Client.dir

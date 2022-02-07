@@ -234,17 +234,17 @@ bool Server::validLogin(const string& userName, const string& password) {
     auto iter = users->find(userName);
     if (iter == users->end()) {
         // user name not found
-        cout << ">> Invalid user name." << endl;
+        cout << ">> Invalid user name. " << endl;
         return false;
     }
-    else if (iter->first == password) {
+    else if (iter->second == password) {
         // found matching user name AND password
         cout << ">> User name and password validated." << endl;
         return true;
     }
     else {
         // user name found, but password does not exist
-        cout << ">> User name found, but password does not match." << endl;
+        cout << ">> User name found, but password does not match. " << endl;
         return false;
     }
 

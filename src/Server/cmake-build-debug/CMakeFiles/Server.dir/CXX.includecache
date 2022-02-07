@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/Server.cpp
+/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/Server.cpp
 unistd.h
 -
 cstdio
@@ -28,13 +28,13 @@ iostream
 fstream
 -
 Server.h
-/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/Server.h
+/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/Server.h
 sstream
 -
 map
 -
 
-/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/Server.h
+/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/Server.h
 unistd.h
 -
 cstdio

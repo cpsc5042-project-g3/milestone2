@@ -6,23 +6,21 @@
 
 #IncludeRegexTransform: 
 
-/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Client/Client.cpp
-Client.h
-/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Client/Client.h
-iostream
--
+/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/Client.h
 cstring
--
-sys/socket.h
--
-arpa/inet.h
--
-unistd.h
--
-sstream
 -
 
-/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Client/Client.h
+/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/main.cpp
+cstdio
+-
 cstring
 -
+vector
+-
+iterator
+-
+iostream
+-
+Client.h
+/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/Client.h
 

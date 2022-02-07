@@ -8,88 +8,86 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Client/cmake-build-debug"/>
+				<Option working_dir="/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC\ 5042\ -\ Computing\ System\ Concepts\ II/Group\ Project/milestone1/src/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC\ 5042\ -\ Computing\ System\ Concepts\ II/Group\ Project/milestone1/src/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC\ 5042\ -\ Computing\ System\ Concepts\ II/Group\ Project/milestone1/src/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC\ 5042\ -\ Computing\ System\ Concepts\ II/Group\ Project/milestone1/src/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/stephaniem/Documents/Classes\ SU/22Q1\ 5042\ CSP\ II/milestone\ 1/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/stephaniem/Documents/Classes\ SU/22Q1\ 5042\ CSP\ II/milestone\ 1/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/stephaniem/Documents/Classes\ SU/22Q1\ 5042\ CSP\ II/milestone\ 1/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/stephaniem/Documents/Classes\ SU/22Q1\ 5042\ CSP\ II/milestone\ 1/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Client/cmake-build-debug"/>
+				<Option working_dir="/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC\ 5042\ -\ Computing\ System\ Concepts\ II/Group\ Project/milestone1/src/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC\ 5042\ -\ Computing\ System\ Concepts\ II/Group\ Project/milestone1/src/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC\ 5042\ -\ Computing\ System\ Concepts\ II/Group\ Project/milestone1/src/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC\ 5042\ -\ Computing\ System\ Concepts\ II/Group\ Project/milestone1/src/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/stephaniem/Documents/Classes\ SU/22Q1\ 5042\ CSP\ II/milestone\ 1/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/stephaniem/Documents/Classes\ SU/22Q1\ 5042\ CSP\ II/milestone\ 1/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/stephaniem/Documents/Classes\ SU/22Q1\ 5042\ CSP\ II/milestone\ 1/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/stephaniem/Documents/Classes\ SU/22Q1\ 5042\ CSP\ II/milestone\ 1/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Client/cmake-build-debug"/>
+				<Option working_dir="/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC\ 5042\ -\ Computing\ System\ Concepts\ II/Group\ Project/milestone1/src/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC\ 5042\ -\ Computing\ System\ Concepts\ II/Group\ Project/milestone1/src/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC\ 5042\ -\ Computing\ System\ Concepts\ II/Group\ Project/milestone1/src/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC\ 5042\ -\ Computing\ System\ Concepts\ II/Group\ Project/milestone1/src/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/stephaniem/Documents/Classes\ SU/22Q1\ 5042\ CSP\ II/milestone\ 1/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/stephaniem/Documents/Classes\ SU/22Q1\ 5042\ CSP\ II/milestone\ 1/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/stephaniem/Documents/Classes\ SU/22Q1\ 5042\ CSP\ II/milestone\ 1/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/stephaniem/Documents/Classes\ SU/22Q1\ 5042\ CSP\ II/milestone\ 1/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="Client">
-				<Option output="/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Client/cmake-build-debug/Client.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Client/cmake-build-debug"/>
+				<Option output="/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/cmake-build-debug/Client" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/include/c++"/>
-					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/include/c++/x86_64-pc-cygwin"/>
-					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/include/c++/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/include"/>
-					<Add directory="/usr/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/../../../../lib/../include/w32api"/>
+					<Add directory="/usr/local/Cellar/gcc/10.2.0_4/lib/gcc/10/gcc/x86_64-apple-darwin18/10.2.0/../../../../../../include/c++/10.2.0"/>
+					<Add directory="/usr/local/Cellar/gcc/10.2.0_4/lib/gcc/10/gcc/x86_64-apple-darwin18/10.2.0/../../../../../../include/c++/10.2.0/x86_64-apple-darwin18"/>
+					<Add directory="/usr/local/Cellar/gcc/10.2.0_4/lib/gcc/10/gcc/x86_64-apple-darwin18/10.2.0/../../../../../../include/c++/10.2.0/backward"/>
+					<Add directory="/usr/local/Cellar/gcc/10.2.0_4/lib/gcc/10/gcc/x86_64-apple-darwin18/10.2.0/include"/>
+					<Add directory="/usr/local/Cellar/gcc/10.2.0_4/lib/gcc/10/gcc/x86_64-apple-darwin18/10.2.0/include-fixed"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC\ 5042\ -\ Computing\ System\ Concepts\ II/Group\ Project/milestone1/src/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 Client"/>
-					<CompileFile command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC\ 5042\ -\ Computing\ System\ Concepts\ II/Group\ Project/milestone1/src/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC\ 5042\ -\ Computing\ System\ Concepts\ II/Group\ Project/milestone1/src/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC\ 5042\ -\ Computing\ System\ Concepts\ II/Group\ Project/milestone1/src/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/stephaniem/Documents/Classes\ SU/22Q1\ 5042\ CSP\ II/milestone\ 1/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 Client"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/stephaniem/Documents/Classes\ SU/22Q1\ 5042\ CSP\ II/milestone\ 1/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/stephaniem/Documents/Classes\ SU/22Q1\ 5042\ CSP\ II/milestone\ 1/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/stephaniem/Documents/Classes\ SU/22Q1\ 5042\ CSP\ II/milestone\ 1/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="Client/fast">
-				<Option output="/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Client/cmake-build-debug/Client.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Client/cmake-build-debug"/>
+				<Option output="/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/cmake-build-debug/Client" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/include/c++"/>
-					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/include/c++/x86_64-pc-cygwin"/>
-					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/include/c++/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/include"/>
-					<Add directory="/usr/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/10/../../../../lib/../include/w32api"/>
+					<Add directory="/usr/local/Cellar/gcc/10.2.0_4/lib/gcc/10/gcc/x86_64-apple-darwin18/10.2.0/../../../../../../include/c++/10.2.0"/>
+					<Add directory="/usr/local/Cellar/gcc/10.2.0_4/lib/gcc/10/gcc/x86_64-apple-darwin18/10.2.0/../../../../../../include/c++/10.2.0/x86_64-apple-darwin18"/>
+					<Add directory="/usr/local/Cellar/gcc/10.2.0_4/lib/gcc/10/gcc/x86_64-apple-darwin18/10.2.0/../../../../../../include/c++/10.2.0/backward"/>
+					<Add directory="/usr/local/Cellar/gcc/10.2.0_4/lib/gcc/10/gcc/x86_64-apple-darwin18/10.2.0/include"/>
+					<Add directory="/usr/local/Cellar/gcc/10.2.0_4/lib/gcc/10/gcc/x86_64-apple-darwin18/10.2.0/include-fixed"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC\ 5042\ -\ Computing\ System\ Concepts\ II/Group\ Project/milestone1/src/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 Client/fast"/>
-					<CompileFile command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC\ 5042\ -\ Computing\ System\ Concepts\ II/Group\ Project/milestone1/src/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC\ 5042\ -\ Computing\ System\ Concepts\ II/Group\ Project/milestone1/src/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make.exe -j8 -f &quot;/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC\ 5042\ -\ Computing\ System\ Concepts\ II/Group\ Project/milestone1/src/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/stephaniem/Documents/Classes\ SU/22Q1\ 5042\ CSP\ II/milestone\ 1/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 Client/fast"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/stephaniem/Documents/Classes\ SU/22Q1\ 5042\ CSP\ II/milestone\ 1/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/stephaniem/Documents/Classes\ SU/22Q1\ 5042\ CSP\ II/milestone\ 1/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/stephaniem/Documents/Classes\ SU/22Q1\ 5042\ CSP\ II/milestone\ 1/Client/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Client/Client.cpp">
+		<Unit filename="/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/Client.cpp">
 			<Option target="Client"/>
 		</Unit>
-		<Unit filename="/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Client/Client.h">
+		<Unit filename="/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/Client.h">
 			<Option target="Client"/>
 		</Unit>
-		<Unit filename="/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Client/main.cpp">
+		<Unit filename="/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/main.cpp">
 			<Option target="Client"/>
 		</Unit>
-		<Unit filename="/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Client/CMakeLists.txt">
+		<Unit filename="/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>

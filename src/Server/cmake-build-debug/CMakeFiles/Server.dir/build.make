@@ -54,19 +54,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /cygdrive/c/Users/candr/AppData/Local/JetBrains/CLion2020.3/cygwin_cmake/bin/cmake.exe
+CMAKE_COMMAND = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake
 
 # The command to remove a file.
-RM = /cygdrive/c/Users/candr/AppData/Local/JetBrains/CLion2020.3/cygwin_cmake/bin/cmake.exe -E rm -f
+RM = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server"
+CMAKE_SOURCE_DIR = "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/cmake-build-debug"
+CMAKE_BINARY_DIR = "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/cmake-build-debug"
 
 # Include any dependencies generated for this target.
 include CMakeFiles/Server.dir/depend.make
@@ -79,29 +79,29 @@ include CMakeFiles/Server.dir/flags.make
 
 CMakeFiles/Server.dir/main.cpp.o: CMakeFiles/Server.dir/flags.make
 CMakeFiles/Server.dir/main.cpp.o: ../main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Server.dir/main.cpp.o"
-	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Server.dir/main.cpp.o -c "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/main.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Server.dir/main.cpp.o"
+	/usr/local/bin/g++-10  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Server.dir/main.cpp.o -c "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/main.cpp"
 
 CMakeFiles/Server.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Server.dir/main.cpp.i"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/main.cpp" > CMakeFiles/Server.dir/main.cpp.i
+	/usr/local/bin/g++-10 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/main.cpp" > CMakeFiles/Server.dir/main.cpp.i
 
 CMakeFiles/Server.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Server.dir/main.cpp.s"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/main.cpp" -o CMakeFiles/Server.dir/main.cpp.s
+	/usr/local/bin/g++-10 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/main.cpp" -o CMakeFiles/Server.dir/main.cpp.s
 
 CMakeFiles/Server.dir/Server.cpp.o: CMakeFiles/Server.dir/flags.make
 CMakeFiles/Server.dir/Server.cpp.o: ../Server.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Server.dir/Server.cpp.o"
-	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Server.dir/Server.cpp.o -c "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/Server.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Server.dir/Server.cpp.o"
+	/usr/local/bin/g++-10  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Server.dir/Server.cpp.o -c "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/Server.cpp"
 
 CMakeFiles/Server.dir/Server.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Server.dir/Server.cpp.i"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/Server.cpp" > CMakeFiles/Server.dir/Server.cpp.i
+	/usr/local/bin/g++-10 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/Server.cpp" > CMakeFiles/Server.dir/Server.cpp.i
 
 CMakeFiles/Server.dir/Server.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Server.dir/Server.cpp.s"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/Server.cpp" -o CMakeFiles/Server.dir/Server.cpp.s
+	/usr/local/bin/g++-10 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/Server.cpp" -o CMakeFiles/Server.dir/Server.cpp.s
 
 # Object files for target Server
 Server_OBJECTS = \
@@ -111,15 +111,15 @@ Server_OBJECTS = \
 # External object files for target Server
 Server_EXTERNAL_OBJECTS =
 
-Server.exe: CMakeFiles/Server.dir/main.cpp.o
-Server.exe: CMakeFiles/Server.dir/Server.cpp.o
-Server.exe: CMakeFiles/Server.dir/build.make
-Server.exe: CMakeFiles/Server.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable Server.exe"
+Server: CMakeFiles/Server.dir/main.cpp.o
+Server: CMakeFiles/Server.dir/Server.cpp.o
+Server: CMakeFiles/Server.dir/build.make
+Server: CMakeFiles/Server.dir/link.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable Server"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Server.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
-CMakeFiles/Server.dir/build: Server.exe
+CMakeFiles/Server.dir/build: Server
 
 .PHONY : CMakeFiles/Server.dir/build
 
@@ -128,6 +128,6 @@ CMakeFiles/Server.dir/clean:
 .PHONY : CMakeFiles/Server.dir/clean
 
 CMakeFiles/Server.dir/depend:
-	cd "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/cmake-build-debug" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server" "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server" "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/cmake-build-debug" "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/cmake-build-debug" "/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/cmake-build-debug/CMakeFiles/Server.dir/DependInfo.cmake" --color=$(COLOR)
+	cd "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/cmake-build-debug" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server" "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server" "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/cmake-build-debug" "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/cmake-build-debug" "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/cmake-build-debug/CMakeFiles/Server.dir/DependInfo.cmake" --color=$(COLOR)
 .PHONY : CMakeFiles/Server.dir/depend
 

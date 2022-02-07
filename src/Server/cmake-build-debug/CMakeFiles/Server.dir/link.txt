@@ -1,1 +1,1 @@
-/usr/bin/c++.exe -g  -Wl,--enable-auto-import CMakeFiles/Server.dir/main.cpp.o CMakeFiles/Server.dir/Server.cpp.o  -o Server.exe -Wl,--out-implib,libServer.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
+/usr/local/bin/g++-10  -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/Server.dir/main.cpp.o CMakeFiles/Server.dir/Server.cpp.o  -o Server 

@@ -1,4 +1,4 @@
-set(CMAKE_CXX_COMPILER "/usr/bin/c++.exe")
+set(CMAKE_CXX_COMPILER "/usr/local/bin/g++-10")
 set(CMAKE_CXX_COMPILER_ARG1 "")
 set(CMAKE_CXX_COMPILER_ID "GNU")
 set(CMAKE_CXX_COMPILER_VERSION "10.2.0")
@@ -12,25 +12,25 @@ set(CMAKE_CXX14_COMPILE_FEATURES "cxx_std_14;cxx_aggregate_default_initializers;
 set(CMAKE_CXX17_COMPILE_FEATURES "cxx_std_17")
 set(CMAKE_CXX20_COMPILE_FEATURES "cxx_std_20")
 
-set(CMAKE_CXX_PLATFORM_ID "Cygwin")
+set(CMAKE_CXX_PLATFORM_ID "Darwin")
 set(CMAKE_CXX_SIMULATE_ID "")
 set(CMAKE_CXX_COMPILER_FRONTEND_VARIANT "")
 set(CMAKE_CXX_SIMULATE_VERSION "")
 
 
 
-set(CMAKE_AR "/usr/bin/ar.exe")
-set(CMAKE_CXX_COMPILER_AR "/usr/bin/gcc-ar.exe")
-set(CMAKE_RANLIB "/usr/bin/ranlib.exe")
-set(CMAKE_CXX_COMPILER_RANLIB "/usr/bin/gcc-ranlib.exe")
-set(CMAKE_LINKER "/usr/bin/ld.exe")
+set(CMAKE_AR "/usr/bin/ar")
+set(CMAKE_CXX_COMPILER_AR "/usr/local/bin/gcc-ar-10")
+set(CMAKE_RANLIB "/usr/bin/ranlib")
+set(CMAKE_CXX_COMPILER_RANLIB "/usr/local/bin/gcc-ranlib-10")
+set(CMAKE_LINKER "/usr/bin/ld")
 set(CMAKE_MT "")
 set(CMAKE_COMPILER_IS_GNUCXX 1)
 set(CMAKE_CXX_COMPILER_LOADED 1)
 set(CMAKE_CXX_COMPILER_WORKS TRUE)
 set(CMAKE_CXX_ABI_COMPILED TRUE)
 set(CMAKE_COMPILER_IS_MINGW )
-set(CMAKE_COMPILER_IS_CYGWIN 1)
+set(CMAKE_COMPILER_IS_CYGWIN )
 if(CMAKE_COMPILER_IS_CYGWIN)
   set(CYGWIN 1)
   set(UNIX 1)
@@ -79,10 +79,10 @@ if(CMAKE_CXX_CL_SHOWINCLUDES_PREFIX)
 endif()
 
 
+set(CMAKE_CXX_SYSROOT_FLAG "-isysroot")
+set(CMAKE_CXX_OSX_DEPLOYMENT_TARGET_FLAG "-mmacosx-version-min=")
 
-
-
-set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "/usr/lib/gcc/x86_64-pc-cygwin/10/include/c++;/usr/lib/gcc/x86_64-pc-cygwin/10/include/c++/x86_64-pc-cygwin;/usr/lib/gcc/x86_64-pc-cygwin/10/include/c++/backward;/usr/lib/gcc/x86_64-pc-cygwin/10/include;/usr/include;/usr/include/w32api")
-set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "stdc++;gcc_s;gcc;cygwin;advapi32;shell32;user32;kernel32;gcc_s;gcc")
-set(CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "/usr/lib/gcc/x86_64-pc-cygwin/10;/usr/x86_64-pc-cygwin/lib;/usr/lib;/lib")
-set(CMAKE_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES "")
+set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "/usr/local/Cellar/gcc/10.2.0_4/include/c++/10.2.0;/usr/local/Cellar/gcc/10.2.0_4/include/c++/10.2.0/x86_64-apple-darwin18;/usr/local/Cellar/gcc/10.2.0_4/include/c++/10.2.0/backward;/usr/local/Cellar/gcc/10.2.0_4/lib/gcc/10/gcc/x86_64-apple-darwin18/10.2.0/include;/usr/local/Cellar/gcc/10.2.0_4/lib/gcc/10/gcc/x86_64-apple-darwin18/10.2.0/include-fixed;/Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/System/Library/Frameworks")
+set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "stdc++;gcc_ext.10.5;gcc")
+set(CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "/usr/local/Cellar/gcc/10.2.0_4/lib/gcc/10/gcc/x86_64-apple-darwin18/10.2.0;/usr/local/Cellar/gcc/10.2.0_4/lib/gcc/10;/Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/lib")
+set(CMAKE_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES "/Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/System/Library/Frameworks")

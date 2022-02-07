@@ -7,6 +7,7 @@
 #include <cstring>
 #include <vector>
 #include <iterator>
+#include <iostream>
 #include "Client.h"
 
 using namespace std;
@@ -23,10 +24,35 @@ void ParseTokens(char* buffer, std::vector<std::string>& a)
     }
 }
 
+void getUser(char *& userName) {
+    cin.clear();
+    cout << "Enter valid username: ";
+    cin >> userName;
+    if (cin.fail()) {
+        cin.clear();
+        cout << "Bad input." << endl;
+        userName = (char*) " ";
+    }
+}
+
+void getPassword(char *& password) {
+    cin.clear();
+    cout << "Enter the associated password: ";
+    cin >> password;
+    if (cin.fail()) {
+        cin.clear();
+        cout << "Bad input." << endl;
+        password = (char*) " ";
+    }
+}
+
 int main(int argc, char const* argv[])
 {
-    char* userName = (char*) "MIKE";
-    char* password = (char*) "MIKE";
+    const int MAX_LEN = 10;
+    char* userName = new char[MAX_LEN];
+    char* password = new char[MAX_LEN];
+    getUser(userName);
+    getPassword(password);
     const char* serverIP = argv[1];
     const int port = atoi(argv[2]);
     bool connected;
