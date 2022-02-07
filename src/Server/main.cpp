@@ -1,4 +1,3 @@
-#include <cstdio>
 #include <iostream>
 #include "Server.h"
 
@@ -6,12 +5,9 @@ using namespace std;
 
 int main(int argc, char const* argv[])
 {
-    //
-    const char* serverIP = argv[1];
     int port = atoi(argv[2]);
-
-    bool statusOk = true;
-    Server* serverObj = new Server(serverIP, port);
+    bool statusOk;
+    auto* serverObj = new Server(port);
 
     // Start server
     statusOk = serverObj->StartServer();

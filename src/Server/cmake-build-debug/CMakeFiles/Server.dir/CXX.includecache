@@ -6,29 +6,49 @@
 
 #IncludeRegexTransform: 
 
-/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/Server.h
+/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/Server.cpp
 unistd.h
 -
-stdio.h
+cstdio
 -
 sys/socket.h
 -
-stdlib.h
+cstdlib
 -
 netinet/in.h
 -
-string.h
+cstring
 -
 vector
 -
 iterator
 -
-
-/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/main.cpp
-cstdio
--
 iostream
+-
+fstream
 -
 Server.h
 /cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/Server.h
+sstream
+-
+map
+-
+
+/cygdrive/c/Users/candr/Documents/Education/SeattleU/CPSC 5042 - Computing System Concepts II/Group Project/milestone1/src/Server/Server.h
+unistd.h
+-
+cstdio
+-
+sys/socket.h
+-
+cstdlib
+-
+netinet/in.h
+-
+cstring
+-
+vector
+-
+iterator
+-
 

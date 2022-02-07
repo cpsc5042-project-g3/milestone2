@@ -7,34 +7,35 @@
 
 #pragma once
 #include <unistd.h>
-#include <stdio.h>
+#include <cstdio>
 #include <sys/socket.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <netinet/in.h>
-#include <string.h>
+#include <cstring>
 #include <vector>
 #include <iterator>
 
+using namespace std;
+
 class Server {
 public:
-    Server(const char* serverIP, int port);
+    Server(int port);
     ~Server();
     bool StartServer();
     bool ListenForClient();
     bool rpcProcess();
-    void ParseTokens(char* buffer, std::vector<std::string>& a);
+    static void ParseTokens(char* buffer, std::vector<std::string>& a);
 
 private:
-    int rpcCount;
     int server_fd;
     int socketID;
     int port;
     struct sockaddr_in address;
 
-    bool rpcConnect(std::vector<std::string>& arrayTokens);
-    bool rpcDisconnect();
-    bool rpcStatus();
-    bool validateLogin();
+    bool rpcConnect(std::vector<std::string>& arrayTokens) const;
+    bool rpcDisconnect() const;
+    static bool rpcStatus();
+    static bool validLogin(const string& userName, const string& password);
 };
 
 

@@ -3,26 +3,28 @@
 //
 
 #include <unistd.h>
-#include <stdio.h>
+#include <cstdio>
 #include <sys/socket.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <netinet/in.h>
-#include <string.h>
+#include <cstring>
 #include <vector>
 #include <iterator>
 #include <iostream>
-
+#include <fstream>
 #include "Server.h"
+#include <sstream>
+#include <map>
 
 using namespace std;
 
-Server::Server(const char *serverIP, int portIn) {
-    rpcCount = 0;
-    serverIP = (char*) serverIP;
+Server::Server(int portIn) {
+    server_fd = 0;
+    socketID = 0;
     port = portIn;
 }
 
-Server::~Server() {}
+Server::~Server() = default;
 
 bool Server::StartServer() {
     int opt = 1;
@@ -32,7 +34,7 @@ bool Server::StartServer() {
     // Create socket
     cout << ">> Creating socket" << endl;
     server_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if ((server_fd == 0)) {
+    if (server_fd == 0) {
         perror(">> Socket creation failed");
         exit(EXIT_FAILURE);
     }
@@ -97,10 +99,9 @@ void Server::ParseTokens(char *buffer, std::vector<std::string> &a) {
 
 bool Server::rpcProcess()
 {
-    const char* rpcs[] = { "connect", "disconnect", "status"};
     char buffer[1024] = { 0 };
     std::vector<std::string> arrayTokens;
-    int valread = 0;
+    int valread;
     bool connected = false;
     bool statusOk = true;
     bool continueOn = true;
@@ -110,8 +111,8 @@ bool Server::rpcProcess()
     while ((continueOn) && (statusOk))
     {
         // Should be blocked when a new RPC has not called us yet
-        if ((valread = read(this->socketID, buffer, sizeof(buffer))) <= 0)
-        {
+        valread = read(this->socketID, buffer, sizeof(buffer));
+        if (valread <= 0) {
             printf("errno is %d\n", errno);
             break;
         }
@@ -152,7 +153,7 @@ bool Server::rpcProcess()
     return true;
 }
 
-bool Server::rpcConnect(std::vector<std::string> & arrayTokens) {
+bool Server::rpcConnect(std::vector<std::string> & arrayTokens) const {
     cout << ">> Confirm RPC: Connect" << endl << endl;
 
     const int USERNAMETOKEN = 1;
@@ -164,12 +165,17 @@ bool Server::rpcConnect(std::vector<std::string> & arrayTokens) {
     char szBuffer[80];
 
     // Our Authentication Logic. Looks like Mike/Mike is only valid combination
+    if (!validLogin(userNameString, passwordString)) {
+        // invalid login
+        return false;
+    }
+/*
     if ((userNameString == "MIKE") && (passwordString == "MIKE")) {
         strcpy(szBuffer, "1;"); // Connected
     } else {
         strcpy(szBuffer, "0;"); // Not Connected
     }
-
+*/
     // Send Response back on our socket
     int nlen = strlen(szBuffer);
     szBuffer[nlen] = 0;
@@ -183,7 +189,7 @@ bool Server::rpcStatus() {
     return true;
 }
 
-bool Server::rpcDisconnect() {
+bool Server::rpcDisconnect() const {
     cout << ">> Confirm RPC: Disconnect" << endl << endl;
     char szBuffer[16];
     strcpy(szBuffer, "disconnect");
@@ -195,4 +201,51 @@ bool Server::rpcDisconnect() {
     return true;
 }
 
-bool Server::validateLogin() {}
+/*
+ * This function validates the supplied login credentials against a list of
+ * approved users.  Normally, we would expect approved users to be maintained
+ * in a database somewhere, but we are simulating this by maintaining these
+ * in a simple text file.
+ */
+bool Server::validLogin(const string& userName, const string& password) {
+    string line, name, pwd;
+    auto users = new map<string, string>();
+
+    // open file of approved users
+    ifstream inFile("ApprovedUsers.txt");
+    if (!inFile.is_open()) {
+        cout << ">> Failed to read approved users list." << endl;
+        return false;
+    }
+
+    // read approved users and their passwords line by line
+    while(inFile.peek() != EOF) {
+        getline(inFile, line);
+
+        if (line.length() > 1) {
+            stringstream ss(line);
+            ss >> name >> pwd;
+            users->insert(make_pair(name, pwd));
+        }
+    }
+    inFile.close();
+
+    // validate supplied userName and password
+    auto iter = users->find(userName);
+    if (iter == users->end()) {
+        // user name not found
+        cout << ">> Invalid user name." << endl;
+        return false;
+    }
+    else if (iter->first == password) {
+        // found matching user name AND password
+        cout << ">> User name and password validated." << endl;
+        return true;
+    }
+    else {
+        // user name found, but password does not exist
+        cout << ">> User name found, but password does not match." << endl;
+        return false;
+    }
+
+}
