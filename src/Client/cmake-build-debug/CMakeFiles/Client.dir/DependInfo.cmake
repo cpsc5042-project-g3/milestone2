@@ -4,8 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/Client.cpp" "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/cmake-build-debug/CMakeFiles/Client.dir/Client.cpp.o"
-  "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/main.cpp" "/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Client/cmake-build-debug/CMakeFiles/Client.dir/main.cpp.o"
+  "/Users/ziwang/Desktop/CPSC 5042/Project/GuessWhoProject/milestone1/src/Client/Client.cpp" "/Users/ziwang/Desktop/CPSC 5042/Project/GuessWhoProject/milestone1/src/Client/cmake-build-debug/CMakeFiles/Client.dir/Client.cpp.o"
+  "/Users/ziwang/Desktop/CPSC 5042/Project/GuessWhoProject/milestone1/src/Client/ClientMain.cpp" "/Users/ziwang/Desktop/CPSC 5042/Project/GuessWhoProject/milestone1/src/Client/cmake-build-debug/CMakeFiles/Client.dir/ClientMain.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

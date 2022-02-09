@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/Server.cpp
+/Users/ziwang/Desktop/CPSC 5042/Project/GuessWhoProject/milestone1/src/Server/Server.cpp
 unistd.h
 -
 cstdio
@@ -28,13 +28,13 @@ iostream
 fstream
 -
 Server.h
-/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/Server.h
+/Users/ziwang/Desktop/CPSC 5042/Project/GuessWhoProject/milestone1/src/Server/Server.h
 sstream
 -
 map
 -
 
-/Users/stephaniem/Documents/Classes SU/22Q1 5042 CSP II/milestone 1/Server/Server.h
+/Users/ziwang/Desktop/CPSC 5042/Project/GuessWhoProject/milestone1/src/Server/Server.h
 unistd.h
 -
 cstdio
@@ -51,4 +51,10 @@ vector
 -
 iterator
 -
+
+/Users/ziwang/Desktop/CPSC 5042/Project/GuessWhoProject/milestone1/src/Server/ServerMain.cpp
+iostream
+-
+Server.h
+/Users/ziwang/Desktop/CPSC 5042/Project/GuessWhoProject/milestone1/src/Server/Server.h
 

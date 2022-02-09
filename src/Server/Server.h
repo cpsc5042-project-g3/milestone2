@@ -1,6 +1,10 @@
-//
-// Created by candr on 04-Feb-22.
-//
+/*
+ * CPSC 5042: Comp Systems Principles II
+ * Client-Server Project: Milestone 1
+ * Group 3: Andrew Shell, Steph Mills, Zi Wang, Leonardo Levy
+ * Professor: Michael McKee
+ * Date: Feb 2022
+ */
 
 #ifndef SERVER_SERVER_H
 #define SERVER_SERVER_H
@@ -21,21 +25,25 @@ class Server {
 public:
     Server(int port);
     ~Server();
-    bool StartServer();
-    bool ListenForClient();
+    bool startServer();
+    bool connectWithClient();
     bool rpcProcess();
-    static void ParseTokens(char* buffer, std::vector<std::string>& a);
 
 private:
+    const int BUFFER_SIZE = 1024;
+    char* buffer;
     int server_fd;
     int socketID;
     int port;
-    struct sockaddr_in address;
+    struct sockaddr_in address{};
 
-    bool rpcConnect(std::vector<std::string>& arrayTokens) const;
-    bool rpcDisconnect() const;
+    bool sendResponse(char* message);
+    bool rpcConnect(std::vector<std::string>& arrayTokens);
+    bool rpcDisconnect();
     static bool rpcStatus();
-    static bool validLogin(const string& userName, const string& password);
+    bool validLogin(const string& userName, const string& password);
+    void parseTokens(vector<string>& a);
+    static void printToken(vector<string>& a);
 };
 
 

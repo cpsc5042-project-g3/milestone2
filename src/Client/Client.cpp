@@ -1,5 +1,10 @@
-
-
+/*
+ * CPSC 5042: Comp Systems Principles II
+ * Client-Server Project: Milestone 1
+ * Group 3: Andrew Shell, Steph Mills, Zi Wang, Leonardo Levy
+ * Professor: Michael McKee
+ * Date: Feb 2022
+ */
 #include "Client.h"
 #include <iostream>
 #include <cstring>
@@ -11,109 +16,151 @@
 using namespace std;
 
 Client::Client() {
-    userName = (char*) "TBD";
-    password = (char*) "TBD";
-    socketID = 0;
+    socketID = 0;          // server-client "connection" socket descriptor
     buffer = nullptr;
     connected = false;
 }
 
 Client::~Client() {
     close(socketID);
+    delete userName;
+    delete password;
 }
 
-bool Client::ConnectServer(const char* serverIP, int port) {
-    struct sockaddr_in serv_addr;
-    buffer = {0};
+bool Client::connectServer(const char *serverIP, int port) {
+    struct sockaddr_in serv_addr{};
 
-    // assemble connect message
-    stringstream ss;
-    ss << "connect;" << userName << ";" << password << ";";
-    string temp = ss.str();
-    char* rpcConnect = &temp[0];
-
-    // Create socket
-    cout << ">> Creating socket." << endl;
+    // Create Socket: "connection" socket
+    cout << "\n>> Starting to create a client socket." << endl;
     socketID = socket(AF_INET, SOCK_STREAM, 0);
     if (socketID < 0) {
-        cout << "Socket creation failed." << endl;
+        perror(">> Error: Socket creation failed");
         return false;
     }
     cout << ">> Socket creation successful." << endl;
 
-    // Do mystery magic
+    // Specifies the communication domain for "server address"
     serv_addr.sin_family = AF_INET;
+    // Specifies the PORT number for "server address"
     serv_addr.sin_port = htons(port);
 
     // Convert IPv4 and IPv6 addresses from text to binary form
     cout << ">> Validating IP address." << endl;
     if (inet_pton(AF_INET, serverIP, &serv_addr.sin_addr) <= 0) {
-        cout << ">> IP address is invalid or not supported." << endl;
+        perror(">> Error: IP address is invalid or not supported");
         return false;
     }
     cout << ">> IP address is valid." << endl;
 
     // Open connection to server
     cout << ">> Connecting to server." << endl;
-    if (connect(socketID, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0) {
-        cout << ">> Connection failed." << endl;
+    if (connect(socketID, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
+        perror(">> Error: Connection failed");
         return false;
     }
-    cout << ">> Connection successful" << endl;
+    cout << ">> Connection to server successful." << endl << endl;
 
-    // use buffer to send message to server
-    cout << ">> Sending rpcConnect message to server." << endl;
-    buffer = rpcConnect;
-    int nlen = strlen(buffer);
-    buffer[nlen] = 0;   // Put the null terminator
-
-    // write message to server
-   int valwrite = send(socketID, buffer, strlen(buffer)+1, 0);
-   printf(">> Connect message sent with %d bytes\n", valwrite);
-
-   // read response from server
-   int valread = read(socketID, buffer, 1024);
-   printf(">> Server response: %s with valread=%d\n", buffer, valread);
-
-   connected = true;
-   return true;
+    connected = true;
+    return true;
 }
 
-bool Client::queryTrait(const char* trait, const char* traitValue) {}
+// RPC: Connect/LogIn
+bool Client::logIn() {
+    // Get user name and password
+    if (!getUserName())
+        return false;
+    if (!getPassword())
+        return false;
 
+    // Assemble login message
+    stringstream ss;
+    ss << "connect;" << userName << ";" << password << ";";
+    string temp = ss.str();
+    char *rpcConnect = &temp[0];
+
+    // Send login message to server and get response
+    if (sendMessage("Login", rpcConnect))
+        if (getResponse())
+            if (strcmp(buffer, "User name and password validated.") == 0) {
+                cout << ">> Now you are logged in." << endl << endl;
+                return true;
+            }
+    return false;
+}
+
+bool Client::getUserName() {
+    userName = new char[MAX_LEN];
+    cin.clear();
+    cout << ">> Enter valid username: ";
+    cin >> userName;
+    if (strlen(userName) > MAX_LEN || cin.fail()) {
+        cin.clear();
+        cerr << ">> Error: Username too long." << endl;
+        cout << endl;
+        delete userName;
+        return false;
+    }
+    return true;
+}
+
+bool Client::getPassword() {
+    password = new char[MAX_LEN];
+    cin.clear();
+    cout << ">> Enter the associated password: ";
+    cin >> password;
+    if (strlen(password) > MAX_LEN || cin.fail()) {
+        cin.clear();
+        cerr << ">> Error: Password too long." << endl;
+        cout << endl;
+        delete password;
+        return false;
+    }
+    return true;
+}
+
+// RPCs to be implemented later
+bool Client::queryTrait(const char *trait, const char *traitValue) {}
 bool Client::guessName(const char *name) {}
-
 bool Client::eliminatePerson(const char *name) {}
 
-bool Client::DisconnectServer() const {
-    const char* logoffRPC = "disconnect";
+// RPC: Disconnect
+bool Client::disconnectServer() {
+    // Assemble disconnect message
+    string temp = "disconnect";
+    char *logoffRPC = &temp[0];
 
-    if (connected) {
-        // add logoff message to buffer
-        strcpy(buffer, logoffRPC);
-        int nlen = strlen(buffer);
-        buffer[nlen] = 0;   // Put the null terminator
-
-        // write buffer to server
-        int valwrite = send(socketID, buffer, strlen(buffer) + 1, 0);
-        printf(">> Disconnect message sent with %d bytes\n", valwrite);
-
-        // read response from serfver
-        int valread = read(socketID, buffer, 1024);
-        printf(">> Server response: %s with valread=%d\n", buffer, valread);
-    }
-    else {
-        cout << ">> Disconnect not required. No server connection detected." << endl;
-    }
-    return true;
+    // Send disconnect message to server and get response
+    if (connected)
+        if (sendMessage("Disconnect", logoffRPC))
+            if (getResponse())
+                if (strcmp(buffer, "Disconnect successful.") == 0) {
+                    cout << ">> Now you are logged off and disconnected." << endl;
+                    return true;
+                }
+    return false;
 }
 
-bool Client::setUserName(char* userNameIn) {
-    userName = userNameIn;
-    return true;
+// Send message to server
+bool Client::sendMessage(const string& title, char* message) {
+    cout << "\n>> Sending " << title << " message to server." << endl;
+
+    // Assemble message
+    buffer = message;
+    size_t nlen = strlen(buffer);
+    buffer[nlen] = 0;   // Put the null terminator
+    if (send(socketID, buffer, strlen(buffer) + 1, 0)) {
+        cout << ">> " << title << " message sent." << endl;
+        return true;
+    }
+    cout << ">> " << title << " message failed to send." << endl;
+    return false;
 }
 
-bool Client::setPassword(char* passwordIn) {
-    password = passwordIn;
-    return true;
+// Get response from server
+bool Client::getResponse() {
+    if (read(socketID, buffer, 1024)) {
+        cout << ">> Server response: " << buffer << endl << endl;
+        return true;
+    }
+    return false;
 }
