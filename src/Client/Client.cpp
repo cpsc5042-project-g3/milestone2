@@ -66,25 +66,34 @@ bool Client::connectServer(const char *serverIP, int port) {
 
 // RPC: Connect/LogIn
 bool Client::logIn() {
-    // Get user name and password
-    if (!getUserName())
-        return false;
-    if (!getPassword())
-        return false;
-
-    // Assemble login message
     stringstream ss;
+    string temp1, messageTitle;
+
+    // prompt for userName
+    if (!getUserName()) {
+        return false;
+    }
+    // prompt for password
+    if (!getPassword()) {
+        return false;
+    }
+    // Assemble login message to server
     ss << "connect;" << userName << ";" << password << ";";
-    string temp = ss.str();
-    char *rpcConnect = &temp[0];
+    ss >> temp1;
+    int n = temp1.length();
+    char temp2[n + 1];
+    strcpy(temp2, temp1.c_str());
+    messageTitle = "Login";
 
     // Send login message to server and get response
-    if (sendMessage("Login", rpcConnect))
-        if (getResponse())
+    if (sendMessage(messageTitle, temp2)) {
+        if (getResponse()) {
             if (strcmp(buffer, "User name and password validated.") == 0) {
-                cout << ">> Now you are logged in." << endl << endl;
+                cout << ">> You are now logged in." << endl;
                 return true;
             }
+        }
+    }
     return false;
 }
 
@@ -120,7 +129,9 @@ bool Client::getPassword() {
 
 // RPCs to be implemented later
 bool Client::queryTrait(const char *trait, const char *traitValue) {}
+
 bool Client::guessName(const char *name) {}
+
 bool Client::eliminatePerson(const char *name) {}
 
 // RPC: Disconnect
@@ -141,7 +152,7 @@ bool Client::disconnectServer() {
 }
 
 // Send message to server
-bool Client::sendMessage(const string& title, char* message) {
+bool Client::sendMessage(const string &title, char *message) {
     cout << "\n>> Sending " << title << " message to server." << endl;
 
     // Assemble message
@@ -159,7 +170,7 @@ bool Client::sendMessage(const string& title, char* message) {
 // Get response from server
 bool Client::getResponse() {
     if (read(socketID, buffer, 1024)) {
-        cout << ">> Server response: " << buffer << endl << endl;
+        cout << ">> Server response: " << buffer << endl;
         return true;
     }
     return false;

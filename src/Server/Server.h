@@ -31,7 +31,6 @@ public:
 
 private:
     const int BUFFER_SIZE = 1024;
-    char* buffer;
     int server_fd;
     int socketID;
     int port;
@@ -42,7 +41,7 @@ private:
     bool rpcDisconnect();
     static bool rpcStatus();
     bool validLogin(const string& userName, const string& password);
-    void parseTokens(vector<string>& a);
+    void parseTokens(char* buffer, vector<string>& a);
     static void printToken(vector<string>& a);
 };
 

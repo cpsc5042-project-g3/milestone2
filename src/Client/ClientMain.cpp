@@ -98,13 +98,13 @@ int main(int argc, char const *argv[]) {
                 }
                 break;
             case 2: // Query Trait
-                cout << "\nTBA: Come back later!" << endl << endl;
+                cout << "\nFeature not yet available!" << endl << endl;
                 break;
             case 3: // Eliminate Person
-                cout << "\nTBA: Come back later!" << endl << endl;
+                cout << "\nFeature not yet available!" << endl << endl;
                 break;
             case 4: // Make a Guess
-                cout << "\nTBA: Come back later!" << endl << endl;
+                cout << "\nFeature not yet available!" << endl << endl;
                 break;
             case 5: // Disconnect from server
                 if (client->disconnectServer())

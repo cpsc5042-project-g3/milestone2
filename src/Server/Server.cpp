@@ -102,12 +102,13 @@ bool Server::rpcProcess() {
     const int RPCTOKEN = 0;
 
     while ((continueOn)) {
-        buffer= new char[BUFFER_SIZE];
+        char *buffer= new char[BUFFER_SIZE];
         // Blocked until a RPC is sent to server
         msgByte = read(socketID, buffer, BUFFER_SIZE);
 
         if (msgByte <= 0) {
             perror(">> Error: Read failed");
+            delete[] buffer;
             break;
         }
 
@@ -117,7 +118,7 @@ bool Server::rpcProcess() {
 
         // Parse and Print the tokens
         arrayTokens.clear();
-        parseTokens(arrayTokens);
+        parseTokens(buffer, arrayTokens);
         printToken(arrayTokens);
 
         // Get RPC name: string statements are not supported with a switch, so using if/else logic to dispatch
@@ -136,20 +137,19 @@ bool Server::rpcProcess() {
             sendResponse(&error[0]);
             // Not in our list, perhaps, print out what was sent
         }
+        delete[] buffer;
     }
     return true;
 }
 
 // Parse incoming message
-void Server::parseTokens(vector<string> &a) {
+void Server::parseTokens(char* buffer, vector<string> &a) {
     char *token;
 
     cout << ">> Parsing tokens." << endl;
     while ((token = strtok_r(buffer, ";", &buffer))) {
         a.emplace_back(token);
     }
-    // Free memory of buffer after it's been parsed
-    delete buffer;
 }
 
 // Print incoming message

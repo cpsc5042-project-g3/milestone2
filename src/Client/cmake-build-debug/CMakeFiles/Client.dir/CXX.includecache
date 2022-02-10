@@ -28,15 +28,3 @@ cstring
 string
 -
 
-/Users/ziwang/Desktop/CPSC 5042/Project/GuessWhoProject/milestone1/src/Client/ClientMain.cpp
-cstdio
--
-cstring
--
-vector
--
-iostream
--
-Client.h
-/Users/ziwang/Desktop/CPSC 5042/Project/GuessWhoProject/milestone1/src/Client/Client.h
-
