@@ -1,4 +1,0 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/usr/bin/make -DCMAKE_C_COMPILER=/usr/local/Cellar/gcc/10.2.0_4/bin/gcc-10 -DCMAKE_CXX_COMPILER=/usr/local/Cellar/gcc/10.2.0_4/bin/g++-10 -G "CodeBlocks - Unix Makefiles" "/Users/ziwang/Desktop/CPSC 5042/Project/GuessWhoProject/milestone1/src/Server"
--- Configuring done
--- Generating done
--- Build files have been written to: /Users/ziwang/Desktop/CPSC 5042/Project/GuessWhoProject/milestone1/src/Server/cmake-build-debug

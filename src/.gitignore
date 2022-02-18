@@ -1,0 +1,7 @@
+Client/.idea
+Server/.idea
+.idea
+.DS_Store
+Client/cmake-build-debug
+Server/cmake-build-debug
+cmake-build-debug
