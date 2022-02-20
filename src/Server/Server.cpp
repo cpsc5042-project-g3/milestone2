@@ -16,9 +16,11 @@
 #include <iterator>
 #include <iostream>
 #include <fstream>
-#include "Server.h"
 #include <sstream>
 #include <map>
+
+#include "Server.h"
+#include "RPCImpl.h"
 
 using namespace std;
 
@@ -81,175 +83,43 @@ bool Server::startServer() {
 bool Server::connectWithClient() {
     int addrLen = sizeof(address);
 
-    // Create "connection" socket and start accepting
-    cout << ">> Accept process started." << endl << endl;
-    if ((socketID = accept(server_fd, (struct sockaddr *) &address, (socklen_t *) &addrLen)) < 0) {
-        perror(">> Error: Connection failed");
-        exit(EXIT_FAILURE);
-    }
-    cout << ">> Client successfully connected." << endl;
-    cout << ">> Waiting for client RPC." << endl;
-    cout << ">> Buffer size available: " << BUFFER_SIZE << " bytes. " << endl << endl;
+    vector<pthread_t> threadIDList;
 
-    return true;
-}
+    for (;;) {
+        cout << "ZZZZ" << endl;
 
-// Process all the RPCs
-bool Server::rpcProcess() {
-    vector<string> arrayTokens;
-    ssize_t msgByte;
-    bool continueOn = true;
-    const int RPCTOKEN = 0;
-
-    while ((continueOn)) {
-        char *buffer= new char[BUFFER_SIZE];
-        // Blocked until a RPC is sent to server
-        msgByte = read(socketID, buffer, BUFFER_SIZE);
-
-        if (msgByte <= 0) {
-            perror(">> Error: Read failed");
-            delete[] buffer;
-            break;
+        // Create "connection" socket and start accepting
+        cout << ">> Accept process started." << endl << endl;
+        if ((socketID = accept(server_fd, (struct sockaddr *) &address, (socklen_t *) &addrLen)) < 0) {
+            perror(">> Error: Connection failed");
+            exit(EXIT_FAILURE);
         }
+        cout << ">> Client successfully connected." << endl;
+        cout << ">> Waiting for client RPC." << endl;
+        cout << ">> Buffer size available: " << BUFFER_SIZE << " bytes. " << endl << endl;
 
-        // Once an RPC is received
-        cout << ">> Client RPC received: " << buffer << endl;
-        cout << ">> Total bytes: " << msgByte << endl;
+        // TODO: Launch thread to process RPC ???
+        pthread_t thread_id;
+        threadIDList.push_back(thread_id);
+        int connectSocket = socketID;
+        pthread_create(&thread_id, NULL, myThreadFun, (void*)&connectSocket);
 
-        // Parse and Print the tokens
-        arrayTokens.clear();
-        parseTokens(buffer, arrayTokens);
-        printToken(arrayTokens);
-
-        // Get RPC name: string statements are not supported with a switch, so using if/else logic to dispatch
-        string rpcName = arrayTokens[RPCTOKEN];
-
-        if (rpcName == "connect") {  // This step is actually to authenticate user
-            rpcConnect(arrayTokens);
-        } else if (rpcName == "disconnect") {
-            rpcDisconnect();
-            continueOn = false; // We are going to leave this loop, as we are done
-        } else if (rpcName == "status") {
-            rpcStatus();   // Status RPC
-        } else {
-            string error = "Error: Invalid request";
-            cerr << ">> " << error << endl;
-            sendResponse(&error[0]);
-            // Not in our list, perhaps, print out what was sent
-        }
-        delete[] buffer;
     }
     return true;
 }
 
-// Parse incoming message
-void Server::parseTokens(char* buffer, vector<string> &a) {
-    char *token;
+// A normal C function that is executed as a thread
+// when its name is specified in pthread_create()
+void* Server::myThreadFun(void* vargp) {
 
-    cout << ">> Parsing tokens." << endl;
-    while ((token = strtok_r(buffer, ";", &buffer))) {
-        a.emplace_back(token);
-    }
-}
+    sleep(1);
 
-// Print incoming message
-void Server::printToken(vector<string> &arrayTokens) {
-    // Enumerate through the tokens. The first token is always the specific RPC name
-    cout << ">> Token(s) received: ";
-    for (auto &arrayToken : arrayTokens) {
-        printf("\n\ttoken = %s", arrayToken.c_str());
-    }
-    cout << endl;
-}
+    int socket = *(int *) vargp;
+    printf("PPPP\n");
+    auto *rpcImplObj = new RPCImpl(socket);
+    rpcImplObj->rpcProcess();   // This will go until client disconnects;
+    printf("Done with Thread");
 
-// Send response to client
-bool Server::sendResponse(char *message) {
-    return send(socketID, message, strlen(message) + 1, 0);
-}
-
-// RPC: Connect/Login
-bool Server::rpcConnect(vector<string> &arrayTokens) {
-    cout << ">> Processing RPC: Connect" << endl << endl;
-    cout << ">> Validating login info." << endl;
-
-    const int USERNAMETOKEN = 1;
-    const int PASSWORDTOKEN = 2;
-
-    // Strip out tokens 1 and 2 (username, password)
-    string userNameString = arrayTokens[USERNAMETOKEN];
-    string passwordString = arrayTokens[PASSWORDTOKEN];
-
-    // Our Authentication Logic.
-    return validLogin(userNameString, passwordString);
-
-}
-
-// RPC: Other PRCs
-bool Server::rpcStatus() {
-    cout << ">> Processing RPC: Status" << endl << endl;
-    return true;
-}
-
-// RPC: Disconnect
-bool Server::rpcDisconnect() {
-    cout << ">> Processing RPC: Disconnect" << endl << endl;
-    // Send Response back on our socket
-    string response = "Disconnect successful.";
-    if (sendResponse(&response[0]))
-        cout << ">> Informed client disconnect successful.";
-
-    return true;
-}
-
-/*
- * This function validates the supplied login credentials against a list of
- * approved users.  Normally, we would expect approved users to be maintained
- * in a database somewhere, but we are simulating this by maintaining these
- * in a simple text file.
- */
-bool Server::validLogin(const string &userName, const string &password) {
-    string line, name, pwd;
-    auto users = new map<string, string>();
-
-    // open file of approved users
-    ifstream inFile("ApprovedUsers.txt");
-    if (!inFile.is_open()) {
-        cout << ">> Failed to read approved users list." << endl;
-        return false;
-    }
-
-    // read approved users and their passwords line by line
-    while (inFile.peek() != EOF) {
-        getline(inFile, line);
-
-        if (line.length() > 1) {
-            stringstream ss(line);
-            ss >> name >> pwd;
-            users->insert(make_pair(name, pwd));
-        }
-    }
-    inFile.close();
-
-    // validate supplied userName and password
-    auto iter = users->find(userName);
-    if (iter == users->end()) {
-        // user name not found
-        string response = "Invalid user name.";
-        cout << ">> " << response << endl << endl;
-        sendResponse(&response[0]);
-        return false;
-    } else if (iter->second == password) {
-        // found matching user name AND password
-        string response = "User name and password validated.";
-        cout << ">> " << response << endl << endl;
-        sendResponse(&response[0]);
-        return true;
-    } else {
-        // user name found, but password does not exist
-        string response = "User name found, but password does not match.";
-        cout << ">> " << response << endl << endl;
-        sendResponse(&response[0]);
-        return false;
-    }
+    return NULL;
 
 }

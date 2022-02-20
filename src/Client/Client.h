@@ -29,7 +29,7 @@ private:
     const int MAX_LEN = 10;
     char* userName;
     char* password;
-    char* buffer;
+    char* response;
     int socketID;
     bool connected;
 
