@@ -18,7 +18,8 @@ using namespace std;
 Client::Client() {
     socketID = 0;          // server-client "connection" socket descriptor
     connected = false;
-    response = nullptr;
+    userName = nullptr;
+    password = nullptr;
 }
 
 Client::~Client() {
@@ -37,7 +38,7 @@ bool Client::connectServer(const char *serverIP, int port) {
         perror(">> Error: Socket creation failed");
         return false;
     }
-    cout << ">> Socket creation successful." << endl;
+    printf(">> Socket creation successful. You are Client %d.\n", socketID);
 
     // Specifies the communication domain for "server address"
     serv_addr.sin_family = AF_INET;
@@ -89,7 +90,7 @@ bool Client::logIn() {
     if (sendMessage(messageTitle, temp2)) {
         if (getResponse()) {
             if (strcmp(response, "User name and password validated.") == 0) {
-                cout << ">> You are now logged in." << endl;
+                printf(">> %s, you are now logged in.\n", userName);
                 return true;
             }
         }
@@ -152,7 +153,7 @@ bool Client::disconnectServer() {
 }
 
 // Send message to server
-bool Client::sendMessage(const string &title, char *message) {
+bool Client::sendMessage(const string &title, char *message) const {
     cout << "\n>> Sending " << title << " message to server." << endl;
 
     // Assemble message
@@ -171,8 +172,12 @@ bool Client::getResponse() {
     char buffer[1024] = { 0 };
     if (read(socketID, buffer, 1024)) {
         cout << ">> Server response: " << buffer << endl;
-        response = buffer;
+        strcpy(response, buffer);
         return true;
     }
     return false;
+}
+
+char* Client::getFinalUserName() {
+    return userName;
 }

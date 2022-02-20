@@ -44,15 +44,13 @@ bool RPCImpl::rpcProcess() {
     while ((continueOn)) {
         // Blocked until a RPC is sent to server
         msgByte = read(socketID, buffer, sizeof(buffer));
-
-        cout << "Z0Z0Z0Z0Z0Z0 mybyte: " << msgByte << endl;
         if (msgByte <= 0) {
-            printf("Read failed. Errno is %d.\n", errno);
+            printf("Read failed from Client %d. Errno is %d.\n", socketID, errno);
             break;
         }
 
         // Once an RPC is received
-        cout << ">> Client RPC received: " << buffer << endl;
+        printf(">> Client %d RPC received: %s\n", socketID, buffer);
         cout << ">> Total bytes: " << msgByte << endl;
 
         // Parse and Print the tokens
@@ -96,7 +94,8 @@ void RPCImpl::printToken(vector<string> &arrayTokens) {
     // Enumerate through the tokens. The first token is always the specific RPC name
     cout << ">> Token(s) received: ";
     for (auto &arrayToken : arrayTokens) {
-        printf("\n\ttoken = %s", arrayToken.c_str());
+//        printf("\n\ttoken = %s", arrayToken.c_str());
+        printf("%s  ", arrayToken.c_str());
     }
     cout << endl;
 }
@@ -112,7 +111,7 @@ bool RPCImpl::sendResponse(char *message) const {
 // RPC: Connect/Login
 bool RPCImpl::rpcConnect(vector<string> &arrayTokens) {
     cout << ">> Processing RPC: Connect" << endl << endl;
-    cout << ">> Validating login info." << endl;
+    printf(">> Validating login info for Client %d.\n", socketID);
 
     const int USERNAMETOKEN = 1;
     const int PASSWORDTOKEN = 2;
@@ -138,7 +137,7 @@ bool RPCImpl::rpcDisconnect() {
     // Send Response back on our socket
     string response = "Disconnect successful.";
     if (sendResponse(&response[0]))
-        cout << ">> Informed client disconnect successful.";
+        printf(">> Informed Client %d disconnect successful.\n", socketID);
 
     return true;
 }

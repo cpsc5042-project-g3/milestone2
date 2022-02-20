@@ -75,7 +75,7 @@ bool Server::startServer() {
         perror(">> Error: Listening process failed");
         exit(EXIT_FAILURE);
     }
-    cout << ">> Listening for client to connect." << endl;
+    cout << ">> Listening successful." << endl;
     return true;
 }
 
@@ -85,24 +85,24 @@ bool Server::connectWithClient() {
 
     vector<pthread_t> threadIDList;
 
+    cout << "\n>> Accept process started. Waiting for clients..." << endl;
     for (;;) {
-        cout << "ZZZZ" << endl;
-
         // Create "connection" socket and start accepting
-        cout << ">> Accept process started." << endl << endl;
+
         if ((socketID = accept(server_fd, (struct sockaddr *) &address, (socklen_t *) &addrLen)) < 0) {
             perror(">> Error: Connection failed");
             exit(EXIT_FAILURE);
         }
-        cout << ">> Client successfully connected." << endl;
-        cout << ">> Waiting for client RPC." << endl;
+        printf(">>>>>>> Client %d successfully connected.\n", socketID);
+        printf(">> Waiting for RPCs from Client %d.\n", socketID);
         cout << ">> Buffer size available: " << BUFFER_SIZE << " bytes. " << endl << endl;
 
         // TODO: Launch thread to process RPC ???
         pthread_t thread_id;
         threadIDList.push_back(thread_id);
-        int connectSocket = socketID;
-        pthread_create(&thread_id, NULL, myThreadFun, (void*)&connectSocket);
+        int clientID = socketID;
+        pthread_create(&thread_id, NULL, myThreadFun, (void*)&clientID);
+
 
     }
     return true;
@@ -114,12 +114,13 @@ void* Server::myThreadFun(void* vargp) {
 
     sleep(1);
 
-    int socket = *(int *) vargp;
-    printf("PPPP\n");
-    auto *rpcImplObj = new RPCImpl(socket);
+    int clientID = *(int *) vargp;
+    printf(">>----->> Client %d, start thread.\n", clientID);
+    auto *rpcImplObj = new RPCImpl(clientID);
     rpcImplObj->rpcProcess();   // This will go until client disconnects;
-    printf("Done with Thread");
-
+    printf("<<-----<< Client %d, done with Thread.\n", clientID);
+    printf("<<<<<< Client %d session ended.\n", clientID);
+    cout << "\n>> Waiting for next client." << endl;
     return NULL;
 
 }

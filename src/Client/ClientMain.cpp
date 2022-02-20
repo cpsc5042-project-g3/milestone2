@@ -27,8 +27,8 @@ void displayMenu1() {
          << "\t2. Disconnect\n";
     cout << "Your choice: ";
 }
-void displayMenu2() {
-    cout << "Please pick an option from the menu: \n"
+void displayMenu2(char* myName) {
+    cout << myName << ", please pick an option from the menu: \n"
          << "\t1. Start a new game \n" // login required if not already logged in
          << "\t2. Query Trait\n"
          << "\t3. Eliminate Person\n"
@@ -66,6 +66,8 @@ int main(int argc, char const *argv[]) {
     bool connected;
     bool loggedIn = false;
     int menuPick;
+    char *myName;
+
 
     welcome();
 
@@ -85,9 +87,11 @@ int main(int argc, char const *argv[]) {
         }
     }
 
+    myName = client->getFinalUserName();
+
     // Start game (Game logic to follow)
     while (connected) {
-        displayMenu2();
+        displayMenu2(myName);
         menuPick = getMenuPick(2);
         switch (menuPick) {
             case 1: // Start a new game

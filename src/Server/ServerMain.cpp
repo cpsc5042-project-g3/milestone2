@@ -29,8 +29,6 @@ int main(int argc, char const *argv[]) {
 //            // This will be ongoing until client sends a "Disconnect" RPC
 //            serverObj->rpcProcess();
 
-            cout << "\n>> Client session ended." << endl;
-            cout << ">> Waiting for next client." << endl;
 //        }
     }
 
