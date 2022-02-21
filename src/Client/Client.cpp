@@ -1,9 +1,9 @@
 /*
  * CPSC 5042: Comp Systems Principles II
- * Client-Server Project: Milestone 1
+ * Client-Server Project: Milestone 2
  * Group 3: Andrew Shell, Steph Mills, Zi Wang, Leonardo Levy
  * Professor: Michael McKee
- * Date: Feb 2022
+ * Due: 10 Mar 2022
  */
 #include "Client.h"
 #include <iostream>
@@ -15,18 +15,27 @@
 
 using namespace std;
 
+/*
+ * This is the constructor for the Client object.
+ */
 Client::Client() {
     socketID = 0;          // server-client "connection" socket descriptor
     buffer = nullptr;
     connected = false;
 }
 
+/*
+ * This is the destructor for the client object.  It also closes the socket
+ * associated with the client.
+ */
 Client::~Client() {
     close(socketID);
-    delete userName;
-    delete password;
 }
 
+/*
+ * This function opens a socket connection with the server identified
+ * by serverIP and port.
+ */
 bool Client::connectServer(const char *serverIP, int port) {
     struct sockaddr_in serv_addr{};
 
@@ -64,7 +73,11 @@ bool Client::connectServer(const char *serverIP, int port) {
     return true;
 }
 
-// RPC: Connect/LogIn
+/*
+ * This function connects to the server using userName and password and
+ * returns true if the connection was successful, i.e. userName and password
+ * were valid.
+ */
 bool Client::logIn() {
     stringstream ss;
     string temp1, messageTitle;
@@ -73,10 +86,12 @@ bool Client::logIn() {
     if (!getUserName()) {
         return false;
     }
+
     // prompt for password
     if (!getPassword()) {
         return false;
     }
+
     // Assemble login message to server
     ss << "connect;" << userName << ";" << password << ";";
     ss >> temp1;
@@ -97,6 +112,10 @@ bool Client::logIn() {
     return false;
 }
 
+/*
+ * This function prompts the user to enter their user name and verifies that
+ * it is of an acceptable length.
+ */
 bool Client::getUserName() {
     userName = new char[MAX_LEN];
     cin.clear();
@@ -112,6 +131,10 @@ bool Client::getUserName() {
     return true;
 }
 
+/*
+ * This function prompts the user to enter their password and verifies that
+ * it is within an acceptable length.
+ */
 bool Client::getPassword() {
     password = new char[MAX_LEN];
     cin.clear();
@@ -127,14 +150,24 @@ bool Client::getPassword() {
     return true;
 }
 
-// RPCs to be implemented later
+/*
+ * This function transmits a character query to the server
+ */
 bool Client::queryTrait(const char *trait, const char *traitValue) {}
 
+/*
+ * This function submits a guess to the server about the target characters name.
+ */
 bool Client::guessName(const char *name) {}
 
+/*
+ * This function submits a command to the server to eliminate a character from the game
+ */
 bool Client::eliminatePerson(const char *name) {}
 
-// RPC: Disconnect
+/*
+ * This function submits a disconnect command to the server.
+ */
 bool Client::disconnectServer() {
     // Assemble disconnect message
     string temp = "disconnect";
@@ -151,7 +184,10 @@ bool Client::disconnectServer() {
     return false;
 }
 
-// Send message to server
+/*
+ * This function submits a message to the server.  It is used by other functions after they
+ * generate the detailed contents of their particular messages.
+ */
 bool Client::sendMessage(const string &title, char *message) {
     cout << "\n>> Sending " << title << " message to server." << endl;
 
@@ -167,7 +203,10 @@ bool Client::sendMessage(const string &title, char *message) {
     return false;
 }
 
-// Get response from server
+/*
+ * This function listens for a response message from the server.  It is used in conjunction
+ * with a message submitted to the server to validate that the message was received.
+ */
 bool Client::getResponse() {
     if (read(socketID, buffer, 1024)) {
         cout << ">> Server response: " << buffer << endl;

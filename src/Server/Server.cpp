@@ -1,9 +1,9 @@
 /*
  * CPSC 5042: Comp Systems Principles II
- * Client-Server Project: Milestone 1
+ * Client-Server Project: Milestone 2
  * Group 3: Andrew Shell, Steph Mills, Zi Wang, Leonardo Levy
  * Professor: Michael McKee
- * Date: Feb 2022
+ * Due: 10 Mar 2022
  */
 
 #include <unistd.h>
@@ -30,7 +30,9 @@ Server::Server(int portIn) {
 
 Server::~Server() = default;
 
-// Create server "listening" socket
+/*
+ * Create server "listening" socket
+*/
 bool Server::startServer() {
     int opt = 1;
     const int BACKLOG = 10;
@@ -77,7 +79,9 @@ bool Server::startServer() {
     return true;
 }
 
-// Create client-server "connection" socket
+/*
+ * Create client-server "connection" socket
+ */
 bool Server::connectWithClient() {
     int addrLen = sizeof(address);
 
@@ -94,7 +98,9 @@ bool Server::connectWithClient() {
     return true;
 }
 
-// Process all the RPCs
+/*
+ * Process all the RPCs
+*/
 bool Server::rpcProcess() {
     vector<string> arrayTokens;
     ssize_t msgByte;
@@ -142,7 +148,9 @@ bool Server::rpcProcess() {
     return true;
 }
 
-// Parse incoming message
+/*
+ * Parse incoming message
+ */
 void Server::parseTokens(char* buffer, vector<string> &a) {
     char *token;
 
@@ -152,7 +160,9 @@ void Server::parseTokens(char* buffer, vector<string> &a) {
     }
 }
 
-// Print incoming message
+/*
+ * Print incoming message
+ */
 void Server::printToken(vector<string> &arrayTokens) {
     // Enumerate through the tokens. The first token is always the specific RPC name
     cout << ">> Token(s) received: ";
@@ -162,12 +172,16 @@ void Server::printToken(vector<string> &arrayTokens) {
     cout << endl;
 }
 
-// Send response to client
+/*
+ * Send response to client
+ */
 bool Server::sendResponse(char *message) {
     return send(socketID, message, strlen(message) + 1, 0);
 }
 
-// RPC: Connect/Login
+/*
+ * RPC: Connect/Login
+ */
 bool Server::rpcConnect(vector<string> &arrayTokens) {
     cout << ">> Processing RPC: Connect" << endl << endl;
     cout << ">> Validating login info." << endl;
@@ -184,19 +198,23 @@ bool Server::rpcConnect(vector<string> &arrayTokens) {
 
 }
 
-// RPC: Other PRCs
+/*
+ * RPC: Other RPCs
+ */
 bool Server::rpcStatus() {
     cout << ">> Processing RPC: Status" << endl << endl;
     return true;
 }
 
-// RPC: Disconnect
+/*
+ * RPC: Disconnect
+ */
 bool Server::rpcDisconnect() {
     cout << ">> Processing RPC: Disconnect" << endl << endl;
     // Send Response back on our socket
     string response = "Disconnect successful.";
     if (sendResponse(&response[0]))
-        cout << ">> Informed client disconnect successful.";
+        cout << ">> Informed client disconnect was successful.";
 
     return true;
 }
