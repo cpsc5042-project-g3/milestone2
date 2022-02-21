@@ -39,6 +39,9 @@ private:
     bool sendResponse(char* message);
     bool rpcConnect(std::vector<std::string>& arrayTokens);
     bool rpcDisconnect();
+    bool rpcGuess(string name);
+    bool rpcQuery(string trait, string value);
+    bool rpcEliminatePerson(string name);
     static bool rpcStatus();
     bool validLogin(const string& userName, const string& password);
     void parseTokens(char* buffer, vector<string>& a);

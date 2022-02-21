@@ -81,8 +81,8 @@ void ParseTokens(char *buffer, std::vector<std::string> &a) {
 }
 
 int main(int argc, char const *argv[]) {
-    const char *serverIP = argv[1];   // IP address
-    const int port = atoi(argv[2]);   // PORT number: has to match server PORT
+    const char *serverIP = argv[1];         // IP address
+    const int port = atoi(argv[2]);    // PORT number: has to match server PORT
     auto *client = new Client();
     bool connected;
     bool loggedIn = false;

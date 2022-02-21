@@ -132,17 +132,31 @@ bool Server::rpcProcess() {
 
         if (rpcName == "connect") {  // This step is actually to authenticate user
             rpcConnect(arrayTokens);
-        } else if (rpcName == "disconnect") {
+            // TODO: need to handle a rpcConnect failure
+        }
+        else if (rpcName == "disconnect") {
             rpcDisconnect();
+            // TODO: need to handle a rpcDisconnect failure
             continueOn = false; // We are going to leave this loop, as we are done
-        } else if (rpcName == "status") {
+        }
+        else if (rpcName == "guess") {
+            rpcGuess();
+            // TODO: need to handle a rpcGuess failure
+        }
+        else if (rpcName == "query") {
+            rpcQuery();
+            // TODO: need to handle a rpcQuery failure
+        }
+        else if (rpcName == "status") {
             rpcStatus();   // Status RPC
-        } else {
+        }
+        else {
             string error = "Error: Invalid request";
             cerr << ">> " << error << endl;
             sendResponse(&error[0]);
             // Not in our list, perhaps, print out what was sent
         }
+
         delete[] buffer;
     }
     return true;
@@ -193,17 +207,9 @@ bool Server::rpcConnect(vector<string> &arrayTokens) {
     string userNameString = arrayTokens[USERNAMETOKEN];
     string passwordString = arrayTokens[PASSWORDTOKEN];
 
-    // Our Authentication Logic.
+    // Our authentication logic; validLogin function catches bad userName or password
     return validLogin(userNameString, passwordString);
 
-}
-
-/*
- * RPC: Other RPCs
- */
-bool Server::rpcStatus() {
-    cout << ">> Processing RPC: Status" << endl << endl;
-    return true;
 }
 
 /*
@@ -216,6 +222,72 @@ bool Server::rpcDisconnect() {
     if (sendResponse(&response[0]))
         cout << ">> Informed client disconnect was successful.";
 
+    return true;
+}
+
+/*
+ * This function checks to see if the guess provided by the client was
+ * accurate or if it failed.
+ */
+bool Server::rpcGuess(string name) {
+    return character.name == name;
+}
+
+/*
+ * This function eliminates a character specified by the client from the list
+ * of active characters.
+ */
+bool Server::rpcEliminatePerson(string name) {
+    bool success;
+
+    // TODO: implement me
+
+    return success;
+}
+
+/*
+ * This function checks to see if the query provided by the client for the given
+ * trait matches the values for the target character selected by the server.
+ */
+bool Server::rpcQuery(string trait, string value) {
+    /*
+     * TODO:
+     * not sure if string datatype is correct for value, particular since
+     * a lot of these traits will be boolean values.
+     */
+
+    if (trait == "hair") {
+        return character.hairColor == value;
+    }
+    else if (trait == "eyes") {
+        return character.eyeColor = value;
+    }
+    else if (trait == "glasses") {
+        return character.glasses == "yes";
+    }
+    else if (trait == "mustache") {
+        return character.mustache == "yes";
+    }
+    else if (trait == "beard") {
+        return character.beard == "yes";
+    }
+    else if (trait == "chinSize") {
+        return character.chinSize == value;
+    }
+    else if (trait == "cleftChin") {
+        return character.cleftChin == "yes";
+    }
+    else {
+        // unrecognized trait
+        return false;
+    }
+}
+
+/*
+ * RPC: Other RPCs
+ */
+bool Server::rpcStatus() {
+    cout << ">> Processing RPC: Status" << endl << endl;
     return true;
 }
 
