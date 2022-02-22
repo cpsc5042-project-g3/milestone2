@@ -17,8 +17,9 @@ using namespace std;
 
 Client::Client() {
     socketID = 0;          // server-client "connection" socket descriptor
-    buffer = nullptr;
     connected = false;
+    userName = nullptr;
+    password = nullptr;
 }
 
 Client::~Client() {
@@ -37,7 +38,7 @@ bool Client::connectServer(const char *serverIP, int port) {
         perror(">> Error: Socket creation failed");
         return false;
     }
-    cout << ">> Socket creation successful." << endl;
+    printf(">> Socket creation successful. You are Client %d.\n", socketID);
 
     // Specifies the communication domain for "server address"
     serv_addr.sin_family = AF_INET;
@@ -88,8 +89,8 @@ bool Client::logIn() {
     // Send login message to server and get response
     if (sendMessage(messageTitle, temp2)) {
         if (getResponse()) {
-            if (strcmp(buffer, "User name and password validated.") == 0) {
-                cout << ">> You are now logged in." << endl;
+            if (strcmp(response, "User name and password validated.") == 0) {
+                printf(">> %s, you are now logged in.\n", userName);
                 return true;
             }
         }
@@ -144,7 +145,7 @@ bool Client::disconnectServer() {
     if (connected)
         if (sendMessage("Disconnect", logoffRPC))
             if (getResponse())
-                if (strcmp(buffer, "Disconnect successful.") == 0) {
+                if (strcmp(response, "Disconnect successful.") == 0) {
                     cout << ">> Now you are logged off and disconnected." << endl;
                     return true;
                 }
@@ -152,14 +153,13 @@ bool Client::disconnectServer() {
 }
 
 // Send message to server
-bool Client::sendMessage(const string &title, char *message) {
+bool Client::sendMessage(const string &title, char *message) const {
     cout << "\n>> Sending " << title << " message to server." << endl;
 
     // Assemble message
-    buffer = message;
-    size_t nlen = strlen(buffer);
-    buffer[nlen] = 0;   // Put the null terminator
-    if (send(socketID, buffer, strlen(buffer) + 1, 0)) {
+    size_t nlen = strlen(message);
+    message[nlen] = 0;   // Put the null terminator
+    if (send(socketID, message, strlen(message) + 1, 0)) {
         cout << ">> " << title << " message sent." << endl;
         return true;
     }
@@ -169,9 +169,15 @@ bool Client::sendMessage(const string &title, char *message) {
 
 // Get response from server
 bool Client::getResponse() {
+    char buffer[1024] = { 0 };
     if (read(socketID, buffer, 1024)) {
         cout << ">> Server response: " << buffer << endl;
+        strcpy(response, buffer);
         return true;
     }
     return false;
+}
+
+char* Client::getFinalUserName() {
+    return userName;
 }
