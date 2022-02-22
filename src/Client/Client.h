@@ -24,19 +24,21 @@ public:
     bool queryTrait(const char* trait, const char* traitValue);
     bool guessName(const char* name);
     bool eliminatePerson(const char* name);
+    char* getFinalUserName();
 
 private:
     const int MAX_LEN = 10;
     char* userName;
     char* password;
-    char* buffer;
+    char response[50];
     int socketID;
     bool connected;
 
-    bool sendMessage(const string& title, char* message);
+    bool sendMessage(const string& title, char* message) const;
     bool getResponse();
     bool getUserName();
     bool getPassword();
+
 };
 
 #endif //CLIENT_CLIENT_H

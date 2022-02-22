@@ -17,22 +17,20 @@ int main(int argc, char const *argv[]) {
     auto *serverObj = new Server(port);
 
     // Create server listening socket
-    if (serverObj->startServer())
-        statusOk = true;
+    statusOk = serverObj->startServer();
 
     // Create server-client connection socket
     while (statusOk) {
 
-        // Once connected with the client, start accepting RPC
-        if (serverObj->connectWithClient()) {
+        statusOk = serverObj->connectWithClient();
+//        // Once connected with the client, start accepting RPC
+//        if (serverObj->connectWithClient()) {
+//
+//            // Start interaction with client.
+//            // This will be ongoing until client sends a "Disconnect" RPC
+//            serverObj->rpcProcess();
 
-            // Start interaction with client.
-            // This will be ongoing until client sends a "Disconnect" RPC
-            serverObj->rpcProcess();
-
-            cout << "\n>> Client session ended." << endl;
-            cout << ">> Waiting for next client." << endl;
-        }
+//        }
     }
 
     delete serverObj;

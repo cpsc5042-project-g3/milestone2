@@ -39,11 +39,13 @@ void displayMenu1() {
     cout << "Your choice: ";
 }
 
+
 /*
  * This function display the game menu to the user, prompting them for the allowed game functions.
  */
-void displayMenu2() {
-    cout << "Please pick an option from the menu: \n"
+
+void displayMenu2(char* myName) {
+    cout << myName << ", please pick an option from the menu: \n"
          << "\t1. Start a new game \n" // login required if not already logged in
          << "\t2. Query Trait\n"
          << "\t3. Eliminate Person\n"
@@ -81,12 +83,14 @@ void ParseTokens(char *buffer, std::vector<std::string> &a) {
 }
 
 int main(int argc, char const *argv[]) {
-    const char *serverIP = argv[1];         // IP address
-    const int port = atoi(argv[2]);    // PORT number: has to match server PORT
+    const char *serverIP = argv[1];   // IP address
+    const int port = atoi(argv[2]);   // PORT number: has to match server PORT
     auto *client = new Client();
     bool connected;
     bool loggedIn = false;
     int menuPick;
+    char *myName;
+
 
     welcome();
 
@@ -106,9 +110,11 @@ int main(int argc, char const *argv[]) {
         }
     }
 
+    myName = client->getFinalUserName();
+
     // Start game (Game logic to follow)
     while (connected) {
-        displayMenu2();
+        displayMenu2(myName);
         menuPick = getMenuPick(2);
         switch (menuPick) {
             case 1: // Start a new game

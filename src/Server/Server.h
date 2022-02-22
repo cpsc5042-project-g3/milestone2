@@ -27,7 +27,6 @@ public:
     ~Server();
     bool startServer();
     bool connectWithClient();
-    bool rpcProcess();
 
 private:
     const int BUFFER_SIZE = 1024;
@@ -36,16 +35,7 @@ private:
     int port;
     struct sockaddr_in address{};
 
-    bool sendResponse(char* message);
-    bool rpcConnect(std::vector<std::string>& arrayTokens);
-    bool rpcDisconnect();
-    bool rpcGuess(string name);
-    bool rpcQuery(string trait, string value);
-    bool rpcEliminatePerson(string name);
-    static bool rpcStatus();
-    bool validLogin(const string& userName, const string& password);
-    void parseTokens(char* buffer, vector<string>& a);
-    static void printToken(vector<string>& a);
+    static void * myThreadFun(void* vargp);
 };
 
 
