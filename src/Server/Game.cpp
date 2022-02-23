@@ -22,18 +22,24 @@ Game::~Game() {}
  * This function generates a nonzero random number between 1 and MAX_GAMES
  * and assigns it to the game ID.
  */
-void Game::createGameID() {}
+void Game::setGameID() {}
 
 /*
- * This function reads the file containing Characters and their
+ * This function reads the file of game Characters and their
  * associated traits and stores it in the sourceList data structure.
  * this function returns false in the operation failed.
  */
-bool Game::populateMasterList() {}
+bool Game::setMasterList() {}
 
 /*
  * This function selects a character at random from the sourceList data
  * structure.  It returns false if the data structure is empty or the
  * operation otherwise fails.
  */
-bool Game::selectGameCharacter() {}
+bool Game::setGameCharacter() {}
+
+/*
+ * This function returns a pointer to the sourceList data structure.  If
+ * the operation fails, it returns a nullptr
+ */
+Character* Game::getSourceList() {}

@@ -17,9 +17,12 @@ class Game {
 public:
     Game();
     ~Game();
-    void createGameID();
-    bool populateMasterList();
-    bool selectGameCharacter();
+    void setGameID();
+    bool setMasterList();
+    bool setGameCharacter();
+    int getGameID();
+    int getGameCharacter();
+    Character* getSourceList();
 
 private:
     int gameID;
