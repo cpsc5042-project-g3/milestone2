@@ -1,9 +1,9 @@
 /*
  * CPSC 5042: Comp Systems Principles II
- * Client-Server Project: Milestone 1
+ * Client-Server Project: Milestone 2
  * Group 3: Andrew Shell, Steph Mills, Zi Wang, Leonardo Levy
  * Professor: Michael McKee
- * Date: Feb 2022
+ * Due: 10 Mar 2022
  */
 
 #include <unistd.h>
@@ -32,7 +32,9 @@ Server::Server(int portIn) {
 
 Server::~Server() = default;
 
-// Create server "listening" socket
+/*
+ * Create server "listening" socket
+*/
 bool Server::startServer() {
     int opt = 1;
     const int BACKLOG = 10;
@@ -79,7 +81,9 @@ bool Server::startServer() {
     return true;
 }
 
-// Create client-server "connection" socket
+/*
+ * Create client-server "connection" socket
+ */
 bool Server::connectWithClient() {
     int addrLen = sizeof(address);
 

@@ -14,19 +14,36 @@
 
 using namespace std;
 
+/*
+ * This function generates a welcome message for the user when they first connect.
+ */
 void welcome() {
     cout << "Welcome to Guess Who Game!" << endl;
 }
+
+/*
+ * This function generates a goodbye message for the user when they finish using the client.
+ */
 void goodbye() {
     cout << ">> Thank you for playing the Guess Who Game! Come back again!" << endl;
 }
 
+/*
+ * This function display an initial message to the user, prompting them to login to the server
+ * or disconnect.
+ */
 void displayMenu1() {
     cout << "Please pick an option from the menu: \n"
          << "\t1. Login \n"
          << "\t2. Disconnect\n";
     cout << "Your choice: ";
 }
+
+
+/*
+ * This function display the game menu to the user, prompting them for the allowed game functions.
+ */
+
 void displayMenu2(char* myName) {
     cout << myName << ", please pick an option from the menu: \n"
          << "\t1. Start a new game \n" // login required if not already logged in
@@ -37,6 +54,9 @@ void displayMenu2(char* myName) {
     cout << "Your choice: ";
 }
 
+/*
+ * This function gets the menu option the user has selected.  It is usable with either display menu.
+ */
 int getMenuPick(int menu) {
     string userPick;
     while (true) {
@@ -49,6 +69,9 @@ int getMenuPick(int menu) {
     }
 }
 
+/*
+ * This function parses the token received in a message between the server and the client.
+ */
 void ParseTokens(char *buffer, std::vector<std::string> &a) {
     char *token;
     char *rest = (char *) buffer;
