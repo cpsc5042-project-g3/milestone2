@@ -11,23 +11,24 @@
 
 #include "Character.h"
 
-const int MAX_GAMES = 1000;
-
 class Game {
 public:
     Game();
     ~Game();
     void setGameID();
-    bool setMasterList();
+    bool setSourceList();
+    bool addCharacter();
     bool setGameCharacter();
     int getGameID();
     int getGameCharacter();
-    Character* getSourceList();
+    vector<Character*> getSourceList();
 
 private:
+    void parseTokens(char* text, vector<string> &v);
+
     int gameID;
-    Character character;
-    Character sourceList[MAX_GAMES];
+    Character gameCharacter;
+    vector<Character*> sourceList;
 };
 
 

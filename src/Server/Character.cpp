@@ -16,7 +16,11 @@ using namespace std;
  */
 Character::Character() {
     // initialize name, traits, and trait values to known unassigned values
-    name = "TBD";
+    Character("TBD");
+}
+
+Character::Character(string nameIn) {
+    name = nameIn;
     traits.clear();
 }
 
@@ -31,15 +35,15 @@ Character::~Character() {
  * This function adds the supplied trait and value to the character objects
  * trait map.  If the trait already exists, the function returns false.
  */
-bool Character::addTrait(string trait, string traitValue) {
+bool Character::addTrait(string traitName, string traitValue) {
     // check to see if trait exists
-    if (traits.find(trait) != traits.end()) {
+    if (traits.find(traitName) != traits.end()) {
         // trait already exists
         return false;
     }
 
     // add key-value pair to map
-    traits.insert(trait, traitValue);
+    traits.insert(traitName, traitValue);
     return true;
 }
 

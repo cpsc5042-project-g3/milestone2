@@ -19,8 +19,9 @@ const int numTraits = 5;
 class Character {
 public:
     Character();
+    Character(string nameIn);
     ~Character();
-    bool addTrait(string trait, string traitValue);
+    bool addTrait(string traitName, string traitValue);
     bool setName(string characterName);
     bool setTrait(string trait, string traitValue);
     string getName();

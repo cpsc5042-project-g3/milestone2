@@ -80,7 +80,7 @@ bool RPCImpl::rpcProcess() {
 
 // Parse incoming message
 void RPCImpl::parseTokens(char* buffer, vector<string> &a) {
-    char *token;
+    char* token;
     char* rest = (char*)buffer;
 
     cout << ">> Parsing tokens." << endl;
@@ -106,7 +106,6 @@ bool RPCImpl::sendResponse(char *message) const {
     message[nlen] = 0;
     return send(socketID, message, strlen(message) + 1, 0);
 }
-
 
 // RPC: Connect/Login
 bool RPCImpl::rpcConnect(vector<string> &arrayTokens) {

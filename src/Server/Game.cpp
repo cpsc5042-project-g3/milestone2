@@ -6,12 +6,19 @@
  * Due: 10 Mar 2022
  */
 
+#include <fstream>
+#include <iostream>
+#include <vector>
+#include <string.h>
 #include "Game.h"
 
+using namespace std;
+
 /*
- * This is a constructor for a Game object
+ * This is the default constructor for a Game object
  */
 Game::Game() {}
+
 
 /*
  * This is the destructor for a Game object
@@ -25,11 +32,68 @@ Game::~Game() {}
 void Game::setGameID() {}
 
 /*
- * This function reads the file of game Characters and their
- * associated traits and stores it in the sourceList data structure.
- * this function returns false in the operation failed.
+ * This function reads the file of game Characters and their associated
+ * traits and stores it in the sourceList data structure.  This function
+ * returns false in the operation failed.
  */
-bool Game::setMasterList() {}
+bool Game::setSourceList() {
+    char* rest;
+    int lineNum;
+    string line;
+    vector<string> traitNames, traitValues;
+
+    // open file of characters and their traits
+    ifstream inFile("CharacterList.csv");
+    if (!inFile.is_open()) {
+        cout << ">> Failed to import character properties." << endl;
+    }
+
+    // read first line of file to get trait names
+    getline(inFile,line);
+    lineNum++;
+
+    // parse first line to store character traits in the traitNames vector
+    rest = strcpy(new char[line.length() + 1], line.c_str());
+    parseTokens(rest, traitNames);
+
+    // read trait values and assign to sourceList
+    while (inFile.peek() != EOF) {
+        // read and parse line
+        getline(inFile, line);
+        lineNum++;
+        rest = strcpy(new char[line.length() + 1], line.c_str());
+        parseTokens(rest, traitValues);
+
+        // confirm character data is fully present and no extra info is there.  Assumes
+        // "Name" is the first column.
+        if (traitNames.size() == traitValues.size()) {
+            Character* c = new Character();
+            for (int i = 0; i < traitNames.size(); i++) {
+                if (i == 0) {
+                    // assign name
+                    c->setName(traitNames.at(i));
+                } else {
+                    // add trait
+                    c->addTrait(traitNames.at(i), traitValues.at(i));
+                }
+            }
+
+            // Character creation complete.  Add to sourceList.
+            if (c != nullptr) {
+                sourceList.push_back(c);
+            }
+        }
+        else {
+            // traits are either missing or there is extra information
+            cerr << ">> Issue with character specified on line: " << lineNum;
+            cerr << ".  Character input skipped." << endl;
+        }
+    }
+
+    // cleanup
+    delete[] rest;
+}
+
 
 /*
  * This function selects a character at random from the sourceList data
@@ -42,4 +106,17 @@ bool Game::setGameCharacter() {}
  * This function returns a pointer to the sourceList data structure.  If
  * the operation fails, it returns a nullptr
  */
-Character* Game::getSourceList() {}
+vector<Character*> Game::getSourceList() {}
+
+/*
+ * This function parses the comma-separated character traits in the
+ * "CharacterTraits.txt" file and stores them in the provided vector.
+ */
+void Game::parseTokens(char* text, vector<string> &v) {
+    char* trait;
+    char* rest = (char*) text;
+
+    while ((trait = strtok_r(rest, ",", &rest))) {
+        v.push_back(trait);
+    }
+}
