@@ -23,18 +23,25 @@ Game::Game() {}
 /*
  * This is the destructor for a Game object
  */
-Game::~Game() {}
+Game::~Game() {
+}
 
 /*
  * This function generates a nonzero random number between 1 and MAX_GAMES
  * and assigns it to the game ID.
  */
-void Game::setGameID() {}
+void Game::setGameID() {
+    // seed random number generator
+    srand(time(NULL));
+
+    // generate gameID
+    gameID = rand() % MAX_GAMES + 1;
+}
 
 /*
  * This function reads the file of game Characters and their associated
  * traits and stores it in the sourceList data structure.  This function
- * returns false in the operation failed.
+ * returns false if the operation failed.
  */
 bool Game::setSourceList() {
     char* rest;
@@ -92,6 +99,8 @@ bool Game::setSourceList() {
 
     // cleanup
     delete[] rest;
+
+    return true;
 }
 
 
@@ -100,13 +109,27 @@ bool Game::setSourceList() {
  * structure.  It returns false if the data structure is empty or the
  * operation otherwise fails.
  */
-bool Game::setGameCharacter() {}
+bool Game::setGameCharacter() {
+    if (sourceList.size() <= 0) {
+        return false;
+    }
+
+    // seed random number generator
+    srand(time(NULL));
+
+    // get selected character
+    int index = rand() % sourceList.size();
+    gameCharacter = *sourceList.at(index);
+
+}
 
 /*
  * This function returns a pointer to the sourceList data structure.  If
  * the operation fails, it returns a nullptr
  */
-vector<Character*> Game::getSourceList() {}
+vector<Character*> Game::getSourceList() {
+    return sourceList;
+}
 
 /*
  * This function parses the comma-separated character traits in the
