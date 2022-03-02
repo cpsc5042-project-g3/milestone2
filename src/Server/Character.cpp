@@ -7,7 +7,6 @@
  */
 
 #include "Character.h"
-#include <map>
 
 using namespace std;
 
@@ -16,12 +15,25 @@ using namespace std;
  */
 Character::Character() {
     // initialize name, traits, and trait values to known unassigned values
-    Character("TBD");
+    this->name = "TBD";
+    this->clearTraits();
 }
 
+/*
+ * This is an alternate constructor for a character object, using a provided
+ * name as an argument.
+ */
 Character::Character(string nameIn) {
     name = nameIn;
     traits.clear();
+}
+
+/*
+ * This is the copy constructor for a character object.
+ */
+Character::Character(Character const &copyCharacter) {
+    name = copyCharacter.name;
+    traits = copyCharacter.traits;      // copy traits map via overloaded assignment operator
 }
 
 /*
@@ -96,4 +108,24 @@ string Character::getTraitValue(string trait) {
     }
 
     return result;
+}
+
+/*
+ * This is the overload for the assignment operator.
+ */
+Character& Character::operator=(const Character& copyCharacter) {
+    // check for assignment to self
+    if (this != &copyCharacter) {
+        name = copyCharacter.name;
+        traits = copyCharacter.traits;
+    }
+
+    return *this;
+}
+
+/*
+ * This function allows a Character object to clear it own traits map.
+ */
+void Character::clearTraits() {
+    traits.clear();
 }

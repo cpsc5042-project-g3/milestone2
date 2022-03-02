@@ -17,11 +17,11 @@ public:
     Game();
     ~Game();
     void setGameID();
-    bool setSourceList();
-    bool addCharacter();
-    bool setGameCharacter();
-    int getGameID();
-    int getGameCharacter();
+    void setSourceList();
+    bool addCharacter(const Character& characterToAdd);
+    void setGameCharacter();
+    int getGameID() const;
+    Character* getGameCharacter();
     vector<Character*> getSourceList();
 
 private:

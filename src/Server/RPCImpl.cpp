@@ -1,11 +1,8 @@
 #include <unistd.h>
-#include <stdio.h>
+#include <cstdio>
 #include <sys/socket.h>
-#include <stdlib.h>
-#include <netinet/in.h>
-#include <string.h>
+#include <cstring>
 #include <vector>
-#include <iterator>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -13,6 +10,7 @@
 
 #include "RPCImpl.h"
 #include "LocalContext.h"
+#include "Game.h"
 
 
 using namespace std;
@@ -30,10 +28,12 @@ RPCImpl::RPCImpl(int socket)
     m_rpcCount = 0;
 };
 
-RPCImpl::~RPCImpl() {};
+RPCImpl::~RPCImpl() = default;
 
-
-// Process all the RPCs
+/*
+ * This function processes RPC received from a client, calling the appropriate function
+ * once determined.
+ */
 bool RPCImpl::rpcProcess() {
     char buffer[1024] = { 0 };
     vector<string> arrayTokens;
@@ -78,7 +78,10 @@ bool RPCImpl::rpcProcess() {
     return true;
 }
 
-// Parse incoming message
+/*
+ * This function parses incoming messages to identity the RPC and any
+ * included arguments for the RPC.
+ */
 void RPCImpl::parseTokens(char* buffer, vector<string> &a) {
     char* token;
     char* rest = (char*)buffer;
@@ -89,7 +92,10 @@ void RPCImpl::parseTokens(char* buffer, vector<string> &a) {
     }
 }
 
-// Print incoming message
+/*
+ * This function prints out the arguments included with an RPC.  This helps
+ * with troubleshooting.
+ */
 void RPCImpl::printToken(vector<string> &arrayTokens) {
     // Enumerate through the tokens. The first token is always the specific RPC name
     cout << ">> Token(s) received: ";
@@ -100,14 +106,19 @@ void RPCImpl::printToken(vector<string> &arrayTokens) {
     cout << endl;
 }
 
-// Send response to client
+/*
+ * This function sends a response to the client application via the esablished socket.
+ */
 bool RPCImpl::sendResponse(char *message) const {
     size_t nlen = strlen(message);
     message[nlen] = 0;
     return send(socketID, message, strlen(message) + 1, 0);
 }
 
-// RPC: Connect/Login
+/*
+ * This function validates a client's attempt to connect to the server.  Only permitted
+ * clients are allowed to continue.
+ */
 bool RPCImpl::rpcConnect(vector<string> &arrayTokens) {
     cout << ">> Processing RPC: Connect" << endl << endl;
     printf(">> Validating login info for Client %d.\n", socketID);
@@ -130,7 +141,9 @@ bool RPCImpl::rpcStatus() {
     return true;
 }
 
-// RPC: Disconnect
+/*
+ * This function disconnects the client from the server.
+ */
 bool RPCImpl::rpcDisconnect() {
     cout << ">> Processing RPC: Disconnect" << endl << endl;
     // Send Response back on our socket
