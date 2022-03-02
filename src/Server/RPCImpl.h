@@ -16,11 +16,11 @@
 
 #pragma once
 #include <unistd.h>
-#include <stdio.h>
+#include <cstdio>
 #include <sys/socket.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <netinet/in.h>
-#include <string.h>
+#include <cstring>
 #include <vector>
 #include <iterator>
 
@@ -28,7 +28,7 @@ using namespace std;
 class RPCImpl
 {
 public:
-    RPCImpl(int socket);
+    explicit RPCImpl(int socket);
     ~RPCImpl();
     bool rpcProcess();
 

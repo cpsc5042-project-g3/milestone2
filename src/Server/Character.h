@@ -19,13 +19,16 @@ const int numTraits = 5;
 class Character {
 public:
     Character();
-    Character(string nameIn);
-    ~Character();
+    explicit Character(string nameIn);
+    Character(const Character& copyCharacter);
+    virtual ~Character();
     bool addTrait(string traitName, string traitValue);
     bool setName(string characterName);
     bool setTrait(string trait, string traitValue);
+    void clearTraits();
     string getName();
     string getTraitValue(string trait);
+    Character& operator= (const Character& copyCharacter);
 
 private:
     string name;

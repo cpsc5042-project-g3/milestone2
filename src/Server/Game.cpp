@@ -9,7 +9,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-#include <string.h>
+#include <cstring>
 #include "Game.h"
 
 using namespace std;
@@ -17,13 +17,24 @@ using namespace std;
 /*
  * This is the default constructor for a Game object
  */
-Game::Game() {}
+Game::Game() {
+    // seed random number generator, to be used in gameID
+    srand(time(nullptr));
 
+    // initialize game properties
+    setGameID();
+    setSourceList();
+    setGameCharacter();
+}
 
 /*
  * This is the destructor for a Game object
  */
 Game::~Game() {
+    gameID = 0;
+    sourceList.clear();
+    gameCharacter.setName("TBD");
+    gameCharacter.clearTraits();
 }
 
 /*
@@ -31,9 +42,6 @@ Game::~Game() {
  * and assigns it to the game ID.
  */
 void Game::setGameID() {
-    // seed random number generator
-    srand(time(NULL));
-
     // generate gameID
     gameID = rand() % MAX_GAMES + 1;
 }
@@ -43,7 +51,7 @@ void Game::setGameID() {
  * traits and stores it in the sourceList data structure.  This function
  * returns false if the operation failed.
  */
-bool Game::setSourceList() {
+void Game::setSourceList() {
     char* rest;
     int lineNum;
     string line;
@@ -74,7 +82,7 @@ bool Game::setSourceList() {
         // confirm character data is fully present and no extra info is there.  Assumes
         // "Name" is the first column.
         if (traitNames.size() == traitValues.size()) {
-            Character* c = new Character();
+            auto c = new Character();
             for (int i = 0; i < traitNames.size(); i++) {
                 if (i == 0) {
                     // assign name
@@ -86,9 +94,7 @@ bool Game::setSourceList() {
             }
 
             // Character creation complete.  Add to sourceList.
-            if (c != nullptr) {
-                sourceList.push_back(c);
-            }
+            sourceList.push_back(c);
         }
         else {
             // traits are either missing or there is extra information
@@ -99,29 +105,47 @@ bool Game::setSourceList() {
 
     // cleanup
     delete[] rest;
-
-    return true;
 }
 
+/*
+ * This function adds a character from the master character list to the
+ * sourceList.
+ */
+bool Game::addCharacter(const Character& characterToAdd) {
+    int size = sourceList.size();
+
+    // create new character and add to list
+    Character newCharacter = characterToAdd;
+    sourceList.push_back(&newCharacter);
+
+    return sourceList.size() > size;
+}
 
 /*
  * This function selects a character at random from the sourceList data
  * structure.  It returns false if the data structure is empty or the
  * operation otherwise fails.
  */
-bool Game::setGameCharacter() {
-    if (sourceList.size() <= 0) {
-        return false;
-    }
-
-    // seed random number generator
-    srand(time(NULL));
-
+void Game::setGameCharacter() {
     // get selected character
     int index = rand() % sourceList.size();
     gameCharacter = *sourceList.at(index);
-
 }
+
+/*
+ * This function returns the gameID.
+ */
+int Game::getGameID() const {
+    return gameID;
+}
+
+/*
+ * This function returns the character selected for this game.
+ */
+Character* Game::getGameCharacter() {
+    return &gameCharacter;
+}
+
 
 /*
  * This function returns a pointer to the sourceList data structure.  If
@@ -140,6 +164,6 @@ void Game::parseTokens(char* text, vector<string> &v) {
     char* rest = (char*) text;
 
     while ((trait = strtok_r(rest, ",", &rest))) {
-        v.push_back(trait);
+        v.emplace_back(trait);
     }
 }

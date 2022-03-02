@@ -11,14 +11,9 @@
 #include <sys/socket.h>
 #include <cstdlib>
 #include <netinet/in.h>
-#include <cstring>
 #include <vector>
 #include <iterator>
 #include <iostream>
-#include <fstream>
-#include <sstream>
-#include <map>
-
 #include "Server.h"
 #include "RPCImpl.h"
 
@@ -105,7 +100,7 @@ bool Server::connectWithClient() {
         pthread_t thread_id;
         threadIDList.push_back(thread_id);
         int clientID = socketID;
-        pthread_create(&thread_id, NULL, myThreadFun, (void*)&clientID);
+        pthread_create(&thread_id, nullptr, myThreadFun, (void*)&clientID);
 
 
     }
@@ -125,6 +120,6 @@ void* Server::myThreadFun(void* vargp) {
     printf("<<-----<< Client %d, done with Thread.\n", clientID);
     printf("<<<<<< Client %d session ended.\n", clientID);
     cout << "\n>> Waiting for next client." << endl;
-    return NULL;
+    return nullptr;
 
 }
