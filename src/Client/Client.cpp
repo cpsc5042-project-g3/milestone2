@@ -37,7 +37,7 @@ Client::~Client() {
 
 /*
  * This function opens a socket connection with the server identified
- * by serverIP and port.
+ * by serverIP and port and sends a "RPC-connect" to server
  */
 bool Client::connectServer(const char *serverIP, int port) {
     struct sockaddr_in serv_addr{};
@@ -84,6 +84,7 @@ bool Client::connectServer(const char *serverIP, int port) {
 bool Client::logIn() {
     stringstream ss;
     string temp1, messageTitle;
+    char buffer[1024] = { 0 };
 
     // prompt for userName
     if (!getUserName()) {
@@ -105,8 +106,10 @@ bool Client::logIn() {
 
     // Send login message to server and get response
     if (sendMessage(messageTitle, temp2)) {
-        if (getResponse()) {
-            if (strcmp(response, "User name and password validated.") == 0) {
+        // Get server response
+        if (read(socketID, buffer, 1024)) {
+            cout << ">> Server response: " << buffer << endl;
+            if (strcmp(buffer, "User name and password validated.") == 0) {
                 printf(">> %s, you are now logged in.\n", userName);
                 return true;
             }
@@ -154,6 +157,27 @@ bool Client::getPassword() {
 }
 
 /*
+ * This function submits a "RPC-getCharacterNames" to server and gets back a string vector
+ * of character names, which will be kept and updated locally.
+ */
+bool Client::getCharacterNamesFromServer() {
+    char buffer[1024] = { 0 };
+    string temp = "getCharacterList";
+    char *getlistRPC = &temp[0];
+    if (connected)
+        if (sendMessage("Get Character List", getlistRPC))
+            // Get server response
+            if (read(socketID, buffer, 1024)) {
+                cout << ">> Character list received." << endl;
+                cout << ">> Making a local copy." << endl;
+                parseTokens(buffer);
+                return true;
+                }
+    return false;
+
+}
+
+/*
  * This function transmits a character query to the server
  */
 bool Client::queryTrait(const char *trait, const char *traitValue) {}
@@ -169,9 +193,10 @@ bool Client::guessName(const char *name) {}
 bool Client::eliminatePerson(const char *name) {}
 
 /*
- * This function submits a disconnect command to the server.
+ * This function submits a "RPC-disconnect" to the server.
  */
 bool Client::disconnectServer() {
+    char buffer[1024] = { 0 };
     // Assemble disconnect message
     string temp = "disconnect";
     char *logoffRPC = &temp[0];
@@ -179,11 +204,14 @@ bool Client::disconnectServer() {
     // Send disconnect message to server and get response
     if (connected)
         if (sendMessage("Disconnect", logoffRPC))
-            if (getResponse())
-                if (strcmp(response, "Disconnect successful.") == 0) {
+            // Get server response
+            if (read(socketID, buffer, 1024)) {
+                cout << ">> Server response: " << buffer << endl;
+                if (strcmp(buffer, "Disconnect successful.") == 0) {
                     cout << ">> Now you are logged off and disconnected." << endl;
                     return true;
                 }
+            }
     return false;
 }
 
@@ -207,19 +235,13 @@ bool Client::sendMessage(const string &title, char *message) const {
 }
 
 /*
- * This function listens for a response message from the server.  It is used in conjunction
- * with a message submitted to the server to validate that the message was received.
+ * This function parses incoming messages to tokens.
  */
-bool Client::getResponse() {
-    char buffer[1024] = { 0 };
-    if (read(socketID, buffer, 1024)) {
-        cout << ">> Server response: " << buffer << endl;
-        strcpy(response, buffer);
-        return true;
-    }
-    return false;
-}
+void Client::parseTokens(char *buffer) {
+    char *token;
+    char *rest = (char *) buffer;
 
-char* Client::getFinalUserName() {
-    return userName;
+    while ((token = strtok_r(rest, ";", &rest))) {
+        characterList.insert(token);
+    }
 }

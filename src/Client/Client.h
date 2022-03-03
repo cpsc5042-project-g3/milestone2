@@ -11,33 +11,37 @@
 
 #include <cstring>
 #include <string>
+#include <vector>
+#include <set>
 
 using namespace std;
 
 class Client {
 public:
+    char* userName;
+    set<string> characterList;
+
     Client();
     ~Client();
     bool connectServer(const char* serverIP, int port);
     bool logIn();
     bool disconnectServer();
+    bool getCharacterNamesFromServer();
     bool queryTrait(const char* trait, const char* traitValue);
     bool guessName(const char* name);
     bool eliminatePerson(const char* name);
-    char* getFinalUserName();
 
 private:
     const int MAX_LEN = 10;
-    char* userName;
+
     char* password;
-    char response[50];
     int socketID;
     bool connected;
 
     bool sendMessage(const string& title, char* message) const;
-    bool getResponse();
     bool getUserName();
     bool getPassword();
+    void parseTokens(char *buffer);
 
 };
 
