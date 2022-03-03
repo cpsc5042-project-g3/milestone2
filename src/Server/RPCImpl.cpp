@@ -7,8 +7,8 @@
 #include <fstream>
 #include <sstream>
 #include <map>
-
 #include "RPCImpl.h"
+#include <bits/stl_map.h>
 #include "LocalContext.h"
 #include "Game.h"
 
@@ -17,31 +17,42 @@ using namespace std;
 
 typedef struct _GlobalContext {
     int g_rpcCount;
-} GlobalContext;
-
+}
+GlobalContext;  // WHat is this?
 GlobalContext globalObj; // We need to protect this, as we don't want bad data
 
 
-RPCImpl::RPCImpl(int socket)
-{
+
+
+/*
+ * RPC Implementation constructor
+ */
+RPCImpl::RPCImpl(int socket) {
     socketID = socket;
-    m_rpcCount = 0;
+    m_rpcCount = 0; // TODO
+    newGame = new Game;
 };
 
-RPCImpl::~RPCImpl() = default;
+/*
+ * RPC Implementation destructor
+ */
+RPCImpl::~RPCImpl() {
+    delete newGame;
+}
 
 /*
  * This function processes RPC received from a client, calling the appropriate function
  * once determined.
  */
 bool RPCImpl::rpcProcess() {
-    char buffer[1024] = { 0 };
     vector<string> arrayTokens;
     ssize_t msgByte;
     bool continueOn = true;
     const int RPCTOKEN = 0;
 
     while ((continueOn)) {
+        // Buffer is re-initialized before processing each new RPC
+        char buffer[1024] = {0};
         // Blocked until a RPC is sent to server
         msgByte = read(socketID, buffer, sizeof(buffer));
         if (msgByte <= 0) {
@@ -63,11 +74,11 @@ bool RPCImpl::rpcProcess() {
 
         if (rpcName == "connect") {  // This step is actually to authenticate user
             rpcConnect(arrayTokens);
+        } else if (rpcName == "getCharacterList") {
+            getCharacterList();
         } else if (rpcName == "disconnect") {
             rpcDisconnect();
             continueOn = false; // We are going to leave this loop, as we are done
-        } else if (rpcName == "status") {
-            rpcStatus();   // Status RPC
         } else {
             string error = "Error: Invalid request";
             cerr << ">> " << error << endl;
@@ -82,9 +93,9 @@ bool RPCImpl::rpcProcess() {
  * This function parses incoming messages to identity the RPC and any
  * included arguments for the RPC.
  */
-void RPCImpl::parseTokens(char* buffer, vector<string> &a) {
-    char* token;
-    char* rest = (char*)buffer;
+void RPCImpl::parseTokens(char *buffer, vector<string> &a) {
+    char *token;
+    char *rest = (char *) buffer;
 
     cout << ">> Parsing tokens." << endl;
     while ((token = strtok_r(rest, ";", &rest))) {
@@ -107,7 +118,7 @@ void RPCImpl::printToken(vector<string> &arrayTokens) {
 }
 
 /*
- * This function sends a response to the client application via the esablished socket.
+ * This function sends a response to the client application via the established socket.
  */
 bool RPCImpl::sendResponse(char *message) const {
     size_t nlen = strlen(message);
@@ -135,10 +146,31 @@ bool RPCImpl::rpcConnect(vector<string> &arrayTokens) {
 
 }
 
-// RPC: Other PRCs
-bool RPCImpl::rpcStatus() {
-    cout << ">> Processing RPC: Status" << endl << endl;
+/*
+ * This function reduces the source list to a character name list
+ * and send it to the client to keep as a local copy.
+ */
+bool RPCImpl::getCharacterList() {
+    cout << ">> Processing RPC: Generating character list." << endl << endl;
+    cout << ">> Sending character list." << endl;
+
+    // Generate character list and sent it to client
+    string characterNames = getCharacterNamesOnly();
+    if (!sendResponse(&characterNames[0])) {
+        perror(">> Error: Failed to send character list to client.\n");
+        return false;
+    }
+    cout << ">> Character list sent successfully.\n";
     return true;
+}
+
+string RPCImpl::getCharacterNamesOnly() {
+    stringstream names;
+    for (Character *person: newGame->getSourceList()) {
+        names <<  person->getName();
+        names << ";";
+    }
+    return names.str();
 }
 
 /*
@@ -148,9 +180,10 @@ bool RPCImpl::rpcDisconnect() {
     cout << ">> Processing RPC: Disconnect" << endl << endl;
     // Send Response back on our socket
     string response = "Disconnect successful.";
-    if (sendResponse(&response[0]))
-        printf(">> Informed Client %d disconnect successful.\n", socketID);
-
+    if (!sendResponse(&response[0])) {
+        perror(">> Error: Failed to send disconnect successful message.\n");
+        return false;
+    }
     return true;
 }
 

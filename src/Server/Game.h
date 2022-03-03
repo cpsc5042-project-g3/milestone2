@@ -10,7 +10,7 @@
 #define SERVER_GAME_H
 
 #include "Character.h"
-int MAX_GAMES = 10000;
+const int MAX_GAMES = 10000;
 
 class Game {
 public:

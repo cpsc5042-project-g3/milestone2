@@ -107,8 +107,9 @@ bool Server::connectWithClient() {
     return true;
 }
 
-// A normal C function that is executed as a thread
-// when its name is specified in pthread_create()
+/*
+ * A normal C function that is executed as a thread when its name is specified in pthread_create()
+ */
 void* Server::myThreadFun(void* vargp) {
 
     sleep(1);
