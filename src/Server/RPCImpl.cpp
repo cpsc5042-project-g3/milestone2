@@ -22,8 +22,6 @@ GlobalContext;  // WHat is this?
 GlobalContext globalObj; // We need to protect this, as we don't want bad data
 
 
-
-
 /*
  * RPC Implementation constructor
  */
@@ -31,7 +29,7 @@ RPCImpl::RPCImpl(int socket) {
     socketID = socket;
     m_rpcCount = 0; // TODO
     newGame = new Game;
-};
+}
 
 /*
  * RPC Implementation destructor
@@ -74,12 +72,18 @@ bool RPCImpl::rpcProcess() {
 
         if (rpcName == "connect") {  // This step is actually to authenticate user
             rpcConnect(arrayTokens);
-        } else if (rpcName == "getCharacterList") {
-            getCharacterList();
-        } else if (rpcName == "disconnect") {
+        }
+        else if (rpcName == "getCharacterList") {
+            rpcGetCharacterList();
+        }
+        else if (rpcName == "getTraitList") {
+            rpcGetTraitList();
+        }
+        else if (rpcName == "disconnect") {
             rpcDisconnect();
             continueOn = false; // We are going to leave this loop, as we are done
-        } else {
+        }
+        else {
             string error = "Error: Invalid request";
             cerr << ">> " << error << endl;
             sendResponse(&error[0]);
@@ -120,7 +124,7 @@ void RPCImpl::printToken(vector<string> &arrayTokens) {
 /*
  * This function sends a response to the client application via the established socket.
  */
-bool RPCImpl::sendResponse(char *message) const {
+bool RPCImpl::sendResponse(char* message) const {
     size_t nlen = strlen(message);
     message[nlen] = 0;
     return send(socketID, message, strlen(message) + 1, 0);
@@ -143,14 +147,13 @@ bool RPCImpl::rpcConnect(vector<string> &arrayTokens) {
 
     // Our Authentication Logic.
     return validLogin(userNameString, passwordString);
-
 }
 
 /*
  * This function reduces the source list to a character name list
  * and send it to the client to keep as a local copy.
  */
-bool RPCImpl::getCharacterList() {
+bool RPCImpl::rpcGetCharacterList() {
     cout << ">> Processing RPC: Generating character list." << endl << endl;
     cout << ">> Sending character list." << endl;
 
@@ -164,6 +167,52 @@ bool RPCImpl::getCharacterList() {
     return true;
 }
 
+/*
+ * This function returns the list of possible trait names.
+ */
+bool RPCImpl::rpcGetTraitList() {
+    cout << ">> Processing RPC: Generating list of character traits." << endl << endl;
+
+    // Generate character trait list and send to client.
+    string characterTraits = getTraitNames();
+    cout << ">> Sending list of traits to client." << endl;
+    if (!sendResponse(&characterTraits[0])) {
+        perror(">> Error: Failed to send list of traits to client.\n");
+        return false;
+    }
+}
+
+/*
+ * This function checks the supplied traitName and traitValue against
+ * the selected game character.  It returns true if the trait value
+ * matches.
+ */
+bool RPCImpl::rpcQueryTrait(string& traitName, string& traitValue) {
+    bool success;
+    char* message;
+
+    // compare query with game character trait value
+    cout << ">> Comparing supplied trait name and value with game character." << endl;
+    success = newGame->getGameCharacter()->getTraitValue(traitName) == traitValue;
+    if (!success) {
+        cout << ">> Trait query DID NOT match game character traits." << endl;
+        message = "Trait query WAS NOT successful.";
+    }
+    else {
+        cout << ">> Trait query DID match game character traits." << endl;
+        message = "Trait query WAS successful.";
+    }
+
+    // notify client
+    if (!sendResponse(message)) {
+        perror(">> Error: Failed to send response to trait query.");
+    }
+}
+
+/*
+ * This function returns a string containing the names of all the possible
+ * characters a client can choose from.
+ */
 string RPCImpl::getCharacterNamesOnly() {
     stringstream names;
     for (Character *person: newGame->getSourceList()) {
@@ -171,6 +220,13 @@ string RPCImpl::getCharacterNamesOnly() {
         names << ";";
     }
     return names.str();
+}
+
+/*
+ * This function returns the traits that can be guessed at by the client.
+ */
+string RPCImpl::getTraitNames() {
+    return newGame->getGameCharacter()->getTraitNames();
 }
 
 /*
