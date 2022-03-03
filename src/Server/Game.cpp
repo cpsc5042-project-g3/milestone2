@@ -10,6 +10,7 @@
 #include <iostream>
 #include <vector>
 #include <cstring>
+#include <sstream>
 #include "Game.h"
 
 using namespace std;
@@ -73,6 +74,8 @@ void Game::setSourceList() {
 
     // read trait values and assign to sourceList
     while (inFile.peek() != EOF) {
+        // clear trait values before reading next line
+        traitValues.clear();
         // read and parse line
         getline(inFile, line);
         lineNum++;
@@ -86,7 +89,7 @@ void Game::setSourceList() {
             for (int i = 0; i < traitNames.size(); i++) {
                 if (i == 0) {
                     // assign name
-                    c->setName(traitNames.at(i));
+                    c->setName(traitValues.at(i));
                 } else {
                     // add trait
                     c->addTrait(traitNames.at(i), traitValues.at(i));

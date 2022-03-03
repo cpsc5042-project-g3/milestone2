@@ -55,7 +55,7 @@ bool Character::addTrait(string traitName, string traitValue) {
     }
 
     // add key-value pair to map
-    traits.insert(traitName, traitValue);
+    traits.insert(pair<string, string>(traitName, traitValue));
     return true;
 }
 

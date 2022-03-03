@@ -23,14 +23,7 @@ int main(int argc, char const *argv[]) {
     while (statusOk) {
 
         statusOk = serverObj->connectWithClient();
-//        // Once connected with the client, start accepting RPC
-//        if (serverObj->connectWithClient()) {
-//
-//            // Start interaction with client.
-//            // This will be ongoing until client sends a "Disconnect" RPC
-//            serverObj->rpcProcess();
 
-//        }
     }
 
     delete serverObj;

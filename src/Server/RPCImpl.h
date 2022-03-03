@@ -13,7 +13,6 @@
  client
 */
 
-
 #pragma once
 #include <unistd.h>
 #include <cstdio>
@@ -23,20 +22,20 @@
 #include <cstring>
 #include <vector>
 #include <iterator>
+#include "Game.h"
 
 using namespace std;
-class RPCImpl
-{
+class RPCImpl {
 public:
     explicit RPCImpl(int socket);
     ~RPCImpl();
     bool rpcProcess();
 
-
 private:
     const int BUFFER_SIZE = 1024;
     int m_rpcCount;
     int socketID;
+    Game *newGame;
 
     // First one in this function should be a connect, and it
     // will continue try to process RPC's until a Disconnect happens
@@ -44,8 +43,9 @@ private:
     static void printToken(vector<string>& a);
     bool sendResponse(char* message) const;
     bool rpcConnect(std::vector<std::string>& arrayTokens);
+    bool getCharacterList();
+    string getCharacterNamesOnly();
     bool rpcDisconnect();
-    static bool rpcStatus();
     bool validLogin(const string& userName, const string& password);
 
 };

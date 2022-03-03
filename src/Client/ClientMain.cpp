@@ -39,12 +39,10 @@ void displayMenu1() {
     cout << "Your choice: ";
 }
 
-
 /*
  * This function display the game menu to the user, prompting them for the allowed game functions.
  */
-
-void displayMenu2(char* myName) {
+void displayMenu2(char *myName) {
     cout << myName << ", please pick an option from the menu: \n"
          << "\t1. Start a new game \n" // login required if not already logged in
          << "\t2. Query Trait\n"
@@ -52,6 +50,25 @@ void displayMenu2(char* myName) {
          << "\t4. Make a Guess\n"
          << "\t5. Log off and disconnect\n";
     cout << "Your choice: ";
+}
+
+/*
+ * This function displays the remaining characters to be guessed from.
+ */
+void displayCharacterList(Client *client) {
+    set<string> localCopy = client->characterList;
+    cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+    printf("Here are the %lu remaining character(s):\n", localCopy.size());
+
+    int formatter = 0;    // display a max of 10 names per line
+    for (string name:localCopy) {
+        cout << name << " ";
+        formatter++;
+        if (formatter % 10 == 0)
+            cout << endl;
+    }
+
+    cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" << endl;
 }
 
 /*
@@ -91,7 +108,6 @@ int main(int argc, char const *argv[]) {
     int menuPick;
     char *myName;
 
-
     welcome();
 
     // Connect to server
@@ -110,10 +126,12 @@ int main(int argc, char const *argv[]) {
         }
     }
 
-    myName = client->getFinalUserName();
+    myName = client->userName;
 
     // Start game (Game logic to follow)
     while (connected) {
+        client->getCharacterNamesFromServer();  // send RPC: get character name list from server
+        displayCharacterList(client);
         displayMenu2(myName);
         menuPick = getMenuPick(2);
         switch (menuPick) {
