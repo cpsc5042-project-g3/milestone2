@@ -22,7 +22,7 @@ Milestone 2 TO DO:
 - RPC: Query trait
   - Client >> Ask user which trait they want to query 
   - Client >> Implement ```Client::queryTrait()``` function to send RPC message 
-  - Server >> Add function "RPCImpl::rpcQueryTrait()``` to receive RPC
+  - Server >> Add function ```RPCImpl::rpcQueryTrait()``` to receive RPC
   - Server >> Send client a yes/no response 
 
 
