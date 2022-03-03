@@ -72,6 +72,17 @@ bool Character::setName(string characterName) {
 }
 
 /*
+ * This function returns all the traits names (not values) for the character
+ */
+string Character::getTraitNames() {
+    string traitNames;
+    for (map<string, string>::iterator iter = traits.begin(); iter != traits.end(); ++iter) {
+        traitNames += iter->first + " ";
+    }
+    return traitNames;
+}
+
+/*
  * This function set the value of the supplied trait.  If the trait is not
  * found, it returns false.
  */

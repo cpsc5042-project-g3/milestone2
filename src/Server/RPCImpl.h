@@ -43,8 +43,11 @@ private:
     static void printToken(vector<string>& a);
     bool sendResponse(char* message) const;
     bool rpcConnect(std::vector<std::string>& arrayTokens);
-    bool getCharacterList();
+    bool rpcGetCharacterList();
+    bool rpcGetTraitList();
+    bool rpcQueryTrait(string& traitName, string& traitValue);
     string getCharacterNamesOnly();
+    string getTraitNames();
     bool rpcDisconnect();
     bool validLogin(const string& userName, const string& password);
 

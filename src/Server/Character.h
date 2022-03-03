@@ -27,6 +27,7 @@ public:
     bool setTrait(string trait, string traitValue);
     void clearTraits();
     string getName();
+    string getTraitNames();
     string getTraitValue(string trait);
     Character& operator= (const Character& copyCharacter);
 

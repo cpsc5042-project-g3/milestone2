@@ -82,8 +82,8 @@ void Game::setSourceList() {
         rest = strcpy(new char[line.length() + 1], line.c_str());
         parseTokens(rest, traitValues);
 
-        // confirm character data is fully present and no extra info is there.  Assumes
-        // "Name" is the first column.
+        // confirm character data is fully present and no extra info is there.
+        // Assumes "Name" is the first column.
         if (traitNames.size() == traitValues.size()) {
             auto c = new Character();
             for (int i = 0; i < traitNames.size(); i++) {
@@ -97,7 +97,9 @@ void Game::setSourceList() {
             }
 
             // Character creation complete.  Add to sourceList.
-            sourceList.push_back(c);
+            if(!addCharacter(*c)) {
+                cout << ">> Error: Failed to add character on line " << lineNum << endl;
+            }
         }
         else {
             // traits are either missing or there is extra information
@@ -148,7 +150,6 @@ int Game::getGameID() const {
 Character* Game::getGameCharacter() {
     return &gameCharacter;
 }
-
 
 /*
  * This function returns a pointer to the sourceList data structure.  If
