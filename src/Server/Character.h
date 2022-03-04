@@ -18,8 +18,10 @@ const int numTraits = 5;
 
 class Character {
 public:
+    int nameLength;
+
     Character();
-    explicit Character(string nameIn);
+//    explicit Character(string nameIn); // not used yet
     Character(const Character& copyCharacter);
     virtual ~Character();
     bool addTrait(string traitName, string traitValue);
@@ -32,7 +34,7 @@ public:
     Character& operator= (const Character& copyCharacter);
 
 private:
-    string name;
+    char* name;
     map<string, string> traits;
 };
 

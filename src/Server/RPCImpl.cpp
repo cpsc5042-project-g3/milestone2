@@ -215,7 +215,7 @@ bool RPCImpl::rpcQueryTrait(string& traitName, string& traitValue) {
  */
 string RPCImpl::getCharacterNamesOnly() {
     stringstream names;
-    for (Character *person: newGame->getSourceList()) {
+    for (Character *person: *newGame->getSourceList()) {
         names <<  person->getName();
         names << ";";
     }
