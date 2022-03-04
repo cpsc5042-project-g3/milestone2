@@ -46,7 +46,7 @@ private:
     bool rpcGetCharacterList();
     bool rpcGetTraitList();
     bool rpcQueryTrait(string& traitName, string& traitValue);
-    string getCharacterNamesOnly();
+    string getCharacterNames();
     string getTraitNames();
     bool rpcDisconnect();
     bool validLogin(const string& userName, const string& password);

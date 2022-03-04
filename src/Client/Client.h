@@ -20,6 +20,7 @@ class Client {
 public:
     char* userName;
     set<string> characterList;
+    set<string> traitList;
 
     Client();
     ~Client();
@@ -27,6 +28,7 @@ public:
     bool logIn();
     bool disconnectServer();
     bool getCharacterNamesFromServer();
+    bool getTraitListFromServer();
     bool queryTrait(const char* trait, const char* traitValue);
     bool guessName(const char* name);
     bool eliminatePerson(const char* name);
@@ -41,7 +43,7 @@ private:
     bool sendMessage(const string& title, char* message) const;
     bool getUserName();
     bool getPassword();
-    void parseTokens(char *buffer);
+    void parseTokens(char *buffer, string option);
 
 };
 
