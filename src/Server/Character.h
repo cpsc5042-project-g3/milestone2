@@ -11,6 +11,7 @@
 
 #include <string>
 #include <map>
+#include <set>
 
 using namespace std;
 
@@ -19,6 +20,7 @@ const int numTraits = 5;
 class Character {
 public:
     int nameLength;
+    map<string, string> traits;
 
     Character();
 //    explicit Character(string nameIn); // not used yet
@@ -30,12 +32,11 @@ public:
     void clearTraits();
     string getName();
     string getTraitNames();
-    string getTraitValue(string trait);
+    string checkTraitValue(string trait);
     Character& operator= (const Character& copyCharacter);
 
 private:
     char* name;
-    map<string, string> traits;
 };
 
 

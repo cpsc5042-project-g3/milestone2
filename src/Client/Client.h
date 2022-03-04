@@ -29,21 +29,29 @@ public:
     bool disconnectServer();
     bool getCharacterNamesFromServer();
     bool getTraitListFromServer();
-    bool queryTrait(const char* trait, const char* traitValue);
+    bool queryTrait();
     bool guessName(const char* name);
     bool eliminatePerson(const char* name);
 
 private:
     const int MAX_LEN = 10;
-
     char* password;
+    char* queryTraitName;
+    char* queryTraitValue;
     int socketID;
     bool connected;
 
     bool sendMessage(const string& title, char* message) const;
     bool getUserName();
     bool getPassword();
+    void getQueryTraitName();
+    void getQueryTraitValue();
+    bool validateUserInput(string &answer, int flag);
     void parseTokens(char *buffer, string option);
+    void formatAnswer(string &answer);
+    string trim(const string &s);
+    string ltrim(const string &s);
+    string rtrim(const string &s);
 
 };
 

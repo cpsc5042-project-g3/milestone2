@@ -11,7 +11,7 @@
 #include <bits/stl_map.h>
 #include "LocalContext.h"
 #include "Game.h"
-
+#include <algorithm>
 
 using namespace std;
 
@@ -78,6 +78,9 @@ bool RPCImpl::rpcProcess() {
         }
         else if (rpcName == "getTraitList") {
             rpcGetTraitList();
+        }
+        else if (rpcName == "queryTrait") {
+            rpcQueryTrait(arrayTokens);
         }
         else if (rpcName == "disconnect") {
             rpcDisconnect();
@@ -185,30 +188,86 @@ bool RPCImpl::rpcGetTraitList() {
 }
 
 /*
- * This function checks the supplied traitName and traitValue against
- * the selected game character.  It returns true if the trait value
- * matches.
+ * This function parses the queryTrait RPC message from client.
  */
-bool RPCImpl::rpcQueryTrait(string& traitName, string& traitValue) {
+bool RPCImpl::rpcQueryTrait(vector<string> &arrayTokens) {
+    cout << ">> Processing RPC: Query Trait" << endl << endl;
+
+    const int TRAITNAME = 1;
+    const int TRAITVALUE = 2;
+
+    // Strip out tokens 1 and 2 (traitName, traitValue)
+    string traitName = arrayTokens[TRAITNAME];
+    string traitValue = arrayTokens[TRAITVALUE];
+
+    // Get rid of hyphen from client input
+    replace(traitName.begin(), traitName.end(), '-', ' ');
+
+    return queryTraitResponse(traitName, traitValue);
+}
+
+/*
+ * This function checks the supplied traitName and traitValue against
+ * the selected game character. It returns true if the trait value matches.
+ */
+bool RPCImpl::queryTraitResponse(string& traitName, string& traitValue) {
     bool success;
-    char* message;
+    string message1;
+    string expectedTraitValue;
 
     // compare query with game character trait value
     cout << ">> Comparing supplied trait name and value with game character." << endl;
-    success = newGame->getGameCharacter()->getTraitValue(traitName) == traitValue;
-    if (!success) {
-        cout << ">> Trait query DID NOT match game character traits." << endl;
-        message = "Trait query WAS NOT successful.";
-    }
-    else {
-        cout << ">> Trait query DID match game character traits." << endl;
-        message = "Trait query WAS successful.";
-    }
+    expectedTraitValue = newGame->getGameCharacter()->checkTraitValue(traitName);
+    if (!expectedTraitValue.empty()) {
+        success = expectedTraitValue == traitValue;
+        if (!success) {
+            cout << ">> Trait query DID NOT match game character traits." << endl;
+            message1 = "Sorry.. " + customizedReply(traitName, traitValue, 2);
+        }
+        else {
+            cout << ">> Trait query DID match game character traits." << endl;
+            message1 = "Nice guess! " + customizedReply(traitName, traitValue, 1);
+        }
 
-    // notify client
-    if (!sendResponse(message)) {
-        perror(">> Error: Failed to send response to trait query.");
+        // notify client
+        if (!sendResponse(&message1[0])) {
+            perror(">> Error: Failed to send response to trait query.");
+            return false;
+        }
     }
+    return true;
+}
+
+string RPCImpl::customizedReply(string& traitName, string &traitValue, int flag) {
+    string message2;
+    string expectedValue = newGame->getGameCharacter()->checkTraitValue(traitName);
+    if (traitName == "Bald") {
+        if (expectedValue == "Yes")
+            message2 = "This person is bald.";
+        else
+            message2 = "This person is not bald.";
+    }
+    else if (traitName == "Gender") {
+        if (expectedValue == "Male")
+            message2 = "This person is male.";
+        else
+            message2 = "This person is female.";
+    }
+    else if (traitName == "Facial hair" || traitName == "Glasses" || traitName == "Hat") {
+        if (expectedValue == "Yes")
+            message2 = "This person does have " + traitName + ".";
+        else
+            message2 = "This person does not have " + traitName + ".";
+    }
+    else if (traitName == "Eye color" || traitName == "Hair color" || traitName == "Nose size") {
+        if (flag == 1)
+            message2 = "This person does have " + traitValue + " " + traitName + ".";
+        else
+            message2 = "This person does not have " + traitValue + " " + traitName + ".";
+    }
+    formatResponse(message2);
+    return message2;
+
 }
 
 /*
@@ -301,3 +360,10 @@ bool RPCImpl::validLogin(const string &userName, const string &password) {
     }
 }
 
+/*
+ * This function formats response to a word with the initial letter capitalized and the rest in lower case
+ */
+void RPCImpl::formatResponse(string &response) {
+    transform(response.begin(), response.end(), response.begin(), [](unsigned char c) { return std::tolower(c); });
+    response[0] = toupper(response[0]);
+}
