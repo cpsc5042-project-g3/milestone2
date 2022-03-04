@@ -1,18 +1,16 @@
 Milestone 2 already done:
 - Server >> Game class created on Server side 
 - Server >> Character class created on Server side 
-- New RPC request created: called ```getCharacterList```
+- added new RPC called ```getCharacterList```
 - renamed getCharacterList function
 - added RPCImpl::rpcGetTraitList()
 - added RPCImpl::getTraitNames()
 - added Character::getTraitNames() to support RPCImpl::getTraitNames()
 - updated Game::setSourceList() to call Game::addCharacter()
 - added RPCImpl::rpcQueryTrait()
+- added new RPC called ```getTraitList```
 
 Milestone 2 TO DO:
-  - Client >> Add ```Client::getTraitListFromServer()``` function to send RPC message 
-  - Server >> Send client a list of "trait names and values" user can query about 
-  - Client >> After client receives the list, make a local copy and display the content to standard output 
 
 - Eliminate Person -- consider no longer an RPC
   - (New design idea: Server does not need to know who have been eliminated. Client can just update its local copy by removing character names.)
