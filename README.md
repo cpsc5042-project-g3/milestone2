@@ -9,6 +9,8 @@ Milestone 2 already done:
 - updated Game::setSourceList() to call Game::addCharacter()
 - added RPCImpl::rpcQueryTrait()
 - added new RPC called ```getTraitList```
+
+- Finished implementing RPC QueryTrait
 - Implemented Client::queryTrait() function
 - Added Client::getQueryTraitName() function
 - Added Client::getQueryTraitValue() function (Customized user questions based on traitName selected)
@@ -19,6 +21,8 @@ Milestone 2 already done:
 - Edited RPCImpl::rpcQueryTrait() function to be responsible for parsing "queryTrait" message
 - Moved query checking to new function RPCImpl::queryTraitResponse()
 - Added customized server response in RPCImpl::customizedReply() function
+
+
 
 Milestone 2 TO DO:
 
