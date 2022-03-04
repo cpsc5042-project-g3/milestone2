@@ -18,18 +18,18 @@ public:
     ~Game();
     void setGameID();
     void setSourceList();
-    bool addCharacter(const Character& characterToAdd);
+    bool addCharacter( Character* const characterToAdd);
     void setGameCharacter();
     int getGameID() const;
     Character* getGameCharacter();
-    vector<Character*> getSourceList();
+    vector<Character*>* getSourceList();
 
 private:
     void parseTokens(char* text, vector<string> &v);
 
     int gameID;
-    Character gameCharacter;
-    vector<Character*> sourceList;
+    Character *gameCharacter;
+    vector<Character*> *sourceList;
 };
 
 

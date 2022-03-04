@@ -7,6 +7,7 @@
  */
 
 #include "Character.h"
+#include <iostream>
 
 using namespace std;
 
@@ -15,7 +16,8 @@ using namespace std;
  */
 Character::Character() {
     // initialize name, traits, and trait values to known unassigned values
-    this->name = "TBD";
+    name = new char[20];
+    nameLength = 0;
     this->clearTraits();
 }
 
@@ -23,15 +25,15 @@ Character::Character() {
  * This is an alternate constructor for a character object, using a provided
  * name as an argument.
  */
-Character::Character(string nameIn) {
-    name = nameIn;
-    traits.clear();
-}
+//Character::Character(string nameIn) { // Not used, commented out for now
+//    name = nameIn;
+//    traits.clear();
+//}
 
 /*
  * This is the copy constructor for a character object.
  */
-Character::Character(Character const &copyCharacter) {
+Character::Character(const Character &copyCharacter) {
     name = copyCharacter.name;
     traits = copyCharacter.traits;      // copy traits map via overloaded assignment operator
 }
@@ -41,6 +43,7 @@ Character::Character(Character const &copyCharacter) {
  */
 Character::~Character() {
     traits.clear();
+    delete name;
 }
 
 /*
@@ -67,7 +70,10 @@ bool Character::setName(string characterName) {
     if (characterName.empty()) {
         return false;
     }
-    name = characterName;
+    nameLength = characterName.length();
+    for (int i = 0; i < characterName.length(); i++) {
+        name[i] = characterName[i];
+    }
     return true;
 }
 
@@ -97,12 +103,14 @@ bool Character::setTrait(string trait, string traitValue) {
 }
 
 /*
- * This function returns the string assigned to this character's name.
- * If the name has not been assigned, it returns the default value from
- * the constructor.
+ * This function converts character's name from a char array to a string
+ * and returns the string.
  */
 string Character::getName() {
-    return name;
+    string stringName = "";
+    for (int i = 0; i < nameLength; i++)
+        stringName += name[i];
+    return stringName;
 }
 
 /*
@@ -130,7 +138,6 @@ Character& Character::operator=(const Character& copyCharacter) {
         name = copyCharacter.name;
         traits = copyCharacter.traits;
     }
-
     return *this;
 }
 

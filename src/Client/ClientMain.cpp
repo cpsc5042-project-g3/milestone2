@@ -126,11 +126,14 @@ int main(int argc, char const *argv[]) {
         }
     }
 
+    // Save current username for display
     myName = client->userName;
+
+    // send RPC: get character name list from server
+    client->getCharacterNamesFromServer();
 
     // Start game (Game logic to follow)
     while (connected) {
-        client->getCharacterNamesFromServer();  // send RPC: get character name list from server
         displayCharacterList(client);
         displayMenu2(myName);
         menuPick = getMenuPick(2);

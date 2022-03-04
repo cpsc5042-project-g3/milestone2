@@ -19,6 +19,10 @@ using namespace std;
  * This is the default constructor for a Game object
  */
 Game::Game() {
+    gameID = 0;
+    gameCharacter = new Character();
+    sourceList = new vector<Character*>();
+
     // seed random number generator, to be used in gameID
     srand(time(nullptr));
 
@@ -33,9 +37,8 @@ Game::Game() {
  */
 Game::~Game() {
     gameID = 0;
-    sourceList.clear();
-    gameCharacter.setName("TBD");
-    gameCharacter.clearTraits();
+    delete gameCharacter;
+    delete sourceList;
 }
 
 /*
@@ -85,7 +88,7 @@ void Game::setSourceList() {
         // confirm character data is fully present and no extra info is there.
         // Assumes "Name" is the first column.
         if (traitNames.size() == traitValues.size()) {
-            auto c = new Character();
+            auto *c = new Character();
             for (int i = 0; i < traitNames.size(); i++) {
                 if (i == 0) {
                     // assign name
@@ -95,9 +98,8 @@ void Game::setSourceList() {
                     c->addTrait(traitNames.at(i), traitValues.at(i));
                 }
             }
-
             // Character creation complete.  Add to sourceList.
-            if(!addCharacter(*c)) {
+            if(!addCharacter(c)) {
                 cout << ">> Error: Failed to add character on line " << lineNum << endl;
             }
         }
@@ -116,14 +118,11 @@ void Game::setSourceList() {
  * This function adds a character from the master character list to the
  * sourceList.
  */
-bool Game::addCharacter(const Character& characterToAdd) {
-    int size = sourceList.size();
+bool Game::addCharacter(Character * const characterToAdd) {
+    int size = sourceList->size();
+    sourceList->push_back(characterToAdd);
 
-    // create new character and add to list
-    Character newCharacter = characterToAdd;
-    sourceList.push_back(&newCharacter);
-
-    return sourceList.size() > size;
+    return sourceList->size() > size;
 }
 
 /*
@@ -133,8 +132,8 @@ bool Game::addCharacter(const Character& characterToAdd) {
  */
 void Game::setGameCharacter() {
     // get selected character
-    int index = rand() % sourceList.size();
-    gameCharacter = *sourceList.at(index);
+    int index = rand() % sourceList->size();
+    gameCharacter = sourceList->at(index);
 }
 
 /*
@@ -148,14 +147,14 @@ int Game::getGameID() const {
  * This function returns the character selected for this game.
  */
 Character* Game::getGameCharacter() {
-    return &gameCharacter;
+    return gameCharacter;
 }
 
 /*
  * This function returns a pointer to the sourceList data structure.  If
  * the operation fails, it returns a nullptr
  */
-vector<Character*> Game::getSourceList() {
+vector<Character*>* Game::getSourceList() {
     return sourceList;
 }
 
