@@ -45,11 +45,14 @@ private:
     bool rpcConnect(std::vector<std::string>& arrayTokens);
     bool rpcGetCharacterList();
     bool rpcGetTraitList();
-    bool rpcQueryTrait(string& traitName, string& traitValue);
+    bool rpcQueryTrait(vector<string> &arrayTokens);
+    bool queryTraitResponse(string& traitName, string& traitValue);
+    string customizedReply(string& traitName, string &traitValue, int flag);
     string getCharacterNames();
     string getTraitNames();
     bool rpcDisconnect();
     bool validLogin(const string& userName, const string& password);
+    void formatResponse(string &response);
 
 };
 

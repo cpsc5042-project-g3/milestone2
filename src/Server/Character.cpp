@@ -9,6 +9,7 @@
 #include "Character.h"
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 
 using namespace std;
 
@@ -53,10 +54,9 @@ Character::~Character() {
  */
 bool Character::addTrait(string traitName, string traitValue) {
     // check to see if trait exists
-    if (traits.find(traitName) != traits.end()) {
+    if (traits.find(traitName) != traits.end())
         // trait already exists
         return false;
-    }
 
     // add key-value pair to map
     traits.insert(pair<string, string>(traitName, traitValue));
@@ -119,14 +119,15 @@ string Character::getName() {
  * This function retrieves the value of the supplied trait.  If the trait
  * is not found, the function returns an empty string.
  */
-string Character::getTraitValue(string trait) {
+string Character::checkTraitValue(string trait) {
     string result = "";
-
     // make sure trait exists
     if (traits.find(trait) != traits.end()) {
         // trait found, return value
         result = traits.find(trait)->second;
     }
+    else
+        perror(">> Error: Trait name provided is invalid.");
 
     return result;
 }

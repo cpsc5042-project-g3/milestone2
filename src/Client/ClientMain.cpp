@@ -43,7 +43,7 @@ void displayMenu1() {
  * This function display the game menu to the user, prompting them for the allowed game functions.
  */
 void displayMenu2(char *myName) {
-    cout << myName << ", please pick an option from the menu: \n"
+    cout << "\n" << myName << ", please pick an option from the menu: \n"
          << "\t1. Start a new game \n" // login required if not already logged in
          << "\t2. Query Trait\n"
          << "\t3. Eliminate Person\n"
@@ -57,8 +57,13 @@ void displayMenu2(char *myName) {
  */
 void displayCharacterList(Client *client) {
     set<string> localCopy = client->characterList;
-    cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
-    printf("Here are the %lu remaining character(s):\n", localCopy.size());
+    int size = localCopy.size();
+
+    cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+    if (size == 24)
+        printf("Make a guess among these 24 characters: \n");
+    else
+        printf("Here are the %lu remaining character(s):\n", localCopy.size());
 
     int formatter = 0;    // display a max of 10 names per line
     for (string name:localCopy) {
@@ -68,7 +73,7 @@ void displayCharacterList(Client *client) {
             cout << endl;
     }
 
-    cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" << endl;
+    cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 }
 
 /*
@@ -76,18 +81,18 @@ void displayCharacterList(Client *client) {
  */
 void displayTraitList(Client *client) {
     set<string> localCopy = client->traitList;
-    cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+    cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
     printf("Here are the %lu traits you can query about:\n", localCopy.size());
 
     int formatter = 0;    // display a max of 10 names per line
     for (string name:localCopy) {
-        cout << "\"" << name << "\""<< " ";
+        cout << "\"" << name << "\"" << " ";
         formatter++;
         if (formatter % 5 == 0)
             cout << endl;
     }
 
-    cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" << endl;
+    cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 }
 
 /*
@@ -148,13 +153,14 @@ int main(int argc, char const *argv[]) {
     // Save current username for display
     myName = client->userName;
 
-    // send RPC: get character name list from server
-    client->getCharacterNamesFromServer();
-    displayCharacterList(client);
-
-    // send RPC: get trait name list from server
-    client->getTraitListFromServer();
-    displayTraitList(client);
+    if (connected) {
+        // send RPC: get character name list from server
+        // send RPC: get trait name list from server
+        if (!client->getCharacterNamesFromServer() || !client->getTraitListFromServer())
+            connected = false;
+        else
+            displayCharacterList(client);
+    }
 
     // Start game (Game logic to follow)
     while (connected) {
@@ -169,7 +175,8 @@ int main(int argc, char const *argv[]) {
                 }
                 break;
             case 2: // Query Trait
-                cout << "\nFeature not yet available!" << endl << endl;
+                displayTraitList(client);
+                client->queryTrait();
                 break;
             case 3: // Eliminate Person
                 cout << "\nFeature not yet available!" << endl << endl;
