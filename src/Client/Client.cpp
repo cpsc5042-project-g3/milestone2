@@ -276,6 +276,7 @@ void Client::getQueryTraitValue() {
     bool valid = false;
 
     string trait = queryTraitName;
+    replace(trait.begin(), trait.end(), '-', ' ');
     if (trait == "Bald") {
         do {
             cout << "Do you think this person is " << trait << "? ";
@@ -290,19 +291,19 @@ void Client::getQueryTraitValue() {
             trim(answer);
             valid = validateUserInput(answer, 2);
         } while (!valid);
-    } else if (trait == "Facial-hair" || trait == "Glasses" || trait == "Hat") {
+    } else if (trait == "Facial hair" || trait == "Glasses" || trait == "Hat") {
         do {
             cout << "Do you think this person has " << trait << "? ";
             cin >> answer;
             trim(answer);
             valid = validateUserInput(answer, 1);
         } while (!valid);
-    } else if (trait == "Eye-color" || trait == "Hair-color") {
+    } else if (trait == "Eye color" || trait == "Hair color") {
         cout << "What do you think is the person's " << trait << "? ";
         cin >> answer;
         trim(answer);
         strcpy(queryTraitValue, answer.c_str());
-    } else if (trait == "Nose-size") {
+    } else if (trait == "Nose size") {
         do {
             cout << "Do you think this person has small, medium, or large nose? ";
             cin >> answer;
