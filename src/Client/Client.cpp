@@ -5,6 +5,7 @@
  * Professor: Michael McKee
  * Due: 10 Mar 2022
  */
+
 #include "Client.h"
 #include <iostream>
 #include <cstring>
@@ -84,7 +85,7 @@ bool Client::connectServer(const char *serverIP, int port) {
 bool Client::logIn() {
     stringstream ss;
     string temp1, messageTitle;
-    char buffer[1024] = { 0 };
+    char buffer[1024] = {0};
 
     // prompt for userName
     if (!getUserName()) {
@@ -157,11 +158,12 @@ bool Client::getPassword() {
 }
 
 /*
- * This function submits a "RPC-getCharacterNames" to server and gets back a string vector
- * of character names, which will be kept and updated locally.
+ * This function submits a "RPC-getCharacterNames" to server and gets back a list
+ * of character names, which will be parsed into a set of character names and
+ * kept as a local copy.
  */
 bool Client::getCharacterNamesFromServer() {
-    char buffer[1024] = { 0 };
+    char buffer[1024] = {0};
     string temp = "getCharacterList";
     char *getlistRPC = &temp[0];
     if (connected)
@@ -170,11 +172,31 @@ bool Client::getCharacterNamesFromServer() {
             if (read(socketID, buffer, 1024)) {
                 cout << ">> Character list received." << endl;
                 cout << ">> Making a local copy." << endl;
-                parseTokens(buffer);
+                parseTokens(buffer, "parseCharacter");
                 return true;
-                }
+            }
     return false;
+}
 
+/*
+ * This function submits a "RPC-getTraitList" to server and gets back a list
+ * of trait names, which will be parsed into a set of trait names and
+ * kept as a local copy.
+ */
+bool Client::getTraitListFromServer() {
+    char buffer[1024] = {0};
+    string temp = "getTraitList";
+    char *getlistRPC = &temp[0];
+    if (connected)
+        if (sendMessage("Get Trait List", getlistRPC))
+            // Get server response
+            if (read(socketID, buffer, 1024)) {
+                cout << ">> Trait list received." << endl;
+                cout << ">> Making a local copy." << endl;
+                parseTokens(buffer, "parseTrait");
+                return true;
+            }
+    return false;
 }
 
 /*
@@ -196,7 +218,7 @@ bool Client::eliminatePerson(const char *name) {}
  * This function submits a "RPC-disconnect" to the server.
  */
 bool Client::disconnectServer() {
-    char buffer[1024] = { 0 };
+    char buffer[1024] = {0};
     // Assemble disconnect message
     string temp = "disconnect";
     char *logoffRPC = &temp[0];
@@ -237,11 +259,14 @@ bool Client::sendMessage(const string &title, char *message) const {
 /*
  * This function parses incoming messages to tokens.
  */
-void Client::parseTokens(char *buffer) {
+void Client::parseTokens(char *buffer, string option) {
     char *token;
     char *rest = (char *) buffer;
 
-    while ((token = strtok_r(rest, ";", &rest))) {
-        characterList.insert(token);
-    }
+    if (option == "parseCharacter")
+        while ((token = strtok_r(rest, ";", &rest)))
+            characterList.insert(token);
+    else if (option == "parseTrait")
+        while ((token = strtok_r(rest, ";", &rest)))
+            traitList.insert(token);
 }

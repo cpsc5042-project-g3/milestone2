@@ -72,6 +72,25 @@ void displayCharacterList(Client *client) {
 }
 
 /*
+ * This function displays a list of traits user can query about.
+ */
+void displayTraitList(Client *client) {
+    set<string> localCopy = client->traitList;
+    cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+    printf("Here are the %lu traits you can query about:\n", localCopy.size());
+
+    int formatter = 0;    // display a max of 10 names per line
+    for (string name:localCopy) {
+        cout << "\"" << name << "\""<< " ";
+        formatter++;
+        if (formatter % 5 == 0)
+            cout << endl;
+    }
+
+    cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" << endl;
+}
+
+/*
  * This function gets the menu option the user has selected.  It is usable with either display menu.
  */
 int getMenuPick(int menu) {
@@ -131,10 +150,14 @@ int main(int argc, char const *argv[]) {
 
     // send RPC: get character name list from server
     client->getCharacterNamesFromServer();
+    displayCharacterList(client);
+
+    // send RPC: get trait name list from server
+    client->getTraitListFromServer();
+    displayTraitList(client);
 
     // Start game (Game logic to follow)
     while (connected) {
-        displayCharacterList(client);
         displayMenu2(myName);
         menuPick = getMenuPick(2);
         switch (menuPick) {

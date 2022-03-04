@@ -8,6 +8,7 @@
 
 #include "Character.h"
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
@@ -81,11 +82,12 @@ bool Character::setName(string characterName) {
  * This function returns all the traits names (not values) for the character
  */
 string Character::getTraitNames() {
-    string traitNames;
+    stringstream traitNames;
     for (map<string, string>::iterator iter = traits.begin(); iter != traits.end(); ++iter) {
-        traitNames += iter->first + " ";
+        traitNames << iter->first;
+        traitNames << ";";
     }
-    return traitNames;
+    return traitNames.str();
 }
 
 /*
