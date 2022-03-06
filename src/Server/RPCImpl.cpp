@@ -18,7 +18,7 @@ using namespace std;
 typedef struct _GlobalContext {
     int g_rpcCount;
 }
-GlobalContext;  // WHat is this?
+GlobalContext;  // What is this?
 GlobalContext globalObj; // We need to protect this, as we don't want bad data
 
 
@@ -51,6 +51,7 @@ bool RPCImpl::rpcProcess() {
     while ((continueOn)) {
         // Buffer is re-initialized before processing each new RPC
         char buffer[1024] = {0};
+
         // Blocked until a RPC is sent to server
         msgByte = read(socketID, buffer, sizeof(buffer));
         if (msgByte <= 0) {
@@ -138,7 +139,7 @@ bool RPCImpl::sendResponse(char* message) const {
  * clients are allowed to continue.
  */
 bool RPCImpl::rpcConnect(vector<string> &arrayTokens) {
-    cout << ">> Processing RPC: Connect" << endl << endl;
+    cout << ">> Processing RPC: Connect" << endl;
     printf(">> Validating login info for Client %d.\n", socketID);
 
     const int USERNAMETOKEN = 1;
@@ -157,7 +158,7 @@ bool RPCImpl::rpcConnect(vector<string> &arrayTokens) {
  * and send it to the client to keep as a local copy.
  */
 bool RPCImpl::rpcGetCharacterList() {
-    cout << ">> Processing RPC: Generating character list." << endl << endl;
+    cout << ">> Processing RPC: Generating character list." << endl;
 
     // Generate character list and sent to client.
     cout << ">> Sending character list." << endl;
@@ -166,7 +167,7 @@ bool RPCImpl::rpcGetCharacterList() {
         perror(">> Error: Failed to send character list to client.\n");
         return false;
     }
-    cout << ">> Character list sent successfully.\n";
+    cout << ">> Character list sent successfully.\n\n";
     return true;
 }
 
@@ -174,7 +175,7 @@ bool RPCImpl::rpcGetCharacterList() {
  * This function returns the list of possible trait names.
  */
 bool RPCImpl::rpcGetTraitList() {
-    cout << ">> Processing RPC: Generating list of character traits." << endl << endl;
+    cout << ">> Processing RPC: Generating list of character traits." << endl;
 
     // Generate character trait list and send to client.
     string characterTraits = getTraitNames();
@@ -183,7 +184,7 @@ bool RPCImpl::rpcGetTraitList() {
         perror(">> Error: Failed to send list of traits to client.\n");
         return false;
     }
-    cout << ">> Trait list sent successfully.\n";
+    cout << ">> Trait list sent successfully.\n\n";
     return true;
 }
 
@@ -238,6 +239,9 @@ bool RPCImpl::queryTraitResponse(string& traitName, string& traitValue) {
     return true;
 }
 
+/*
+ *
+ */
 string RPCImpl::customizedReply(string& traitName, string &traitValue, int flag) {
     string message2;
     string expectedValue = newGame->getGameCharacter()->checkTraitValue(traitName);
@@ -270,6 +274,7 @@ string RPCImpl::customizedReply(string& traitName, string &traitValue, int flag)
 
 }
 
+
 /*
  * This function returns a string containing the names of all the possible
  * characters a client can choose from.
@@ -289,6 +294,7 @@ string RPCImpl::getCharacterNames() {
 string RPCImpl::getTraitNames() {
     return newGame->getGameCharacter()->getTraitNames();
 }
+
 
 /*
  * This function disconnects the client from the server.

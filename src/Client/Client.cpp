@@ -12,7 +12,6 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include <sstream>
 #include <algorithm>
 #include <regex>
 
@@ -191,7 +190,7 @@ bool Client::getTraitListFromServer() {
             if (read(socketID, buffer, 1024)) {
                 cout << ">> Trait list received from server." << endl;
                 parseTokens(buffer, "parseTrait");
-                cout << ">> Local copy made." << endl;
+                cout << ">> Local copy made." << endl << endl;
                 return true;
             }
     perror(">> Error: Unable to get trait list from server.");
@@ -313,6 +312,7 @@ void Client::getQueryTraitValue() {
     }
 }
 
+
 bool Client::validateUserInput(string &answer, int flag) {
     formatAnswer(answer);
     switch (flag) {
@@ -340,16 +340,15 @@ bool Client::validateUserInput(string &answer, int flag) {
     }
 }
 
-
 /*
  * This function submits a guess to the server about the target characters name.
  */
-bool Client::guessName(const char *name) {}
+bool Client::guessName(const char* name) {}
 
 /*
  * This function submits a command to the server to eliminate a character from the game
  */
-bool Client::eliminatePerson(const char *name) {}
+bool Client::eliminatePerson(const char* name) {}
 
 /*
  * This function submits a "RPC-disconnect" to the server.

@@ -10,6 +10,7 @@
 #include <cstring>
 #include <vector>
 #include <iostream>
+#include <iomanip>
 #include "Client.h"
 
 using namespace std;
@@ -56,24 +57,34 @@ void displayMenu2(char *myName) {
  * This function displays the remaining characters to be guessed from.
  */
 void displayCharacterList(Client *client) {
-    set<string> localCopy = client->characterList;
-    int size = localCopy.size();
-
-    cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
-    if (size == 24)
-        printf("Make a guess among these 24 characters: \n");
-    else
-        printf("Here are the %lu remaining character(s):\n", localCopy.size());
-
-    int formatter = 0;    // display a max of 10 names per line
-    for (string name:localCopy) {
-        cout << name << " ";
-        formatter++;
-        if (formatter % 10 == 0)
-            cout << endl;
+    // Write table header
+    cout << ">> Here is the working list of characters:" << endl;
+    cout << "Row Num   Name";
+    for (string str : client->traitList) {
+        cout << "\t\t" << str;
     }
+    cout << endl;
 
-    cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+    // Write divider line
+    cout << "---------------------------------------------------------------------------------------------------";
+    cout << "----------------------" << endl;
+
+    // Write body of table
+    int rowNum = 1;
+    for (string str : client->characterList) {
+        // write row number and character name
+        cout << setw(10) << left << rowNum << setw(12) << left << str;
+
+        // write character traits
+        vector<string> s = client->activeList[rowNum - 1];
+        for (int i = 0; i < s.size(); i++) {
+           cout << setw(12) << left << s[i];
+        }
+
+        // write end of line and prepare for next iteration
+        cout << endl;
+        rowNum++;
+    }
 }
 
 /*
@@ -172,6 +183,9 @@ int main(int argc, char const *argv[]) {
                 if (!loggedIn) {
                     cout << ">> Log in needed " << endl;
                     loggedIn = client->logIn();
+                }
+                else {
+                    displayCharacterList(client);
                 }
                 break;
             case 2: // Query Trait

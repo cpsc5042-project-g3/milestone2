@@ -84,7 +84,7 @@ bool Server::connectWithClient() {
 
     vector<pthread_t> threadIDList;
 
-    cout << "\n>> Accept process started. Waiting for clients..." << endl;
+    cout << ">> Accept process started. Waiting for clients..." << endl;
     for (;;) {
         // Create "connection" socket and start accepting
 
