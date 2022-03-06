@@ -12,6 +12,7 @@
 #include <cstring>
 #include <sstream>
 #include "Game.h"
+#include <unordered_map>
 
 using namespace std;
 
@@ -21,7 +22,7 @@ using namespace std;
 Game::Game() {
     gameID = 0;
     gameCharacter = new Character();
-    sourceList = new vector<Character*>();
+    sourceList = new unordered_map<string, Character*>();
 
     // seed random number generator, to be used in gameID
     srand(time(nullptr));
@@ -88,16 +89,22 @@ void Game::setSourceList() {
         // confirm character data is fully present and no extra info is there.
         // Assumes "Name" is the first column.
         if (traitNames.size() == traitValues.size()) {
+            stringstream tempTraitValueHolder;
             auto *c = new Character();
             for (int i = 0; i < traitNames.size(); i++) {
                 if (i == 0) {
-                    // assign name
+                    // assign name for character
                     c->setName(traitValues.at(i));
+                    characterNames.push_back(traitValues.at(i));
                 } else {
-                    // add trait
+                    // add trait for character
                     c->addTrait(traitNames.at(i), traitValues.at(i));
+                    // generate a list of trait values to send to Client
+                    tempTraitValueHolder << traitValues.at(i) << ";";
                 }
             }
+            c->traitValuesForDisplay = tempTraitValueHolder.str();
+
             // Character creation complete.  Add to sourceList.
             if(!addCharacter(c)) {
                 cout << ">> Error: Failed to add character on line " << lineNum << endl;
@@ -119,8 +126,9 @@ void Game::setSourceList() {
  * sourceList.
  */
 bool Game::addCharacter(Character * const characterToAdd) {
-    int size = sourceList->size();
-    sourceList->push_back(characterToAdd);
+    unsigned long size = sourceList->size();
+    string stringName = characterToAdd->getName();
+    sourceList->insert(make_pair(stringName, characterToAdd));
 
     return sourceList->size() > size;
 }
@@ -132,15 +140,11 @@ bool Game::addCharacter(Character * const characterToAdd) {
  */
 void Game::setGameCharacter() {
     // get selected character
-    int index = rand() % sourceList->size();
-    gameCharacter = sourceList->at(index);
-}
-
-/*
- * This function returns the gameID.
- */
-int Game::getGameID() const {
-    return gameID;
+    unsigned long index = rand() % sourceList->size();
+    auto it = sourceList->begin();
+    for (int i = 0; i < index; i++)
+        it++;
+    gameCharacter = &(*it->second);
 }
 
 /*
@@ -151,14 +155,6 @@ Character* Game::getGameCharacter() {
 }
 
 /*
- * This function returns a pointer to the sourceList data structure.  If
- * the operation fails, it returns a nullptr
- */
-vector<Character*>* Game::getSourceList() {
-    return sourceList;
-}
-
-/*
  * This function parses the comma-separated character traits in the
  * "CharacterTraits.txt" file and stores them in the provided vector.
  */
@@ -166,7 +162,6 @@ void Game::parseTokens(char* text, vector<string> &v) {
     char* trait;
     char* rest = (char*) text;
 
-    while ((trait = strtok_r(rest, ",", &rest))) {
+    while ((trait = strtok_r(rest, ",", &rest)))
         v.emplace_back(trait);
-    }
 }

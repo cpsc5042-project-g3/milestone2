@@ -59,27 +59,26 @@ void displayMenu2(char *myName) {
 void displayCharacterList(Client *client) {
     // Write table header
     cout << ">> Here is the working list of characters:" << endl;
-    cout << "Row Num   Name";
-    for (string str : client->traitList) {
-        cout << "\t\t" << str;
-    }
+    cout << "Row  " << setw(12) << left << "Name";
+    for (const string& traitName : client->traitNamesForDisplay)
+        cout << setw(12) << left << traitName;
     cout << endl;
 
     // Write divider line
-    cout << "---------------------------------------------------------------------------------------------------";
-    cout << "----------------------" << endl;
+    cout << "------------------------------------------------------------------------------"
+            "---------------------------------" << endl;
 
     // Write body of table
     int rowNum = 1;
-    for (string str : client->characterList) {
-        // write row number and character name
-        cout << setw(10) << left << rowNum << setw(12) << left << str;
+    for (const string& currCharacter : client->characterNames) {
 
-        // write character traits
-        vector<string> s = client->activeList[rowNum - 1];
-        for (int i = 0; i < s.size(); i++) {
-           cout << setw(12) << left << s[i];
-        }
+        // write row number and character name
+        cout << setw(5) << left << rowNum;
+
+        // write character trait values
+        vector<string> traitValues = client->activeList.find(currCharacter)->second;
+        for (auto & currValue : traitValues)
+           cout << setw(12) << left << currValue;
 
         // write end of line and prepare for next iteration
         cout << endl;
@@ -91,19 +90,11 @@ void displayCharacterList(Client *client) {
  * This function displays a list of traits user can query about.
  */
 void displayTraitList(Client *client) {
-    set<string> localCopy = client->traitList;
-    cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
-    printf("Here are the %lu traits you can query about:\n", localCopy.size());
-
-    int formatter = 0;    // display a max of 10 names per line
-    for (string name:localCopy) {
+    cout << "\nHere are the traits you can query about: ";
+    cout << "\n-----------------------------------------------------------------------------------" << endl;
+    for (const string& name: client-> traitNamesForDisplay)
         cout << "\"" << name << "\"" << " ";
-        formatter++;
-        if (formatter % 5 == 0)
-            cout << endl;
-    }
-
-    cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+    cout << "\n-----------------------------------------------------------------------------------" << endl;
 }
 
 /*
@@ -165,9 +156,11 @@ int main(int argc, char const *argv[]) {
     myName = client->userName;
 
     if (connected) {
-        // send RPC: get character name list from server
-        // send RPC: get trait name list from server
-        if (!client->getCharacterNamesFromServer() || !client->getTraitListFromServer())
+        // send RPC: get character names from server
+        // send RPC: get trait names from server
+        // send RPC: get trait values from server
+        if (!client->getCharacterNamesFromServer() || !client->getTraitNamesFromServer()
+            || !client->getTraitValuesFromServer())
             connected = false;
         else
             displayCharacterList(client);
@@ -194,6 +187,7 @@ int main(int argc, char const *argv[]) {
                 break;
             case 3: // Eliminate Person
                 cout << "\nFeature not yet available!" << endl << endl;
+                client->eliminatePerson();
                 break;
             case 4: // Make a Guess
                 cout << "\nFeature not yet available!" << endl << endl;

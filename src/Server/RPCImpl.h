@@ -32,7 +32,6 @@ public:
     bool rpcProcess();
 
     string getCharacterNames();
-    string getTraitNames();
 
 private:
     const int BUFFER_SIZE = 1024;
@@ -45,9 +44,10 @@ private:
     static void parseTokens(char* buffer, vector<string>& a);
     static void printToken(vector<string>& a);
     bool sendResponse(char* message) const;
-    bool rpcConnect(std::vector<std::string>& arrayTokens);
-    bool rpcGetCharacterList();
-    bool rpcGetTraitList();
+    bool rpcConnect(vector<std::string>& arrayTokens);
+    bool rpcGetCharacterNames();
+    bool rpcGetTraitNames();
+    bool rpcGetTraitValues(vector<string> &arrayTokens);
     bool rpcQueryTrait(vector<string> &arrayTokens);
     bool rpcDisconnect();
     bool queryTraitResponse(string& traitName, string& traitValue);
