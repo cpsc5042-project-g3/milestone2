@@ -21,6 +21,7 @@ public:
     char* userName;
     set<string> characterList;
     set<string> traitList;
+    vector<vector<string>> activeList;
 
     Client();
     ~Client();

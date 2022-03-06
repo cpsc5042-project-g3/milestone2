@@ -31,6 +31,9 @@ public:
     ~RPCImpl();
     bool rpcProcess();
 
+    string getCharacterNames();
+    string getTraitNames();
+
 private:
     const int BUFFER_SIZE = 1024;
     int m_rpcCount;
@@ -46,11 +49,9 @@ private:
     bool rpcGetCharacterList();
     bool rpcGetTraitList();
     bool rpcQueryTrait(vector<string> &arrayTokens);
+    bool rpcDisconnect();
     bool queryTraitResponse(string& traitName, string& traitValue);
     string customizedReply(string& traitName, string &traitValue, int flag);
-    string getCharacterNames();
-    string getTraitNames();
-    bool rpcDisconnect();
     bool validLogin(const string& userName, const string& password);
     void formatResponse(string &response);
 
