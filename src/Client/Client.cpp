@@ -393,7 +393,7 @@ bool Client::eliminatePerson() {
     vector<int> rowNumbers;
     string eliminatedName;
     getEliminateChoice(rowNumbers);
-    string temp[characterNames.size()];
+    string temp[characterNames.size()]; // temp array to hold the characters IN ORDER
     int vectorSizeShrink = 1;
 
     // Copy the remaining character names into a temporary array to match table row number
@@ -452,6 +452,8 @@ bool Client::guessName() {
     stringstream ss;
     string temp;
     char buffer[1024] = {0};
+
+    // Prompt user to enter guess
     string guess = getUserGuess();
 
     // Assemble login message to server

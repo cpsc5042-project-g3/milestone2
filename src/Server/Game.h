@@ -19,6 +19,7 @@ public:
     int gameID;
     vector<string> characterNames;
     unordered_map<string, Character*> *sourceList;
+    string traitNamesForDisplay; // a list of trait names IN ORDER to send to Client
 
     Game();
     ~Game();
