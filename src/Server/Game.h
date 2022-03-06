@@ -10,26 +10,29 @@
 #define SERVER_GAME_H
 
 #include "Character.h"
+#include <unordered_map>
+
 const int MAX_GAMES = 10000;
 
 class Game {
 public:
+    int gameID;
+    vector<string> characterNames;
+    unordered_map<string, Character*> *sourceList;
+
     Game();
     ~Game();
     void setGameID();
     void setSourceList();
     bool addCharacter( Character* const characterToAdd);
     void setGameCharacter();
-    int getGameID() const;
     Character* getGameCharacter();
-    vector<Character*>* getSourceList();
 
 private:
     void parseTokens(char* text, vector<string> &v);
 
-    int gameID;
     Character *gameCharacter;
-    vector<Character*> *sourceList;
+
 };
 
 

@@ -19,8 +19,8 @@ const int numTraits = 5;
 
 class Character {
 public:
-    int nameLength;
-    map<string, string> traits;
+    map<string, string> traits;         // a map of "trait name-trait value" pairs
+    string traitValuesForDisplay;       // trait values to display on Client side
 
     Character();
 //    explicit Character(string nameIn); // not used yet
@@ -28,7 +28,6 @@ public:
     virtual ~Character();
     bool addTrait(string traitName, string traitValue);
     bool setName(string characterName);
-    bool setTrait(string trait, string traitValue);
     void clearTraits();
     string getName();
     string getTraitNames();
@@ -37,6 +36,7 @@ public:
 
 private:
     char* name;
+    int nameLength;
 };
 
 

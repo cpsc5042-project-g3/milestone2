@@ -102,7 +102,7 @@ bool Client::logIn() {
     strcpy(rpcMessage, temp.c_str());
 
     // Send login message to server and get response
-    if (sendMessage("RPC1: Login", rpcMessage)) {
+    if (sendMessage("RPC 1: Login", rpcMessage)) {
         // Get server response
         if (read(socketID, buffer, 1024)) {
             cout << ">> Server response: " << buffer << endl;
@@ -110,6 +110,7 @@ bool Client::logIn() {
                 printf(">> %s, you are now logged in.\n", userName);
                 return true;
             }
+            cout << endl; // please keep
         }
     }
     return false;
@@ -160,14 +161,14 @@ bool Client::getPassword() {
  */
 bool Client::getCharacterNamesFromServer() {
     char buffer[1024] = {0};
-    string rpcMessage = "getCharacterList";
+    string rpcMessage = "getCharacterNames";
     char *getlistRPC = &rpcMessage[0];
     if (connected)
-        if (sendMessage("RPC2: Get Character List", getlistRPC))
+        if (sendMessage("RPC 2: Get Character Names", getlistRPC))
             // Get server response
             if (read(socketID, buffer, 1024)) {
                 cout << ">> Character list received from server." << endl;
-                parseTokens(buffer, "parseCharacter");
+                makeLocalCopy(buffer, "parseCharacterNames");
                 cout << ">> Local copy made." << endl;
                 return true;
             }
@@ -176,25 +177,70 @@ bool Client::getCharacterNamesFromServer() {
 }
 
 /*
- * This function submits a "RPC-getTraitList" to server and gets back a list
+ * This function submits a "RPC-getTraitNames" to server and gets back a list
  * of trait names, which will be parsed into a set of trait names and
  * kept as a local copy.
  */
-bool Client::getTraitListFromServer() {
+bool Client::getTraitNamesFromServer() {
     char buffer[1024] = {0};
-    string temp = "getTraitList";
-    char *getlistRPC = &temp[0];
+    string temp = "getTraitNames";
+    char *getTraitNameRPC = &temp[0];
     if (connected)
-        if (sendMessage("RPC 3: Get Trait List", getlistRPC))
+        if (sendMessage("RPC 3: Get Trait Names", getTraitNameRPC))
             // Get server response
             if (read(socketID, buffer, 1024)) {
-                cout << ">> Trait list received from server." << endl;
-                parseTokens(buffer, "parseTrait");
-                cout << ">> Local copy made." << endl << endl;
+                cout << ">> Trait names received from server." << endl;
+                makeLocalCopy(buffer, "parseTraitNames");
+                cout << ">> Local copy made." << endl;
                 return true;
             }
-    perror(">> Error: Unable to get trait list from server.");
+    perror(">> Error: Unable to get trait names from server.");
     return false;
+}
+
+/*
+ * This function submits a "RPC-getTraitValues" to server for each character and gets back all the trait values
+ * associated with that character. The trait values will be mapped into a local active list, which contains all
+ * the remaining characters and their associated traits.
+ */
+bool Client::getTraitValuesFromServer() {
+    if (connected) {
+        cout << "\n>> Sending RPC 4: Get Trait Values message to server." << endl;
+
+        // Iterate through all characters to get their trait values
+        for (const string &who: characterNames) {
+            char buffer[1024] = {0};
+            stringstream ss;
+            string temp;
+
+            // Assemble getTraitValues message, include character's name in message
+            ss << "getTraitValues;" << who << ";";
+            ss >> temp;
+            unsigned long n = temp.length();
+            char rpcMessage[n + 1];
+            strcpy(rpcMessage, temp.c_str());
+
+            // Send message to to server to get the trait values associated with the character
+            if (!send(socketID, rpcMessage, strlen(rpcMessage) + 1, 0)) {
+                printf(">> RPC 4: Get Trait Values message failed to send for character %s.\n", who.c_str());
+                return false;
+            }
+
+            // Get server response
+            if (!read(socketID, buffer, 1024)) {
+                printf(">> Error: Unable to get trait values from server for character %s.\n", who.c_str());
+                return false;
+            }
+
+            // Add trait value info to map of active list
+            makeLocalCopy(buffer, "parseTraitValues");
+        }
+        cout << ">> Message sent successfully." << endl;
+        cout << ">> Trait values received for all characters from server." << endl;
+        cout << ">> Local copy made." << endl << endl;
+        return true;
+    }
+
 }
 
 /*
@@ -256,7 +302,7 @@ void Client::getQueryTraitName() {
             formatAnswer(answer);
         }
         // Check if trait name is valid. If no, prompt user to enter again.
-        if (traitList.find(answerPart1) != traitList.end()) {
+        if (traitNames.find(answerPart1) != traitNames.end()) {
             valid = true;
             strcpy(queryTraitName, answer.c_str());
         } else {
@@ -341,14 +387,24 @@ bool Client::validateUserInput(string &answer, int flag) {
 }
 
 /*
- * This function submits a guess to the server about the target characters name.
- */
-bool Client::guessName(const char* name) {}
-
-/*
  * This function submits a command to the server to eliminate a character from the game
  */
-bool Client::eliminatePerson(const char* name) {}
+bool Client::eliminatePerson() {
+
+
+}
+
+/*
+ * This function gets user's choice whom they want to eliminate from the active list.
+ */
+bool Client::getEliminateChoice() {
+
+}
+
+/*
+ * This function submits a guess to the server about the target characters name.
+ */
+bool Client::guessName(const char *name) {}
 
 /*
  * This function submits a "RPC-disconnect" to the server.
@@ -394,21 +450,35 @@ bool Client::sendMessage(const string &title, char *message) const {
 }
 
 /*
- * This function parses incoming messages to tokens.
+ * This function parses a buffer message from server into tokens and store the information in a local copy.
  */
-void Client::parseTokens(char *buffer, string option) {
+void Client::makeLocalCopy(char *buffer, string option) {
     char *token;
     char *rest = (char *) buffer;
 
     // Insert character names into a local list
-    if (option == "parseCharacter")
+    if (option == "parseCharacterNames")
         while ((token = strtok_r(rest, ";", &rest)))
-            characterList.insert(token);
+            characterNames.emplace_back(token);
 
-        // Insert trait names into a local list
-    else if (option == "parseTrait")
+
+        // Insert trait names into 2 local lists
+    else if (option == "parseTraitNames")
+        while ((token = strtok_r(rest, ";", &rest))) {
+            traitNames.insert(token);
+            traitNamesForDisplay.emplace_back(token);
+        }
+
+        // Insert trait values into a map of active list
+    else if (option == "parseTraitValues") {
+        vector<string> currTraits;
         while ((token = strtok_r(rest, ";", &rest)))
-            traitList.insert(token);
+            currTraits.emplace_back(token);
+        string who = currTraits.at(0);
+        if (activeList.find(who) == activeList.end())
+            activeList.insert(make_pair(who, currTraits));
+    }
+
 }
 
 /*

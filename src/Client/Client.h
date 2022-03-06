@@ -12,33 +12,36 @@
 #include <cstring>
 #include <string>
 #include <vector>
-#include <set>
+#include <unordered_set>
+#include <unordered_map>
 
 using namespace std;
 
 class Client {
 public:
-    char* userName;
-    set<string> characterList;
-    set<string> traitList;
-    vector<vector<string>> activeList;
+    char* userName;                                   // player's login name
+    vector<string> characterNames;                    // a local list of character names
+    unordered_set<string> traitNames;                 // a local list of trait names for searching
+    vector<string> traitNamesForDisplay;              // a local list of trait names for display
+    unordered_map<string, vector<string>> activeList; // a map of remaining characters and their traits
 
     Client();
     ~Client();
-    bool connectServer(const char* serverIP, int port);
+    bool connectServer(const char* serverIP, int port); // RPC 1
     bool logIn();
-    bool disconnectServer();
-    bool getCharacterNamesFromServer();
-    bool getTraitListFromServer();
-    bool queryTrait();
+    bool getCharacterNamesFromServer(); // RPC 2
+    bool getTraitNamesFromServer(); // RPC 3
+    bool getTraitValuesFromServer(); // RPC 4
+    bool queryTrait(); // RPC 5
+    bool eliminatePerson();
     bool guessName(const char* name);
-    bool eliminatePerson(const char* name);
+    bool disconnectServer(); // TODO
 
 private:
-    const int MAX_LEN = 10;
-    char* password;
-    char* queryTraitName;
-    char* queryTraitValue;
+    const int MAX_LEN = 10;         // player's login name length limit
+    char* password;                 // player's login password
+    char* queryTraitName;           // name of trait player wants to query
+    char* queryTraitValue;          // value of trait player wants to query
     int socketID;
     bool connected;
 
@@ -48,7 +51,8 @@ private:
     void getQueryTraitName();
     void getQueryTraitValue();
     bool validateUserInput(string &answer, int flag);
-    void parseTokens(char *buffer, string option);
+    bool getEliminateChoice();
+    void makeLocalCopy(char *buffer, string option);
     void formatAnswer(string &answer);
     string trim(const string &s);
     string ltrim(const string &s);

@@ -74,11 +74,14 @@ bool RPCImpl::rpcProcess() {
         if (rpcName == "connect") {  // This step is actually to authenticate user
             rpcConnect(arrayTokens);
         }
-        else if (rpcName == "getCharacterList") {
-            rpcGetCharacterList();
+        else if (rpcName == "getCharacterNames") {
+            rpcGetCharacterNames();
         }
-        else if (rpcName == "getTraitList") {
-            rpcGetTraitList();
+        else if (rpcName == "getTraitNames") {
+            rpcGetTraitNames();
+        }
+        else if (rpcName == "getTraitValues") {
+            rpcGetTraitValues(arrayTokens);
         }
         else if (rpcName == "queryTrait") {
             rpcQueryTrait(arrayTokens);
@@ -104,11 +107,8 @@ bool RPCImpl::rpcProcess() {
 void RPCImpl::parseTokens(char *buffer, vector<string> &a) {
     char *token;
     char *rest = (char *) buffer;
-
-    cout << ">> Parsing tokens." << endl;
-    while ((token = strtok_r(rest, ";", &rest))) {
+    while ((token = strtok_r(rest, ";", &rest)))
         a.emplace_back(token);
-    }
 }
 
 /*
@@ -157,35 +157,57 @@ bool RPCImpl::rpcConnect(vector<string> &arrayTokens) {
  * This function reduces the source list to a character name list
  * and send it to the client to keep as a local copy.
  */
-bool RPCImpl::rpcGetCharacterList() {
-    cout << ">> Processing RPC: Generating character list." << endl;
+bool RPCImpl::rpcGetCharacterNames() {
+    cout << ">> Processing RPC: Generating character names." << endl;
 
     // Generate character list and sent to client.
-    cout << ">> Sending character list." << endl;
+    cout << ">> Sending character names." << endl;
     string characterNames = getCharacterNames();
     if (!sendResponse(&characterNames[0])) {
-        perror(">> Error: Failed to send character list to client.\n");
+        perror(">> Error: Failed to send character names to client.\n");
         return false;
     }
-    cout << ">> Character list sent successfully.\n\n";
+    cout << ">> Character names sent successfully.\n\n";
     return true;
 }
 
 /*
  * This function returns the list of possible trait names.
  */
-bool RPCImpl::rpcGetTraitList() {
-    cout << ">> Processing RPC: Generating list of character traits." << endl;
+bool RPCImpl::rpcGetTraitNames() {
+    cout << ">> Processing RPC: Generating list of trait names." << endl;
 
-    // Generate character trait list and send to client.
-    string characterTraits = getTraitNames();
-    cout << ">> Sending list of traits to client." << endl;
+    // Generate character trait name list and send to client.
+    string characterTraits = newGame->getGameCharacter()->getTraitNames();
+    cout << ">> Sending list of trait names to client." << endl;
     if (!sendResponse(&characterTraits[0])) {
-        perror(">> Error: Failed to send list of traits to client.\n");
+        perror(">> Error: Failed to send trait names to client.\n");
         return false;
     }
-    cout << ">> Trait list sent successfully.\n\n";
+    cout << ">> Trait names sent successfully.\n\n";
     return true;
+}
+
+/*
+ * This function returns a list of trait values associated with the character.
+ */
+bool RPCImpl::rpcGetTraitValues(vector<string> &arrayTokens) {
+    const int CHARACTER_NAME = 1;
+    string currCharacter = arrayTokens[CHARACTER_NAME];
+
+    printf(">> Processing RPC: Generating a list of trait values for %s.\n", currCharacter.c_str());
+
+    // Get the list of trait values to send to client, include character name at the beginning
+    string traitInfo = currCharacter + ";";
+    traitInfo += newGame->sourceList->find(currCharacter)->second->traitValuesForDisplay;
+    cout << ">> Sending client trait values: " << traitInfo << endl;
+    if (!sendResponse(&traitInfo[0])) {
+        perror(">> Error: Failed to send trait values to client.\n");
+        return false;
+    }
+    cout << ">> Trait values sent successfully.\n\n";
+    return true;
+
 }
 
 /*
@@ -274,27 +296,16 @@ string RPCImpl::customizedReply(string& traitName, string &traitValue, int flag)
 
 }
 
-
 /*
  * This function returns a string containing the names of all the possible
  * characters a client can choose from.
  */
 string RPCImpl::getCharacterNames() {
     stringstream names;
-    for (Character *person: *newGame->getSourceList()) {
-        names <<  person->getName();
-        names << ";";
-    }
+    for (const string& aName:newGame->characterNames)
+        names << aName << ";";
     return names.str();
 }
-
-/*
- * This function returns the traits that can be guessed at by the client.
- */
-string RPCImpl::getTraitNames() {
-    return newGame->getGameCharacter()->getTraitNames();
-}
-
 
 /*
  * This function disconnects the client from the server.

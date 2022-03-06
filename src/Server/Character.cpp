@@ -20,6 +20,7 @@ Character::Character() {
     // initialize name, traits, and trait values to known unassigned values
     name = new char[20];
     nameLength = 0;
+    traitValuesForDisplay = "";
     this->clearTraits();
 }
 
@@ -83,25 +84,9 @@ bool Character::setName(string characterName) {
  */
 string Character::getTraitNames() {
     stringstream traitNames;
-    for (map<string, string>::iterator iter = traits.begin(); iter != traits.end(); ++iter) {
-        traitNames << iter->first;
-        traitNames << ";";
-    }
+    for (map<string, string>::iterator iter = traits.begin(); iter != traits.end(); ++iter)
+        traitNames << iter->first << ";";
     return traitNames.str();
-}
-
-/*
- * This function set the value of the supplied trait.  If the trait is not
- * found, it returns false.
- */
-bool Character::setTrait(string trait, string traitValue) {
-    if (traits.find(trait) != traits.end()) {
-        // trait exists, update value
-        traits.find(trait)->second = traitValue;
-        return true;
-    }
-    // if the code gets here, it failed to find the supplied trait
-    return false;
 }
 
 /*
