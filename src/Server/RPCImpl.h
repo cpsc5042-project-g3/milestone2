@@ -39,21 +39,20 @@ private:
     int socketID;
     Game *newGame;
 
-    // First one in this function should be a connect, and it
-    // will continue try to process RPC's until a Disconnect happens
-    static void parseTokens(char* buffer, vector<string>& a);
-    static void printToken(vector<string>& a);
-    bool sendResponse(char* message) const;
     bool rpcConnect(vector<std::string>& arrayTokens);
+    bool validLogin(const string& userName, const string& password);
     bool rpcGetCharacterNames();
     bool rpcGetTraitNames();
     bool rpcGetTraitValues(vector<string> &arrayTokens);
     bool rpcQueryTrait(vector<string> &arrayTokens);
-    bool rpcDisconnect();
     bool queryTraitResponse(string& traitName, string& traitValue);
     string customizedReply(string& traitName, string &traitValue, int flag);
-    bool validLogin(const string& userName, const string& password);
-    void formatResponse(string &response);
+    static void formatResponse(string &response);
+    bool rpcFinalGuess(vector<string> &arrayTokens);
+    bool rpcDisconnect();
+    bool sendResponse(char* message) const;
+    static void parseTokens(char* buffer, vector<string>& a);
+    static void printToken(vector<string>& a);
 
 };
 

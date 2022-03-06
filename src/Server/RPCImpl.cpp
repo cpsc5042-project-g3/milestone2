@@ -18,7 +18,7 @@ using namespace std;
 typedef struct _GlobalContext {
     int g_rpcCount;
 }
-GlobalContext;  // What is this?
+        GlobalContext;  // What is this?
 GlobalContext globalObj; // We need to protect this, as we don't want bad data
 
 
@@ -73,24 +73,20 @@ bool RPCImpl::rpcProcess() {
 
         if (rpcName == "connect") {  // This step is actually to authenticate user
             rpcConnect(arrayTokens);
-        }
-        else if (rpcName == "getCharacterNames") {
+        } else if (rpcName == "getCharacterNames") {
             rpcGetCharacterNames();
-        }
-        else if (rpcName == "getTraitNames") {
+        } else if (rpcName == "getTraitNames") {
             rpcGetTraitNames();
-        }
-        else if (rpcName == "getTraitValues") {
+        } else if (rpcName == "getTraitValues") {
             rpcGetTraitValues(arrayTokens);
-        }
-        else if (rpcName == "queryTrait") {
+        } else if (rpcName == "queryTrait") {
             rpcQueryTrait(arrayTokens);
-        }
-        else if (rpcName == "disconnect") {
+        } else if (rpcName == "finalGuess") {
+            rpcFinalGuess(arrayTokens);
+        } else if (rpcName == "disconnect") {
             rpcDisconnect();
             continueOn = false; // We are going to leave this loop, as we are done
-        }
-        else {
+        } else {
             string error = "Error: Invalid request";
             cerr << ">> " << error << endl;
             sendResponse(&error[0]);
@@ -98,40 +94,6 @@ bool RPCImpl::rpcProcess() {
         }
     }
     return true;
-}
-
-/*
- * This function parses incoming messages to identity the RPC and any
- * included arguments for the RPC.
- */
-void RPCImpl::parseTokens(char *buffer, vector<string> &a) {
-    char *token;
-    char *rest = (char *) buffer;
-    while ((token = strtok_r(rest, ";", &rest)))
-        a.emplace_back(token);
-}
-
-/*
- * This function prints out the arguments included with an RPC.  This helps
- * with troubleshooting.
- */
-void RPCImpl::printToken(vector<string> &arrayTokens) {
-    // Enumerate through the tokens. The first token is always the specific RPC name
-    cout << ">> Token(s) received: ";
-    for (auto &arrayToken : arrayTokens) {
-//        printf("\n\ttoken = %s", arrayToken.c_str());
-        printf("%s  ", arrayToken.c_str());
-    }
-    cout << endl;
-}
-
-/*
- * This function sends a response to the client application via the established socket.
- */
-bool RPCImpl::sendResponse(char* message) const {
-    size_t nlen = strlen(message);
-    message[nlen] = 0;
-    return send(socketID, message, strlen(message) + 1, 0);
 }
 
 /*
@@ -154,6 +116,62 @@ bool RPCImpl::rpcConnect(vector<string> &arrayTokens) {
 }
 
 /*
+ * This function validates the supplied login credentials against a list of
+ * approved users.  Normally, we would expect approved users to be maintained
+ * in a database somewhere, but we are simulating this by maintaining these
+ * in a simple text file.
+ */
+bool RPCImpl::validLogin(const string &userName, const string &password) {
+    string line, name, pwd;
+    auto *users = new map<string, string>();
+
+    // open file of approved users
+    ifstream inFile("ApprovedUsers.txt");
+    if (!inFile.is_open()) {
+        cout << ">> Failed to read approved users list." << endl;
+        delete users;
+        return false;
+    }
+
+    // read approved users and their passwords line by line
+    while (inFile.peek() != EOF) {
+        getline(inFile, line);
+
+        if (line.length() > 1) {
+            stringstream ss(line);
+            ss >> name >> pwd;
+            users->insert(make_pair(name, pwd));
+        }
+    }
+    inFile.close();
+
+    // validate supplied userName and password
+    auto iter = users->find(userName);
+    if (iter == users->end()) {
+        // user name not found
+        string response = "Invalid user name.";
+        cout << ">> " << response << endl << endl;
+        sendResponse(&response[0]);
+        delete users;
+        return false;
+    } else if (iter->second == password) {
+        // found matching user name AND password
+        string response = "User name and password validated.";
+        cout << ">> " << response << endl << endl;
+        sendResponse(&response[0]);
+        delete users;
+        return true;
+    } else {
+        // user name found, but password does not exist
+        string response = "User name found, but password does not match.";
+        cout << ">> " << response << endl << endl;
+        sendResponse(&response[0]);
+        delete users;
+        return false;
+    }
+}
+
+/*
  * This function reduces the source list to a character name list
  * and send it to the client to keep as a local copy.
  */
@@ -169,6 +187,17 @@ bool RPCImpl::rpcGetCharacterNames() {
     }
     cout << ">> Character names sent successfully.\n\n";
     return true;
+}
+
+/*
+ * This function returns a string containing the names of all the possible
+ * characters a client can choose from.
+ */
+string RPCImpl::getCharacterNames() {
+    stringstream names;
+    for (const string &aName:newGame->characterNames)
+        names << aName << ";";
+    return names.str();
 }
 
 /*
@@ -233,7 +262,7 @@ bool RPCImpl::rpcQueryTrait(vector<string> &arrayTokens) {
  * This function checks the supplied traitName and traitValue against
  * the selected game character. It returns true if the trait value matches.
  */
-bool RPCImpl::queryTraitResponse(string& traitName, string& traitValue) {
+bool RPCImpl::queryTraitResponse(string &traitName, string &traitValue) {
     bool success;
     string message1;
     string expectedTraitValue;
@@ -246,8 +275,7 @@ bool RPCImpl::queryTraitResponse(string& traitName, string& traitValue) {
         if (!success) {
             cout << ">> Trait query DID NOT match game character traits." << endl;
             message1 = "Sorry.. " + customizedReply(traitName, traitValue, 2);
-        }
-        else {
+        } else {
             cout << ">> Trait query DID match game character traits." << endl;
             message1 = "Nice guess! " + customizedReply(traitName, traitValue, 1);
         }
@@ -264,7 +292,7 @@ bool RPCImpl::queryTraitResponse(string& traitName, string& traitValue) {
 /*
  *
  */
-string RPCImpl::customizedReply(string& traitName, string &traitValue, int flag) {
+string RPCImpl::customizedReply(string &traitName, string &traitValue, int flag) {
     string message2;
     string expectedValue = newGame->getGameCharacter()->checkTraitValue(traitName);
     if (traitName == "Bald") {
@@ -272,20 +300,17 @@ string RPCImpl::customizedReply(string& traitName, string &traitValue, int flag)
             message2 = "This person is bald.";
         else
             message2 = "This person is not bald.";
-    }
-    else if (traitName == "Gender") {
+    } else if (traitName == "Gender") {
         if (expectedValue == "Male")
             message2 = "This person is male.";
         else
             message2 = "This person is female.";
-    }
-    else if (traitName == "Facial hair" || traitName == "Glasses" || traitName == "Hat") {
+    } else if (traitName == "Facial hair" || traitName == "Glasses" || traitName == "Hat") {
         if (expectedValue == "Yes")
             message2 = "This person does have " + traitName + ".";
         else
             message2 = "This person does not have " + traitName + ".";
-    }
-    else if (traitName == "Eye color" || traitName == "Hair color" || traitName == "Nose size") {
+    } else if (traitName == "Eye color" || traitName == "Hair color" || traitName == "Nose size") {
         if (flag == 1)
             message2 = "This person does have " + traitValue + " " + traitName + ".";
         else
@@ -297,14 +322,42 @@ string RPCImpl::customizedReply(string& traitName, string &traitValue, int flag)
 }
 
 /*
- * This function returns a string containing the names of all the possible
- * characters a client can choose from.
+ * This function formats response to a word with the initial letter capitalized and the rest in lower case
  */
-string RPCImpl::getCharacterNames() {
-    stringstream names;
-    for (const string& aName:newGame->characterNames)
-        names << aName << ";";
-    return names.str();
+void RPCImpl::formatResponse(string &response) {
+    transform(response.begin(), response.end(), response.begin(), [](unsigned char c) { return std::tolower(c); });
+    response[0] = toupper(response[0]);
+}
+
+/*
+ * This function processes the final guess and checks if user has won.
+ */
+bool RPCImpl::rpcFinalGuess(vector<string> &arrayTokens) {
+    cout << ">> Processing RPC: Final Guess" << endl << endl;
+
+    // Get user final guess
+    const int FINAL_GUESS = 1;
+    string traitName = arrayTokens[FINAL_GUESS];
+    string resultMsg;
+    string expectedName = newGame->getGameCharacter()->getName();
+
+    // Send guess result to client
+    cout << ">> Checking if guess is correct." << endl;
+    if (traitName == expectedName) {
+        resultMsg = "Correct";  // do not change this string
+        cout << ">> User guessed correctly." << endl;
+    }
+    else {
+        resultMsg = expectedName; // if incorrect, send correct answer to client
+        cout << ">> User did not make the right guess." << endl;
+    }
+    cout << ">> Sending final result to client." << endl;
+    if (!sendResponse(&resultMsg[0])) {
+        perror(">> Error: Failed to send final result to client.\n");
+        return false;
+    }
+    cout << ">> Final result sent successfully.\n\n";
+    return true;
 }
 
 /*
@@ -322,65 +375,40 @@ bool RPCImpl::rpcDisconnect() {
 }
 
 /*
- * This function validates the supplied login credentials against a list of
- * approved users.  Normally, we would expect approved users to be maintained
- * in a database somewhere, but we are simulating this by maintaining these
- * in a simple text file.
+ * This function sends a response to the client application via the established socket.
  */
-bool RPCImpl::validLogin(const string &userName, const string &password) {
-    string line, name, pwd;
-    auto *users = new map<string, string>();
-
-    // open file of approved users
-    ifstream inFile("ApprovedUsers.txt");
-    if (!inFile.is_open()) {
-        cout << ">> Failed to read approved users list." << endl;
-        delete users;
-        return false;
-    }
-
-    // read approved users and their passwords line by line
-    while (inFile.peek() != EOF) {
-        getline(inFile, line);
-
-        if (line.length() > 1) {
-            stringstream ss(line);
-            ss >> name >> pwd;
-            users->insert(make_pair(name, pwd));
-        }
-    }
-    inFile.close();
-
-    // validate supplied userName and password
-    auto iter = users->find(userName);
-    if (iter == users->end()) {
-        // user name not found
-        string response = "Invalid user name.";
-        cout << ">> " << response << endl << endl;
-        sendResponse(&response[0]);
-        delete users;
-        return false;
-    } else if (iter->second == password) {
-        // found matching user name AND password
-        string response = "User name and password validated.";
-        cout << ">> " << response << endl << endl;
-        sendResponse(&response[0]);
-        delete users;
-        return true;
-    } else {
-        // user name found, but password does not exist
-        string response = "User name found, but password does not match.";
-        cout << ">> " << response << endl << endl;
-        sendResponse(&response[0]);
-        delete users;
-        return false;
-    }
+bool RPCImpl::sendResponse(char *message) const {
+    size_t nlen = strlen(message);
+    message[nlen] = 0;
+    return send(socketID, message, strlen(message) + 1, 0);
 }
 
 /*
- * This function formats response to a word with the initial letter capitalized and the rest in lower case
+ * This function parses incoming messages to identity the RPC and any
+ * included arguments for the RPC.
  */
-void RPCImpl::formatResponse(string &response) {
-    transform(response.begin(), response.end(), response.begin(), [](unsigned char c) { return std::tolower(c); });
-    response[0] = toupper(response[0]);
+void RPCImpl::parseTokens(char *buffer, vector<string> &a) {
+    char *token;
+    char *rest = (char *) buffer;
+    while ((token = strtok_r(rest, ";", &rest)))
+        a.emplace_back(token);
 }
+
+/*
+ * This function prints out the arguments included with an RPC.  This helps
+ * with troubleshooting.
+ */
+void RPCImpl::printToken(vector<string> &arrayTokens) {
+    // Enumerate through the tokens. The first token is always the specific RPC name
+    cout << ">> Token(s) received: ";
+    for (auto &arrayToken : arrayTokens) {
+//        printf("\n\ttoken = %s", arrayToken.c_str());
+        printf("%s  ", arrayToken.c_str());
+    }
+    cout << endl;
+}
+
+
+
+
+

@@ -186,11 +186,11 @@ int main(int argc, char const *argv[]) {
                 client->queryTrait();
                 break;
             case 3: // Eliminate Person
-                cout << "\nFeature not yet available!" << endl << endl;
                 client->eliminatePerson();
+                displayCharacterList(client);
                 break;
             case 4: // Make a Guess
-                cout << "\nFeature not yet available!" << endl << endl;
+                client->guessName();
                 break;
             case 5: // Disconnect from server
                 if (client->disconnectServer())

@@ -263,7 +263,7 @@ bool Client::queryTrait() {
     strcpy(rpcMessage, temp.c_str());
 
     if (connected)
-        if (sendMessage("RPC4: Query trait", rpcMessage))
+        if (sendMessage("RPC5: Query trait", rpcMessage))
 
             // Get server response
             if (read(socketID, buffer, 1024)) {
@@ -387,24 +387,106 @@ bool Client::validateUserInput(string &answer, int flag) {
 }
 
 /*
- * This function submits a command to the server to eliminate a character from the game
+ * This function updates the active list and the character names list based on users' elimination choices.
  */
 bool Client::eliminatePerson() {
+    vector<int> rowNumbers;
+    string eliminatedName;
+    getEliminateChoice(rowNumbers);
+    string temp[characterNames.size()];
+    int vectorSizeShrink = 1;
 
+    // Copy the remaining character names into a temporary array to match table row number
+    for (int i = 0; i < characterNames.size(); i++)
+        temp[i] = characterNames.at(i);
 
+    cout << "\nThese characters have been eliminated from the table: ";
+
+    for (int rowNumber:rowNumbers) {
+        eliminatedName = temp[rowNumber - 1];
+        // Update the active list
+        activeList.erase(eliminatedName);
+
+        // Update the character names list
+        characterNames.erase(characterNames.begin() + rowNumber - vectorSizeShrink);
+        cout << eliminatedName << "  ";
+        vectorSizeShrink++;
+    }
+    cout << endl << endl;
 }
 
 /*
- * This function gets user's choice whom they want to eliminate from the active list.
+ * This function asks user whom they want to eliminate from the active list. Use input is validated.
  */
-bool Client::getEliminateChoice() {
+void Client::getEliminateChoice(vector<int> &rowNumbers) {
+    string count;
+    string rowChoice;
+    int size = characterNames.size();
+    bool valid;
 
+    do {
+        cout << "How many characters do you want to eliminate? ";
+        cin >> count;
+        valid = validateNumericInput(count, size);
+    } while (!valid);
+
+    do {
+        valid = false;
+        rowNumbers.clear();
+        printf("You want to eliminate %d characters.\n", stoi(count));
+        for (int i = 0; i < stoi(count); i++) {
+            cout << "Enter the ROW number of character No. " << i + 1 << ": ";
+            cin >> rowChoice;
+            valid = validateNumericInput(count, size);
+            if (!valid)
+                break;
+            rowNumbers.emplace_back(stoi(rowChoice));
+        }
+    } while (!valid);
 }
 
 /*
  * This function submits a guess to the server about the target characters name.
  */
-bool Client::guessName(const char *name) {}
+bool Client::guessName() {
+    stringstream ss;
+    string temp;
+    char buffer[1024] = {0};
+    string guess = getUserGuess();
+
+    // Assemble login message to server
+    ss << "finalGuess;" << guess << ";";
+    ss >> temp;
+    int n = temp.length();
+    char rpcMessage[n + 1];
+    strcpy(rpcMessage, temp.c_str());
+
+    // Send final guess message to server and get response
+    if (sendMessage("RPC 6: Final Guess", rpcMessage)) {
+        // Get server response
+        if (read(socketID, buffer, 1024)) {
+            cout << ">> Server response: " << buffer << endl;
+            if (strcmp(buffer, "Correct.") == 0) {
+                printf(">> Congratulations! %s, you have made the right guess!\n", userName);
+                return true;
+            }
+        }
+    }
+    printf(">> Sorry %s, you did not make the right guess. The character is: %s.\n", userName, buffer);
+    return false;
+}
+
+/*
+ * This function prompts the user to enter their guess.
+ */
+string Client::getUserGuess() {
+    string guess;
+    cout << ">> Who do you think the character is? Enter the name: ";
+    cin >> guess;
+    cout << ">> You've entered " << guess << ", now let's check if you are right!" << endl;
+    formatAnswer(guess); // accept upper or lower case answer
+    return guess;
+}
 
 /*
  * This function submits a "RPC-disconnect" to the server.
@@ -510,3 +592,13 @@ string Client::rtrim(const string &s) {
     return regex_replace(s, regex("\\s+$"), std::string(""));
 }
 
+/*
+ * This function validates that user's input only contains digit and is a valid row number or count.
+ */
+bool Client::validateNumericInput(const string &str, int size) {
+    if (str.find_first_not_of("0123456789") != string::npos || stoi(str) > size || stoi(str) < 1) {
+        printf(">> Error: Please enter a number between 1 and %d.\n", size);
+        return false;
+    }
+    return true;
+}

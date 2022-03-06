@@ -34,7 +34,7 @@ public:
     bool getTraitValuesFromServer(); // RPC 4
     bool queryTrait(); // RPC 5
     bool eliminatePerson();
-    bool guessName(const char* name);
+    bool guessName(); // RPC 6
     bool disconnectServer(); // TODO
 
 private:
@@ -51,12 +51,14 @@ private:
     void getQueryTraitName();
     void getQueryTraitValue();
     bool validateUserInput(string &answer, int flag);
-    bool getEliminateChoice();
+    void getEliminateChoice(vector<int> &rowNumbers);
     void makeLocalCopy(char *buffer, string option);
-    void formatAnswer(string &answer);
+    static void formatAnswer(string &answer);
+    static string getUserGuess();
     string trim(const string &s);
     string ltrim(const string &s);
     string rtrim(const string &s);
+    bool validateNumericInput(const string &str, int size);
 
 };
 
