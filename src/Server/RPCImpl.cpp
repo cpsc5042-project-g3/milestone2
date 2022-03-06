@@ -207,7 +207,7 @@ bool RPCImpl::rpcGetTraitNames() {
     cout << ">> Processing RPC: Generating list of trait names." << endl;
 
     // Generate character trait name list and send to client.
-    string characterTraits = newGame->getGameCharacter()->getTraitNames();
+    string characterTraits = newGame->traitNamesForDisplay;
     cout << ">> Sending list of trait names to client." << endl;
     if (!sendResponse(&characterTraits[0])) {
         perror(">> Error: Failed to send trait names to client.\n");

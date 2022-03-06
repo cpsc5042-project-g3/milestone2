@@ -58,7 +58,7 @@ void Game::setGameID() {
  */
 void Game::setSourceList() {
     char* rest;
-    int lineNum;
+    int lineNum = 0;
     string line;
     vector<string> traitNames, traitValues;
 
@@ -70,11 +70,19 @@ void Game::setSourceList() {
 
     // read first line of file to get trait names
     getline(inFile,line);
-    lineNum++;
 
     // parse first line to store character traits in the traitNames vector
     rest = strcpy(new char[line.length() + 1], line.c_str());
     parseTokens(rest, traitNames);
+
+    // Convert first line of trait names into a string to pass to Client
+    if (lineNum == 0) {
+        stringstream ss;
+        for (string &traitName: traitNames)
+            ss << traitName << ";";
+        traitNamesForDisplay = ss.str();
+    }
+
 
     // read trait values and assign to sourceList
     while (inFile.peek() != EOF) {
@@ -82,7 +90,6 @@ void Game::setSourceList() {
         traitValues.clear();
         // read and parse line
         getline(inFile, line);
-        lineNum++;
         rest = strcpy(new char[line.length() + 1], line.c_str());
         parseTokens(rest, traitValues);
 
@@ -99,7 +106,7 @@ void Game::setSourceList() {
                 } else {
                     // add trait for character
                     c->addTrait(traitNames.at(i), traitValues.at(i));
-                    // generate a list of trait values to send to Client
+                    // generate a list of trait values IN ORDER to send to Client
                     tempTraitValueHolder << traitValues.at(i) << ";";
                 }
             }

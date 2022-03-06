@@ -59,9 +59,11 @@ void displayMenu2(char *myName) {
 void displayCharacterList(Client *client) {
     // Write table header
     cout << ">> Here is the working list of characters:" << endl;
-    cout << "Row  " << setw(12) << left << "Name";
-    for (const string& traitName : client->traitNamesForDisplay)
+    cout << "Row  ";
+
+    for (const string& traitName : client->traitNamesForDisplay) {
         cout << setw(12) << left << traitName;
+    }
     cout << endl;
 
     // Write divider line
