@@ -30,13 +30,15 @@ public:
     explicit RPCImpl(int socket);
     ~RPCImpl();
     bool rpcProcess();
-
+    void updateLeaderboard(int score, const string &name);
     string getCharacterNames();
 
 private:
     const int BUFFER_SIZE = 1024;
     int m_rpcCount;
     int socketID;
+    int queryCount;
+    string userID;
     Game *newGame;
 
     bool rpcConnect(vector<std::string>& arrayTokens);

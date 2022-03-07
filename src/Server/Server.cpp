@@ -14,10 +14,12 @@
 #include <vector>
 #include <iterator>
 #include <iostream>
+#include <semaphore.h>
 #include "Server.h"
 #include "RPCImpl.h"
 
 using namespace std;
+
 
 Server::Server(int portIn) {
     server_fd = 0;   // "listening" socket descriptor
@@ -124,3 +126,6 @@ void* Server::myThreadFun(void* vargp) {
     return nullptr;
 
 }
+
+
+

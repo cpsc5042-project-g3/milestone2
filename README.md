@@ -12,14 +12,15 @@ logic has NOT yet been implemented on either side.
     - Eg. what should happen if user wants to start another game (under the same login)
     - Eg. what should happen if user wins or loses?
   - Does Client need to know Game ID?
+
+- Found a few bugs we might want to address
+  - Starting a new game does not work as anticipated.  I don't think we've tried to do much with it so not surprising.
+  - Facial hair was not recognized as a query trait no matter how many ways I tried to spell it.
+  - An incorrect guess results in a statement starting with "Sorry.." there's a double period there.  Minor but caught my eye.
+  - Had a game where I guessed white hair and was told character didn't have white hair, but upon losing the game, the character was listed as having white hair. O.o
   
 - Mutex application 
-  - Server >> Create a map of <GameID, Game>, possibly in the Global context class 
-  - Server >> Create two "GAME STATE": "IN-PROGRESS", "ENDED" (?)
-    - Possibly add a boolean "Game state" field to Game class 
-  - Server >> After a Game is created, set game state to "IN-PROGRESS"
-  - Server >> After a player has won, set game state to "ENDED"
-  - Use mutex locker to ensure only one "GAME STATE" is updated at once
+  - RPCImpl >> Test updateLeaderboard() on game win.  Maybe we should have the server printout the leader board after game conclusion?
   
 **- Powerpoint presentation can be started!
 **
@@ -31,6 +32,9 @@ logic has NOT yet been implemented on either side.
 
 
 **Milestone 2 already done:**
+ - RPCImpl >> added updateLeaderboard() function as well as a couple other supporting functions, was unable to test fully.  Used a semaphore
+   like we did in HW3.  I think that's enough, but we can add a mutex if needed.
+
 - Server >> Game class created on Server side 
 - Server >> Character class created on Server side 
 - added new RPC called ```getCharacterList```

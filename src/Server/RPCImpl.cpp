@@ -12,14 +12,15 @@
 #include "LocalContext.h"
 #include "Game.h"
 #include <algorithm>
+#include <semaphore.h>
 
 using namespace std;
 
-typedef struct _GlobalContext {
-    int g_rpcCount;
-}
-        GlobalContext;  // What is this?
-GlobalContext globalObj; // We need to protect this, as we don't want bad data
+const int LEADERBOARD_SIZE = 10;
+vector<string> leaderNames;     // global variable, protected by semaphore
+vector<int> leaderScores;       // global variable, protected by semaphore
+int minScore;                   // global variable, protected by semaphore
+sem_t sem;
 
 
 /*
@@ -29,6 +30,7 @@ RPCImpl::RPCImpl(int socket) {
     socketID = socket;
     m_rpcCount = 0; // TODO
     newGame = new Game;
+    queryCount = 0;
 }
 
 /*
@@ -156,6 +158,7 @@ bool RPCImpl::validLogin(const string &userName, const string &password) {
         return false;
     } else if (iter->second == password) {
         // found matching user name AND password
+        userID = userName;
         string response = "User name and password validated.";
         cout << ">> " << response << endl << endl;
         sendResponse(&response[0]);
@@ -255,6 +258,9 @@ bool RPCImpl::rpcQueryTrait(vector<string> &arrayTokens) {
     // Get rid of hyphen from client input
     replace(traitName.begin(), traitName.end(), '-', ' ');
 
+    // keep score
+    queryCount++;
+
     return queryTraitResponse(traitName, traitValue);
 }
 
@@ -329,6 +335,7 @@ void RPCImpl::formatResponse(string &response) {
     response[0] = toupper(response[0]);
 }
 
+
 /*
  * This function processes the final guess and checks if user has won.
  */
@@ -346,6 +353,7 @@ bool RPCImpl::rpcFinalGuess(vector<string> &arrayTokens) {
     if (traitName == expectedName) {
         resultMsg = "Correct";  // do not change this string
         cout << ">> User guessed correctly." << endl;
+        updateLeaderboard(queryCount, userID);
     }
     else {
         resultMsg = expectedName; // if incorrect, send correct answer to client
@@ -406,6 +414,50 @@ void RPCImpl::printToken(vector<string> &arrayTokens) {
         printf("%s  ", arrayToken.c_str());
     }
     cout << endl;
+}
+
+int getMinScore() {
+    int score = 1000000;  // if someone is playing this long, we are in trouble
+
+    for (int s : leaderScores) {
+        // traverse vector to find min score
+        if (s < score) {
+            score = s;
+        }
+    }
+    return score;
+}
+
+
+void RPCImpl::updateLeaderboard(int score, const string &name) {
+    // wait until semaphore says go
+    sem_wait(&sem);
+
+    // lots of room >> add score
+    if (leaderScores.size() < LEADERBOARD_SIZE) {
+        leaderScores.emplace_back(score);
+        leaderNames.emplace_back(name);
+        minScore = getMinScore();
+    }
+
+    // leaderboard is full, check if score qualifies and replace lowest score
+    // TODO: want to do this sorted if time allows.
+    if (score < minScore) {
+        for (int i = leaderScores.size(); i-- > 0;) {
+            if (leaderScores[i] == minScore) {
+                leaderScores[i] = score;
+                leaderNames[i] = name;
+                minScore = getMinScore();
+                i = 0;      // break out of loop
+            }
+        }
+    }
+
+    // implied else statement here that does nothing
+    // i.e. (score >= minScore) && (leaderScores >= LEADERBOARD_SIZE) >> "no soup for you"
+
+    // end of critical section, allow others to use semaphore
+    sem_post(&sem);
 }
 
 
