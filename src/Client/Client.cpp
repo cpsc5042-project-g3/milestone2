@@ -472,7 +472,7 @@ bool Client::guessName() {
         // Get server response
         if (read(socketID, buffer, 1024)) {
             cout << ">> Server response: " << buffer << endl;
-            if (strcmp(buffer, "Correct.") == 0) {
+            if (strcmp(buffer, "Correct") == 0) {
                 printf(">> Congratulations! %s, you have made the right guess!\n", userName);
                 return true;
             }

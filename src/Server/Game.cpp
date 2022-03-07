@@ -122,6 +122,7 @@ void Game::setSourceList() {
             cerr << ">> Issue with character specified on line: " << lineNum;
             cerr << ".  Character input skipped." << endl;
         }
+        lineNum++;
     }
 
     // cleanup
