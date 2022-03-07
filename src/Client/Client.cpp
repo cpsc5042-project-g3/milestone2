@@ -16,6 +16,8 @@
 #include <regex>
 
 using namespace std;
+const string ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const string ENDOFLINE = "\r\n";
 
 /*
  * This is the constructor for the Client object.
@@ -186,14 +188,16 @@ bool Client::getTraitNamesFromServer() {
     string temp = "getTraitNames";
     char *getTraitNameRPC = &temp[0];
     if (connected)
-        if (sendMessage("RPC 3: Get Trait Names", getTraitNameRPC))
+        if (sendMessage("RPC 3: Get Trait Names", getTraitNameRPC)) {
             // Get server response
-            if (read(socketID, buffer, 1024)) {
+            bool result = read(socketID, buffer, 1024);
+            if (result) {
                 cout << ">> Trait names received from server." << endl;
                 makeLocalCopy(buffer, "parseTraitNames");
                 cout << ">> Local copy made." << endl;
                 return true;
             }
+        }
     perror(">> Error: Unable to get trait names from server.");
     return false;
 }
@@ -538,22 +542,30 @@ bool Client::sendMessage(const string &title, char *message) const {
  */
 void Client::makeLocalCopy(char *buffer, string option) {
     char *token;
-    char *rest = (char *) buffer;
+    char *rest;
+    string str(buffer);
+
+    // trim any end of line constants
+    int first = str.find_first_of(ALPHABET);
+    int last = str.find_first_of(ENDOFLINE);
+    string trimmed = str.substr(first, last - first);
+    rest = &trimmed[0];
 
     // Insert character names into a local list
-    if (option == "parseCharacterNames")
+    if (option == "parseCharacterNames") {
         while ((token = strtok_r(rest, ";", &rest)))
             characterNames.emplace_back(token);
+    }
 
-
-        // Insert trait names into 2 local lists
-    else if (option == "parseTraitNames")
+    // Insert trait names into 2 local lists
+    else if (option == "parseTraitNames") {
         while ((token = strtok_r(rest, ";", &rest))) {
             traitNames.insert(token);
             traitNamesForDisplay.emplace_back(token);
         }
+    }
 
-        // Insert trait values into a map of active list
+     // Insert trait values into a map of active list
     else if (option == "parseTraitValues") {
         vector<string> currTraits;
         while ((token = strtok_r(rest, ";", &rest)))
@@ -562,7 +574,6 @@ void Client::makeLocalCopy(char *buffer, string option) {
         if (activeList.find(who) == activeList.end())
             activeList.insert(make_pair(who, currTraits));
     }
-
 }
 
 /*

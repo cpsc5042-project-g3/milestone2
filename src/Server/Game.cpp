@@ -63,7 +63,7 @@ void Game::setSourceList() {
     vector<string> traitNames, traitValues;
 
     // open file of characters and their traits
-    ifstream inFile("CharacterList.csv");
+    ifstream inFile("CharacterList.txt");
     if (!inFile.is_open()) {
         cout << ">> Failed to import character properties." << endl;
     }
@@ -169,6 +169,6 @@ void Game::parseTokens(char* text, vector<string> &v) {
     char* trait;
     char* rest = (char*) text;
 
-    while ((trait = strtok_r(rest, ",", &rest)))
+    while ((trait = strtok_r(rest, ";", &rest)))
         v.emplace_back(trait);
 }
