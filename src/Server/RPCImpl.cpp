@@ -17,9 +17,9 @@
 
 using namespace std;
 
-const int LEADERBOARD_SIZE = 10;
+const int LEADERBOARD_SIZE = 5;
 vector<string> leaderNames;     // global variable, protected by semaphore
-vector<int> leaderScores;       // global variable, protected by semaphore
+vector<int> leaderScores;       // global variable, protected by semaphore; holds the queryCounts of each player
 int minScore = 1000000;         // global variable, protected by semaphore
 sem_t sem;
 
@@ -85,6 +85,8 @@ bool RPCImpl::rpcProcess() {
             rpcQueryTrait(arrayTokens);
         } else if (rpcName == "finalGuess") {
             rpcFinalGuess(arrayTokens);
+        } else if (rpcName == "getLeaderBoard") {
+            rpcGetLeaderBoard();
         } else if (rpcName == "disconnect") {
             rpcDisconnect();
             continueOn = false; // We are going to leave this loop, as we are done
@@ -368,6 +370,34 @@ bool RPCImpl::rpcFinalGuess(vector<string> &arrayTokens) {
 }
 
 /*
+ * This function sends the leader board info to the client.
+ */
+bool RPCImpl::rpcGetLeaderBoard() {
+    cout << ">> Processing RPC: Get leader board" << endl << endl;
+    string response;
+
+    // If leader board is empty, send "Empty"
+    if (leaderNames.empty())
+        response = "Empty";
+
+    // Else, assemble leader border info, separate everything by ";"
+    else {
+        stringstream ss;
+        for (int i = 0; i < leaderNames.size(); i++)
+            ss << leaderNames[i] << ";" << leaderScores[i] << ";";
+        response = ss.str();
+    }
+
+    // Send leader board to client
+    if (!sendResponse(&response[0])) {
+        perror(">> Error: Failed to send leader board to client.\n");
+        return false;
+    }
+    cout << ">> Leader board sent successfully." << endl;
+    return true;
+}
+
+/*
  * This function disconnects the client from the server.
  */
 bool RPCImpl::rpcDisconnect() {
@@ -415,18 +445,24 @@ void RPCImpl::printToken(vector<string> &arrayTokens) {
     cout << endl;
 }
 
-int getMinScore() {
-    int score = 1000000;  // if someone is playing this long, we are in trouble
+/*
+ * This function gets the maximum queryCount from all the players.
+ * A max queryCount will lead to a min total score (because finalScore = 100 - queryCount)
+ */
+int getMaxQueryCount() {
+    int queryCount = 0;
 
-    for (int s : leaderScores) {
-        // traverse vector to find min score
-        if (s < score) {
-            score = s;
-        }
+    for (int count : leaderScores) {
+        // traverse vector to find max query count
+        if (count > queryCount)
+            queryCount = count;
     }
-    return score;
+    return queryCount;
 }
 
+/*
+ * This function prints leader board on Server side. Print order is based on score in descending order.
+ */
 void RPCImpl::printLeaderboard() {
     // print header
     cout << "Current Leaderboard" << endl;
@@ -435,34 +471,41 @@ void RPCImpl::printLeaderboard() {
 
     // print players in leaderboard
     for (int i = 0; i < leaderScores.size(); i++) {
-        cout << setw(12) << left << leaderNames[i] << setw(12) << left << leaderScores[i] << endl;
+        int actualScore = 100 - leaderScores[i];
+        cout << setw(12) << left << leaderNames[i] << setw(12) << left << actualScore << endl;
     }
     cout << endl;
 }
 
+/*
+ * This function updates the leader boarder. Leader border is sorted based on score in descending order.
+ */
 void RPCImpl::updateLeaderboard(int score, const string &name) {
     // wait until semaphore says go
     sem_wait(&sem);
 
-    // lots of room >> add score
+    // Add score
     if (leaderScores.size() < LEADERBOARD_SIZE) {
         leaderScores.emplace_back(score);
         leaderNames.emplace_back(name);
-        minScore = getMinScore();
+        minScore = getMaxQueryCount();
     }
 
-    // leaderboard is full, check if score qualifies and replace lowest score
-    // TODO: want to do this sorted if time allows.
-    if (score < minScore) {
+    // If leaderboard is full, check if score qualifies and replace lowest score
+    // if score == minScore, replace the last player to keep most recent player
+    else if (score <= minScore) {
         for (int i = leaderScores.size(); i-- > 0;) {
             if (leaderScores[i] == minScore) {
                 leaderScores[i] = score;
                 leaderNames[i] = name;
-                minScore = getMinScore();
+                minScore = getMaxQueryCount();
                 i = 0;      // break out of loop
             }
         }
     }
+
+    // Sort leaderboard
+    selectionSort();
 
     // print out leaderboard
     printLeaderboard();
@@ -471,7 +514,39 @@ void RPCImpl::updateLeaderboard(int score, const string &name) {
     sem_post(&sem);
 }
 
+/*
+ * This function sorts the leader scores in ascending order.
+ * NOTE: "leader score" here is based on queryCount.
+ * The order of leader names will be also updated in accordance.
+ */
+void RPCImpl::selectionSort() {
+    int min;
+    int n = leaderScores.size();
+    for (int i = 0; i < n; i++) {
+        min = i;
+        for (int j = i + 1; j < n; j++)
+            if (leaderScores[j] < leaderScores[min])
+                min = j;
+        swapScores(&leaderScores[min], &leaderScores[i]);
+        swapNames(&leaderNames[min], &leaderNames[i]);
+    }
+}
 
+/*
+ * This function swaps the leader scores.
+ */
+void RPCImpl::swapScores(int *i, int *j) {
+    int temp = *i;
+    *i = *j;
+    *j = temp;
+}
 
-
+/*
+ * This function swaps the leader names.
+ */
+void RPCImpl::swapNames(string *i, string *j) {
+    string temp = *i;
+    *i = *j;
+    *j = temp;
+}
 

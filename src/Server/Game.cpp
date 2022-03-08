@@ -153,6 +153,12 @@ void Game::setGameCharacter() {
     for (int i = 0; i < index; i++)
         it++;
     gameCharacter = &(*it->second);
+
+    // *** IF YOU WANT TO HARDCODE A GAME CHARACTER FOR TESTING PURPOSE
+    // COMMENT OUT THE REST OF THE CODE IN THIS FUNCTION
+    // UNCOMMENT THE NEXT LINE OF CODE
+    // MAY SWITCH "Philip" TO ANY OTHER VALID CHARACTER NAME ****
+//    gameCharacter = sourceList->find("Philip")->second;
 }
 
 /*
