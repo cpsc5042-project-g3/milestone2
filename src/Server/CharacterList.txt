@@ -1,4 +1,4 @@
-﻿Name;Gender;Hair color;Bald;Eye color;Facial Hair;Glasses;Hat;Nose size
+﻿Name;Gender;Hair color;Bald;Eye color;Facial hair;Glasses;Hat;Nose size
 George;Male;White;No;Brown;No;No;Yes;Large
 Alfred;Male;Orange;No;Blue;Yes;No;No;Large
 Tom;Male;Bald;Yes;Blue;No;Yes;No;Large

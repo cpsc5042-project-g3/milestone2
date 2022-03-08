@@ -13,13 +13,14 @@
 #include "Game.h"
 #include <algorithm>
 #include <semaphore.h>
+#include <iomanip>
 
 using namespace std;
 
 const int LEADERBOARD_SIZE = 10;
 vector<string> leaderNames;     // global variable, protected by semaphore
 vector<int> leaderScores;       // global variable, protected by semaphore
-int minScore;                   // global variable, protected by semaphore
+int minScore = 1000000;         // global variable, protected by semaphore
 sem_t sem;
 
 
@@ -28,7 +29,6 @@ sem_t sem;
  */
 RPCImpl::RPCImpl(int socket) {
     socketID = socket;
-    m_rpcCount = 0; // TODO
     newGame = new Game;
     queryCount = 0;
 }
@@ -280,7 +280,7 @@ bool RPCImpl::queryTraitResponse(string &traitName, string &traitValue) {
         success = expectedTraitValue == traitValue;
         if (!success) {
             cout << ">> Trait query DID NOT match game character traits." << endl;
-            message1 = "Sorry.. " + customizedReply(traitName, traitValue, 2);
+            message1 = "Sorry.  " + customizedReply(traitName, traitValue, 2);
         } else {
             cout << ">> Trait query DID match game character traits." << endl;
             message1 = "Nice guess! " + customizedReply(traitName, traitValue, 1);
@@ -334,7 +334,6 @@ void RPCImpl::formatResponse(string &response) {
     transform(response.begin(), response.end(), response.begin(), [](unsigned char c) { return std::tolower(c); });
     response[0] = toupper(response[0]);
 }
-
 
 /*
  * This function processes the final guess and checks if user has won.
@@ -428,6 +427,18 @@ int getMinScore() {
     return score;
 }
 
+void RPCImpl::printLeaderboard() {
+    // print header
+    cout << "Current Leaderboard" << endl;
+    cout << "Name        Score" << endl;
+    cout << "-----------------" << endl;
+
+    // print players in leaderboard
+    for (int i = 0; i < leaderScores.size(); i++) {
+        cout << setw(12) << left << leaderNames[i] << setw(12) << left << leaderScores[i] << endl;
+    }
+    cout << endl;
+}
 
 void RPCImpl::updateLeaderboard(int score, const string &name) {
     // wait until semaphore says go
@@ -453,8 +464,8 @@ void RPCImpl::updateLeaderboard(int score, const string &name) {
         }
     }
 
-    // implied else statement here that does nothing
-    // i.e. (score >= minScore) && (leaderScores >= LEADERBOARD_SIZE) >> "no soup for you"
+    // print out leaderboard
+    printLeaderboard();
 
     // end of critical section, allow others to use semaphore
     sem_post(&sem);

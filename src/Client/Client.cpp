@@ -333,26 +333,30 @@ void Client::getQueryTraitValue() {
             trim(answer);
             valid = validateUserInput(answer, 1);
         } while (!valid);
-    } else if (trait == "Gender") {
+    }
+    else if (trait == "Gender") {
         do {
             cout << "Do you think this person is a male or female? ";
             cin >> answer;
             trim(answer);
             valid = validateUserInput(answer, 2);
         } while (!valid);
-    } else if (trait == "Facial hair" || trait == "Glasses" || trait == "Hat") {
+    }
+    else if (trait == "Facial hair" || trait == "Glasses" || trait == "Hat") {
         do {
             cout << "Do you think this person has " << trait << "? ";
             cin >> answer;
             trim(answer);
             valid = validateUserInput(answer, 1);
         } while (!valid);
-    } else if (trait == "Eye color" || trait == "Hair color") {
+    }
+    else if (trait == "Eye color" || trait == "Hair color") {
         cout << "What do you think is the person's " << trait << "? ";
         cin >> answer;
         trim(answer);
         strcpy(queryTraitValue, answer.c_str());
-    } else if (trait == "Nose size") {
+    }
+    else if (trait == "Nose size") {
         do {
             cout << "Do you think this person has small, medium, or large nose? ";
             cin >> answer;
@@ -446,6 +450,7 @@ void Client::getEliminateChoice(vector<int> &rowNumbers) {
                 break;
             rowNumbers.emplace_back(stoi(rowChoice));
         }
+        sort(rowNumbers.begin(), rowNumbers.end());
     } while (!valid);
 }
 

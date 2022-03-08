@@ -30,12 +30,12 @@ public:
     explicit RPCImpl(int socket);
     ~RPCImpl();
     bool rpcProcess();
+    void printLeaderboard();
     void updateLeaderboard(int score, const string &name);
     string getCharacterNames();
 
 private:
     const int BUFFER_SIZE = 1024;
-    int m_rpcCount;
     int socketID;
     int queryCount;
     string userID;
