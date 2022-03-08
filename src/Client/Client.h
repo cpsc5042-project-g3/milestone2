@@ -24,6 +24,7 @@ public:
     unordered_set<string> traitNames;                 // a local list of trait names for searching
     vector<string> traitNamesForDisplay;              // a local list of trait names for display
     unordered_map<string, vector<string>> activeList; // a map of remaining characters and their traits
+    vector<string> leaderBoard;                       // a list of leader name and leader score
 
     Client();
     ~Client();
@@ -35,7 +36,8 @@ public:
     bool queryTrait(); // RPC 5
     bool eliminatePerson();
     bool guessName(); // RPC 6
-    bool disconnectServer(); // TODO
+    bool getLeaderBoard(); // RPC 7
+    bool disconnectServer(); // RPC 8
 
 private:
     const int MAX_LEN = 10;         // player's login name length limit
@@ -48,10 +50,10 @@ private:
     bool sendMessage(const string& title, char* message) const;
     bool getUserName();
     bool getPassword();
-    void getQueryTraitName();
+    bool getQueryTraitName();
     void getQueryTraitValue();
     bool validateUserInput(string &answer, int flag);
-    void getEliminateChoice(vector<int> &rowNumbers);
+    bool getEliminateChoice(vector<int> &rowNumbers);
     void makeLocalCopy(char *buffer, string option);
     static void formatAnswer(string &answer);
     static string getUserGuess();

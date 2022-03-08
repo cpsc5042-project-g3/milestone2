@@ -45,11 +45,21 @@ void displayMenu1() {
  */
 void displayMenu2(char *myName) {
     cout << "\n" << myName << ", please pick an option from the menu: \n"
-         << "\t1. Start a new game \n" // login required if not already logged in
-         << "\t2. Query Trait\n"
-         << "\t3. Eliminate Person\n"
-         << "\t4. Make a Guess\n"
+         << "\t1. Query Trait\n"
+         << "\t2. Eliminate Person\n"
+         << "\t3. Make a Guess\n"
+         << "\t4. Display leaderboard\n"
          << "\t5. Log off and disconnect\n";
+    cout << "Your choice: ";
+}
+
+/*
+ * This function display the game menu to the user, prompting them for the allowed game functions.
+ */
+void displayMenu3(char *myName) {
+    cout << "\n" << myName << ", please pick an option from the menu: \n"
+         << "\t1. Display leaderboard\n"
+         << "\t2. Log off and disconnect\n";
     cout << "Your choice: ";
 }
 
@@ -61,7 +71,7 @@ void displayCharacterList(Client *client) {
     cout << ">> Here is the working list of characters:" << endl;
     cout << "Row  ";
 
-    for (const string& traitName : client->traitNamesForDisplay) {
+    for (const string &traitName : client->traitNamesForDisplay) {
         cout << setw(12) << left << traitName;
     }
     cout << endl;
@@ -72,15 +82,15 @@ void displayCharacterList(Client *client) {
 
     // Write body of table
     int rowNum = 1;
-    for (const string& currCharacter : client->characterNames) {
+    for (const string &currCharacter : client->characterNames) {
 
         // write row number and character name
         cout << setw(5) << left << rowNum;
 
         // write character trait values
         vector<string> traitValues = client->activeList.find(currCharacter)->second;
-        for (auto & currValue : traitValues)
-           cout << setw(12) << left << currValue;
+        for (auto &currValue : traitValues)
+            cout << setw(12) << left << currValue;
 
         // write end of line and prepare for next iteration
         cout << endl;
@@ -94,9 +104,32 @@ void displayCharacterList(Client *client) {
 void displayTraitList(Client *client) {
     cout << "\nHere are the traits you can query about: ";
     cout << "\n-----------------------------------------------------------------------------------" << endl;
-    for (const string& name: client-> traitNamesForDisplay)
-        cout << "\"" << name << "\"" << " ";
+    for (const string &name: client->traitNamesForDisplay)
+        if (name != "Name")
+            cout << "\"" << name << "\"" << " ";
     cout << "\n-----------------------------------------------------------------------------------" << endl;
+}
+
+/*
+ * This function displays the leader boarder to user.
+ */
+void printLeaderBoard(const Client &client) {
+    cout << "\nCurrent Leaderboard" << endl;
+    cout << "Name        Score" << endl;
+    cout << "-----------------" << endl;
+
+    vector<string> leaderBoard = client.leaderBoard;
+
+    // print players in leaderboard
+    if (leaderBoard.empty()) {
+        cout << "Leader board is currently empty." << endl;
+        return;
+    }
+
+    for (int i = 0; i < leaderBoard.size(); i++) {
+        cout << setw(12) << left << leaderBoard.at(i) << setw(12)
+             << left << 100 - stoi(leaderBoard.at(++i)) << endl;
+    }
 }
 
 /*
@@ -107,23 +140,11 @@ int getMenuPick(int menu) {
     while (true) {
         cin >> userPick;
         if ((menu == 1 && userPick.find_first_not_of("12") == string::npos) ||
-            (menu == 2 && userPick.find_first_not_of("12345") == string::npos))
+            (menu == 2 && userPick.find_first_not_of("12345") == string::npos) ||
+            (menu == 3 && userPick.find_first_not_of("12") == string::npos))
             return userPick[0] - '0';
         else
             cout << "Please pick again: ";
-    }
-}
-
-/*
- * This function parses the token received in a message between the server and the client.
- */
-void ParseTokens(char *buffer, std::vector<std::string> &a) {
-    char *token;
-    char *rest = (char *) buffer;
-
-    while ((token = strtok_r(rest, ";", &rest))) {
-        printf("%s\n", token);
-        a.emplace_back(token);
     }
 }
 
@@ -146,9 +167,9 @@ int main(int argc, char const *argv[]) {
     while (connected && !loggedIn) {
         displayMenu1();
         menuPick = getMenuPick(1);
-        if (menuPick == 1)
+        if (menuPick == 1) // Menu 1: login
             loggedIn = client->logIn();
-        else if (menuPick == 2) {
+        else if (menuPick == 2) { // Menu 1: disconnect
             if (client->disconnectServer())
                 connected = false;
         }
@@ -173,28 +194,34 @@ int main(int argc, char const *argv[]) {
         displayMenu2(myName);
         menuPick = getMenuPick(2);
         switch (menuPick) {
-            case 1: // Start a new game
-                cout << "\n>> A new game is started (Previous data to be erased.)" << endl << endl;
-                if (!loggedIn) {
-                    cout << ">> Log in needed " << endl;
-                    loggedIn = client->logIn();
-                }
-                else {
-                    displayCharacterList(client);
-                }
-                break;
-            case 2: // Query Trait
+            case 1: // Menu 2: Query Trait
                 displayTraitList(client);
                 client->queryTrait();
                 break;
-            case 3: // Eliminate Person
-                client->eliminatePerson();
-                displayCharacterList(client);
+            case 2: // Menu 2: Eliminate Person
+                if (client->eliminatePerson())
+                    displayCharacterList(client);
                 break;
-            case 4: // Make a Guess
+            case 3: // Menu 2: Make a Guess
                 client->guessName();
+
+                // After final guess is made and result displayed, display Menu 3
+                displayMenu3(myName);
+                menuPick = getMenuPick(3);
+                if (menuPick == 1) {  // Menu 3: display leader board
+                    client->getLeaderBoard();
+                    printLeaderBoard(*client);
+                }
+                else if (menuPick == 2) {  // Menu 3: disconnect
+                    if (client->disconnectServer())
+                        connected = false;
+                }
                 break;
-            case 5: // Disconnect from server
+            case 4: // Menu 2: Display leader board
+                client->getLeaderBoard();
+                printLeaderBoard(*client);
+                break;
+            case 5: // Menu 2: Disconnect from server
                 if (client->disconnectServer())
                     connected = false;
                 break;

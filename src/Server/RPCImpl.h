@@ -51,10 +51,15 @@ private:
     string customizedReply(string& traitName, string &traitValue, int flag);
     static void formatResponse(string &response);
     bool rpcFinalGuess(vector<string> &arrayTokens);
+    bool rpcGetLeaderBoard();
     bool rpcDisconnect();
     bool sendResponse(char* message) const;
     static void parseTokens(char* buffer, vector<string>& a);
     static void printToken(vector<string>& a);
+    void selectionSort();
+    void swapScores(int *i, int *j);
+    void swapNames(string *i, string *j);
+
 
 };
 

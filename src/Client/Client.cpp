@@ -256,7 +256,8 @@ bool Client::queryTrait() {
     char buffer[1024] = {0};
 
     // prompt for trait name and value
-    getQueryTraitName();
+    if (!getQueryTraitName())
+        return false;
     getQueryTraitValue();
 
     // Assemble queryTrait message to server
@@ -267,7 +268,7 @@ bool Client::queryTrait() {
     strcpy(rpcMessage, temp.c_str());
 
     if (connected)
-        if (sendMessage("RPC5: Query trait", rpcMessage))
+        if (sendMessage("RPC 5: Query trait", rpcMessage))
 
             // Get server response
             if (read(socketID, buffer, 1024)) {
@@ -282,7 +283,7 @@ bool Client::queryTrait() {
  * This function prompts the user to enter their query trait name and verifies that
  * it is of an acceptable trait name.
  */
-void Client::getQueryTraitName() {
+bool Client::getQueryTraitName() {
     cin.clear();
     queryTraitName = new char[30];
     string answerPart1;  // answer to check
@@ -291,8 +292,10 @@ void Client::getQueryTraitName() {
     bool valid = false;
     do {
         // Get console input
-        cout << ">> Enter the name of the trait you want query about: ";
+        cout << ">> Enter the name of the trait you want query about (or 'x' to return to previous menu): ";
         cin >> answerPart1;
+        if (answerPart1 == "x")
+            return false;
         trim(answerPart1);    // get rid of leading and trailing zeros
         formatAnswer(answerPart1);
         answer = answerPart1;
@@ -313,6 +316,7 @@ void Client::getQueryTraitName() {
             cout << ">> Trait name not found." << endl;
         }
     } while (!valid);
+    return true;
 }
 
 /*
@@ -333,30 +337,27 @@ void Client::getQueryTraitValue() {
             trim(answer);
             valid = validateUserInput(answer, 1);
         } while (!valid);
-    }
-    else if (trait == "Gender") {
+    } else if (trait == "Gender") {
         do {
             cout << "Do you think this person is a male or female? ";
             cin >> answer;
             trim(answer);
             valid = validateUserInput(answer, 2);
         } while (!valid);
-    }
-    else if (trait == "Facial hair" || trait == "Glasses" || trait == "Hat") {
+    } else if (trait == "Facial hair" || trait == "Glasses" || trait == "Hat") {
         do {
             cout << "Do you think this person has " << trait << "? ";
             cin >> answer;
             trim(answer);
             valid = validateUserInput(answer, 1);
         } while (!valid);
-    }
-    else if (trait == "Eye color" || trait == "Hair color") {
+    } else if (trait == "Eye color" || trait == "Hair color") {
         cout << "What do you think is the person's " << trait << "? ";
         cin >> answer;
         trim(answer);
+        validateUserInput(answer, 4);
         strcpy(queryTraitValue, answer.c_str());
-    }
-    else if (trait == "Nose size") {
+    } else if (trait == "Nose size") {
         do {
             cout << "Do you think this person has small, medium, or large nose? ";
             cin >> answer;
@@ -391,6 +392,8 @@ bool Client::validateUserInput(string &answer, int flag) {
             }
             cout << ">> Please enter small, medium, or large." << endl;
             return false;
+        default:
+            return true;
     }
 }
 
@@ -400,7 +403,12 @@ bool Client::validateUserInput(string &answer, int flag) {
 bool Client::eliminatePerson() {
     vector<int> rowNumbers;
     string eliminatedName;
-    getEliminateChoice(rowNumbers);
+
+    // If user picked 'x' to return to previous menu
+    if (!getEliminateChoice(rowNumbers))
+        return false;
+
+    // Otherwise, continue on to eliminate
     string temp[characterNames.size()]; // temp array to hold the characters IN ORDER
     int vectorSizeShrink = 1;
 
@@ -426,15 +434,17 @@ bool Client::eliminatePerson() {
 /*
  * This function asks user whom they want to eliminate from the active list. Use input is validated.
  */
-void Client::getEliminateChoice(vector<int> &rowNumbers) {
+bool Client::getEliminateChoice(vector<int> &rowNumbers) {
     string count;
     string rowChoice;
     int size = characterNames.size();
     bool valid;
 
     do {
-        cout << "How many characters do you want to eliminate? ";
+        cout << "How many characters do you want to eliminate? (Enter x if you want to return to previous menu) ";
         cin >> count;
+        if (count == "x")
+            return false;
         valid = validateNumericInput(count, size);
     } while (!valid);
 
@@ -452,6 +462,7 @@ void Client::getEliminateChoice(vector<int> &rowNumbers) {
         }
         sort(rowNumbers.begin(), rowNumbers.end());
     } while (!valid);
+    return true;
 }
 
 /*
@@ -465,7 +476,11 @@ bool Client::guessName() {
     // Prompt user to enter guess
     string guess = getUserGuess();
 
-    // Assemble login message to server
+    // If user entered x, return to previous menu
+    if (guess == "x")
+        return false;
+
+    // Otherwise, assemble login message to server
     ss << "finalGuess;" << guess << ";";
     ss >> temp;
     int n = temp.length();
@@ -473,17 +488,17 @@ bool Client::guessName() {
     strcpy(rpcMessage, temp.c_str());
 
     // Send final guess message to server and get response
-    if (sendMessage("RPC 6: Final Guess", rpcMessage)) {
+    if (sendMessage("RPC 8: Final Guess", rpcMessage)) {
         // Get server response
         if (read(socketID, buffer, 1024)) {
-            cout << ">> Server response: " << buffer << endl;
+            cout << ">> Server response: ";
             if (strcmp(buffer, "Correct") == 0) {
-                printf(">> Congratulations! %s, you have made the right guess!\n", userName);
+                printf("Congratulations %s! you have made the right guess!\n", userName);
                 return true;
             }
         }
     }
-    printf(">> Sorry %s, you did not make the right guess. The character is: %s.\n", userName, buffer);
+    printf("Sorry %s, you did not make the right guess. The character is: %s.\n", userName, buffer);
     return false;
 }
 
@@ -492,11 +507,38 @@ bool Client::guessName() {
  */
 string Client::getUserGuess() {
     string guess;
-    cout << ">> Who do you think the character is? Enter the name: ";
+    cout << ">> Who do you think the character is? Enter the name (or 'x' to return to previous menu): ";
     cin >> guess;
+    if (guess == "x")
+        return guess;
     cout << ">> You've entered " << guess << ", now let's check if you are right!" << endl;
     formatAnswer(guess); // accept upper or lower case answer
     return guess;
+}
+
+/*
+ * This function sends a request to get leader board from server.
+ */
+bool Client::getLeaderBoard() {
+    char buffer[1024] = {0};
+    string temp = "getLeaderBoard";
+    char *getLeaderBoardRPC = &temp[0];
+    if (connected)
+        if (sendMessage("RPC 7: Get leader board", getLeaderBoardRPC)) {
+            // Get server response
+            bool result = read(socketID, buffer, 1024);
+            if (result) {
+                cout << ">> Leader board received from server." << endl;
+                if (strcmp(buffer, "Empty") == 0)
+                    return false;
+                makeLocalCopy(buffer, "parseLeaderBoard");
+                cout << ">> Local copy made." << endl;
+                return true;
+            }
+        }
+    perror(">> Error: Unable to get leader board from server.");
+    return false;
+
 }
 
 /*
@@ -562,7 +604,7 @@ void Client::makeLocalCopy(char *buffer, string option) {
             characterNames.emplace_back(token);
     }
 
-    // Insert trait names into 2 local lists
+        // Insert trait names into 2 local lists
     else if (option == "parseTraitNames") {
         while ((token = strtok_r(rest, ";", &rest))) {
             traitNames.insert(token);
@@ -570,7 +612,7 @@ void Client::makeLocalCopy(char *buffer, string option) {
         }
     }
 
-     // Insert trait values into a map of active list
+        // Insert trait values into a map of active list
     else if (option == "parseTraitValues") {
         vector<string> currTraits;
         while ((token = strtok_r(rest, ";", &rest)))
@@ -578,6 +620,13 @@ void Client::makeLocalCopy(char *buffer, string option) {
         string who = currTraits.at(0);
         if (activeList.find(who) == activeList.end())
             activeList.insert(make_pair(who, currTraits));
+    }
+
+        // Insert leader names and leader scores into local copy
+    else if (option == "parseLeaderBoard") {
+        leaderBoard.clear();
+        while ((token = strtok_r(rest, ";", &rest)))
+            leaderBoard.emplace_back(token);
     }
 }
 
