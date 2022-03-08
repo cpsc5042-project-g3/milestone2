@@ -30,8 +30,7 @@ March 8 UPDATE:
 - RPCImpl.cpp >> Added selectionSort() to sort leader board based on scores in descending order
 
 
-
-
+PRIOR:
 - RPCImpl.cpp >> created updateLeaderboard() to print out the leaderboard on the server side after a client wins a game.  Would be nice to pass
   that to the client, but I don't think we have time.
 - Client.cpp >> modified getEliiminateChoice() to sort rowNumbers vector after user input finishes.  Seems to have fixed the bug where inputting
