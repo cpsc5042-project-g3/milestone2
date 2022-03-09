@@ -5,7 +5,6 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <map>
 #include "RPCImpl.h"
 #include <bits/stl_map.h>
@@ -22,6 +21,7 @@ vector<string> leaderNames;     // global variable, protected by semaphore
 vector<int> leaderScores;       // global variable, protected by semaphore; holds the queryCounts of each player
 int minScore = 1000000;         // global variable, protected by semaphore
 sem_t sem;
+pthread_mutex_t mutex;
 
 
 /*
@@ -29,8 +29,10 @@ sem_t sem;
  */
 RPCImpl::RPCImpl(int socket) {
     socketID = socket;
+    userName = "";
     newGame = new Game;
     queryCount = 0;
+    traitSent = 0;
 }
 
 /*
@@ -49,6 +51,7 @@ bool RPCImpl::rpcProcess() {
     ssize_t msgByte;
     bool continueOn = true;
     const int RPCTOKEN = 0;
+    string temp;
 
     while ((continueOn)) {
         // Buffer is re-initialized before processing each new RPC
@@ -57,44 +60,63 @@ bool RPCImpl::rpcProcess() {
         // Blocked until a RPC is sent to server
         msgByte = read(socketID, buffer, sizeof(buffer));
         if (msgByte <= 0) {
-            printf("Read failed from Client %d. Errno is %d.\n", socketID, errno);
+            printf("Read failed from Client %d. Errno is %d.\n", socketID - 3, errno);
             break;
         }
 
-        // Once an RPC is received
-        printf(">> Client %d RPC received: %s\n", socketID, buffer);
-        cout << ">> Total bytes: " << msgByte << endl;
+        temp = buffer;
 
-        // Parse and Print the tokens
+        // Parse the tokens
         arrayTokens.clear();
         parseTokens(buffer, arrayTokens);
-        printToken(arrayTokens);
 
         // Get RPC name: string statements are not supported with a switch, so using if/else logic to dispatch
         string rpcName = arrayTokens[RPCTOKEN];
 
         if (rpcName == "connect") {  // This step is actually to authenticate user
+            userName = arrayTokens[1];
+            printf("\n>> RPC 1 received from %s (bytes = %d): %s\n", userName.c_str(), msgByte, temp.c_str());
             rpcConnect(arrayTokens);
         } else if (rpcName == "getCharacterNames") {
+            printf(">> RPC 2 received from %s (bytes = %d): %s\n", userName.c_str(), msgByte, temp.c_str());
             rpcGetCharacterNames();
         } else if (rpcName == "getTraitNames") {
+            printf(">> RPC 3 received from %s (bytes = %d): %s\n", userName.c_str(), msgByte, temp.c_str());
             rpcGetTraitNames();
         } else if (rpcName == "getTraitValues") {
+            traitSent++;
+            // Since there are many characters, instead of printing Server console output for each character
+            // Only print ">> Client RPC received" message once upon receiving the first character's request
+            if (traitSent == 1) {
+                printf(">> RPC 4 received from %s (bytes = %d): getTraitValues\n", userName.c_str(), msgByte);
+                printf(">> Processing RPC: Generating a list of trait values for each character.\n");
+            }
+
             rpcGetTraitValues(arrayTokens);
+
+            // Only print ">> Trait values sent successfully message." once upon sending the last character's request
+            if (traitSent == newGame->characterNames.size()) {
+                cout << ">> Trait values sent successfully for all characters.\n\n";
+                traitSent = 0;
+            }
         } else if (rpcName == "queryTrait") {
+            printf(">> RPC 5 received from %s (bytes = %d): %s\n", userName.c_str(), msgByte, temp.c_str());
             rpcQueryTrait(arrayTokens);
         } else if (rpcName == "finalGuess") {
+            printf(">> RPC 6 received from %s (bytes = %d): %s\n", userName.c_str(), msgByte, temp.c_str());
             rpcFinalGuess(arrayTokens);
         } else if (rpcName == "getLeaderBoard") {
+            printf(">> RPC 7 received from %s (bytes = %d): %s\n", userName.c_str(), msgByte, temp.c_str());
             rpcGetLeaderBoard();
         } else if (rpcName == "disconnect") {
+            printf(">> RPC 8 received from %s (bytes = %d): %s\n", userName.c_str(), msgByte, temp.c_str());
             rpcDisconnect();
             continueOn = false; // We are going to leave this loop, as we are done
         } else {
             string error = "Error: Invalid request";
             cerr << ">> " << error << endl;
             sendResponse(&error[0]);
-            // Not in our list, perhaps, print out what was sent
+            // Not in our list
         }
     }
     return true;
@@ -106,7 +128,6 @@ bool RPCImpl::rpcProcess() {
  */
 bool RPCImpl::rpcConnect(vector<string> &arrayTokens) {
     cout << ">> Processing RPC: Connect" << endl;
-    printf(">> Validating login info for Client %d.\n", socketID);
 
     const int USERNAMETOKEN = 1;
     const int PASSWORDTOKEN = 2;
@@ -116,6 +137,7 @@ bool RPCImpl::rpcConnect(vector<string> &arrayTokens) {
     string passwordString = arrayTokens[PASSWORDTOKEN];
 
     // Our Authentication Logic.
+    printf(">> Validating login info for %s.\n", userName.c_str());
     return validLogin(userNameString, passwordString);
 }
 
@@ -162,7 +184,8 @@ bool RPCImpl::validLogin(const string &userName, const string &password) {
         // found matching user name AND password
         userID = userName;
         string response = "User name and password validated.";
-        cout << ">> " << response << endl << endl;
+        cout << ">> " << response << endl;
+        cout << ">> Sidenote: RPC 2 - 4 are automatically generated to pass character table to Client to save as local copy.\n" << endl;
         sendResponse(&response[0]);
         delete users;
         return true;
@@ -229,26 +252,23 @@ bool RPCImpl::rpcGetTraitValues(vector<string> &arrayTokens) {
     const int CHARACTER_NAME = 1;
     string currCharacter = arrayTokens[CHARACTER_NAME];
 
-    printf(">> Processing RPC: Generating a list of trait values for %s.\n", currCharacter.c_str());
-
     // Get the list of trait values to send to client, include character name at the beginning
     string traitInfo = currCharacter + ";";
     traitInfo += newGame->sourceList->find(currCharacter)->second->traitValuesForDisplay;
-    cout << ">> Sending client trait values: " << traitInfo << endl;
+
+    printf("\tSending trait values: %s\n", traitInfo.c_str());
     if (!sendResponse(&traitInfo[0])) {
-        perror(">> Error: Failed to send trait values to client.\n");
+        printf(">> Error: Failed to send %s's trait values to client.\n", currCharacter.c_str());
         return false;
     }
-    cout << ">> Trait values sent successfully.\n\n";
     return true;
-
 }
 
 /*
  * This function parses the queryTrait RPC message from client.
  */
 bool RPCImpl::rpcQueryTrait(vector<string> &arrayTokens) {
-    cout << ">> Processing RPC: Query Trait" << endl << endl;
+    cout << ">> Processing RPC: Query Trait" << endl;
 
     const int TRAITNAME = 1;
     const int TRAITVALUE = 2;
@@ -281,16 +301,16 @@ bool RPCImpl::queryTraitResponse(string &traitName, string &traitValue) {
     if (!expectedTraitValue.empty()) {
         success = expectedTraitValue == traitValue;
         if (!success) {
-            cout << ">> Trait query DID NOT match game character traits." << endl;
+            cout << ">> Trait query DID NOT match game character traits.\n" << endl;
             message1 = "Sorry.  " + customizedReply(traitName, traitValue, 2);
         } else {
-            cout << ">> Trait query DID match game character traits." << endl;
+            cout << ">> Trait query DID match game character traits.\n" << endl;
             message1 = "Nice guess! " + customizedReply(traitName, traitValue, 1);
         }
 
         // notify client
         if (!sendResponse(&message1[0])) {
-            perror(">> Error: Failed to send response to trait query.");
+            perror(">> Error: Failed to send response to trait query.\n");
             return false;
         }
     }
@@ -341,7 +361,7 @@ void RPCImpl::formatResponse(string &response) {
  * This function processes the final guess and checks if user has won.
  */
 bool RPCImpl::rpcFinalGuess(vector<string> &arrayTokens) {
-    cout << ">> Processing RPC: Final Guess" << endl << endl;
+    cout << ">> Processing RPC: Final Guess" << endl;
 
     // Get user final guess
     const int FINAL_GUESS = 1;
@@ -360,12 +380,11 @@ bool RPCImpl::rpcFinalGuess(vector<string> &arrayTokens) {
         resultMsg = expectedName; // if incorrect, send correct answer to client
         cout << ">> User did not make the right guess." << endl;
     }
-    cout << ">> Sending final result to client." << endl;
     if (!sendResponse(&resultMsg[0])) {
         perror(">> Error: Failed to send final result to client.\n");
         return false;
     }
-    cout << ">> Final result sent successfully.\n\n";
+    cout << ">> Result sent to client successfully.\n\n";
     return true;
 }
 
@@ -373,7 +392,7 @@ bool RPCImpl::rpcFinalGuess(vector<string> &arrayTokens) {
  * This function sends the leader board info to the client.
  */
 bool RPCImpl::rpcGetLeaderBoard() {
-    cout << ">> Processing RPC: Get leader board" << endl << endl;
+    cout << ">> Processing RPC: Get leader board" << endl;
     string response;
 
     // If leader board is empty, send "Empty"
@@ -432,20 +451,6 @@ void RPCImpl::parseTokens(char *buffer, vector<string> &a) {
 }
 
 /*
- * This function prints out the arguments included with an RPC.  This helps
- * with troubleshooting.
- */
-void RPCImpl::printToken(vector<string> &arrayTokens) {
-    // Enumerate through the tokens. The first token is always the specific RPC name
-    cout << ">> Token(s) received: ";
-    for (auto &arrayToken : arrayTokens) {
-//        printf("\n\ttoken = %s", arrayToken.c_str());
-        printf("%s  ", arrayToken.c_str());
-    }
-    cout << endl;
-}
-
-/*
  * This function gets the maximum queryCount from all the players.
  * A max queryCount will lead to a min total score (because finalScore = 100 - queryCount)
  */
@@ -482,7 +487,10 @@ void RPCImpl::printLeaderboard() {
  */
 void RPCImpl::updateLeaderboard(int score, const string &name) {
     // wait until semaphore says go
+    cout << ">> Updating leaderboard for " << userName << "." << endl << endl;
+
     sem_wait(&sem);
+    pthread_mutex_lock(&mutex);
 
     // Add score
     if (leaderScores.size() < LEADERBOARD_SIZE) {
@@ -511,6 +519,7 @@ void RPCImpl::updateLeaderboard(int score, const string &name) {
     printLeaderboard();
 
     // end of critical section, allow others to use semaphore
+    pthread_mutex_unlock(&mutex);
     sem_post(&sem);
 }
 

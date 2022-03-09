@@ -21,9 +21,7 @@ int main(int argc, char const *argv[]) {
 
     // Create server-client connection socket
     while (statusOk) {
-
         statusOk = serverObj->connectWithClient();
-
     }
 
     delete serverObj;

@@ -148,17 +148,17 @@ bool Game::addCharacter(Character * const characterToAdd) {
  */
 void Game::setGameCharacter() {
     // get selected character
-    unsigned long index = rand() % sourceList->size();
-    auto it = sourceList->begin();
-    for (int i = 0; i < index; i++)
-        it++;
-    gameCharacter = &(*it->second);
+//    unsigned long index = rand() % sourceList->size();
+//    auto it = sourceList->begin();
+//    for (int i = 0; i < index; i++)
+//        it++;
+//    gameCharacter = &(*it->second);
 
     // *** IF YOU WANT TO HARDCODE A GAME CHARACTER FOR TESTING PURPOSE
     // COMMENT OUT THE REST OF THE CODE IN THIS FUNCTION
     // UNCOMMENT THE NEXT LINE OF CODE
     // MAY SWITCH "Philip" TO ANY OTHER VALID CHARACTER NAME ****
-//    gameCharacter = sourceList->find("Philip")->second;
+    gameCharacter = sourceList->find("Philip")->second;
 }
 
 /*
