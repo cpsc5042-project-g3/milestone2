@@ -16,14 +16,12 @@ const int MAX_GAMES = 10000;
 
 class Game {
 public:
-    int gameID;
     vector<string> characterNames;
     unordered_map<string, Character*> *sourceList;
     string traitNamesForDisplay; // a list of trait names IN ORDER to send to Client
 
     Game();
     ~Game();
-    void setGameID();
     void setSourceList();
     bool addCharacter( Character* const characterToAdd);
     void setGameCharacter();

@@ -17,7 +17,7 @@
 using namespace std;
 
 const int LEADERBOARD_SIZE = 5;
-const int NIGHT_NIGHT = 10;
+const int NIGHT_NIGHT = 1;
 vector<string> leaderNames;     // global variable, protected by semaphore
 vector<int> leaderScores;       // global variable, protected by semaphore; holds the queryCounts of each player
 int minScore = 1000000;         // global variable, protected by semaphore
@@ -62,7 +62,7 @@ bool RPCImpl::rpcProcess() {
         // Blocked until a RPC is sent to server
         msgByte = read(socketID, buffer, sizeof(buffer));
         if (msgByte <= 0) {
-            printf("Read failed from Client %d. Errno is %d.\n", socketID - 3, errno);
+            cerr << ">> Error: Read failed from Client " << socketID - 3 << ".";
             break;
         }
 
@@ -80,7 +80,7 @@ bool RPCImpl::rpcProcess() {
             printf("\n>> RPC 1 received from %s (bytes = %d): %s\n", userName.c_str(), msgByte, temp.c_str());
             rpcConnect(arrayTokens);
         } else if (rpcName == "getCharacterNames") {
-            printf(">> RPC 2 received from %s (bytes = %d): %s\n", userName.c_str(), msgByte, temp.c_str());
+            printf("\n>> RPC 2 received from %s (bytes = %d): %s\n", userName.c_str(), msgByte, temp.c_str());
             rpcGetCharacterNames();
         } else if (rpcName == "getTraitNames") {
             printf(">> RPC 3 received from %s (bytes = %d): %s\n", userName.c_str(), msgByte, temp.c_str());
@@ -129,10 +129,10 @@ bool RPCImpl::rpcProcess() {
  * clients are allowed to continue.
  */
 bool RPCImpl::rpcConnect(vector<string> &arrayTokens) {
+    cout << ">> Processing RPC: Connect" << endl;
+
     // sleep to allow for demonstration of simultaneous activity
     sleep(NIGHT_NIGHT);
-
-    cout << ">> Processing RPC: Connect" << endl;
 
     const int USERNAMETOKEN = 1;
     const int PASSWORDTOKEN = 2;
@@ -159,7 +159,7 @@ bool RPCImpl::validLogin(const string &userName, const string &password) {
     // open file of approved users
     ifstream inFile("ApprovedUsers.txt");
     if (!inFile.is_open()) {
-        cout << ">> Failed to read approved users list." << endl;
+        cerr << ">> Error: Failed to read approved users list." << endl;
         delete users;
         return false;
     }
@@ -182,7 +182,9 @@ bool RPCImpl::validLogin(const string &userName, const string &password) {
         // user name not found
         string response = "Invalid user name.";
         cout << ">> " << response << endl << endl;
-        sendResponse(&response[0]);
+        if (!sendResponse(&response[0])) {
+            perror(">> Error: Failed to send invalid user name message to client.\n");
+        }
         delete users;
         return false;
     } else if (iter->second == password) {
@@ -190,15 +192,18 @@ bool RPCImpl::validLogin(const string &userName, const string &password) {
         userID = userName;
         string response = "User name and password validated.";
         cout << ">> " << response << endl;
-        cout << ">> Sidenote: RPC 2 - 4 are automatically generated to pass character table to Client to save as local copy.\n" << endl;
-        sendResponse(&response[0]);
+        if (!sendResponse(&response[0])) {
+            perror(">> Error: Failed to send login validation message to client.\n");
+        }
         delete users;
         return true;
     } else {
         // user name found, but password does not exist
         string response = "User name found, but password does not match.";
         cout << ">> " << response << endl << endl;
-        sendResponse(&response[0]);
+        if (!sendResponse(&response[0])) {
+            perror(">> Error: Failed to send password not match message to client.\n");
+        }
         delete users;
         return false;
     }
@@ -209,10 +214,10 @@ bool RPCImpl::validLogin(const string &userName, const string &password) {
  * and send it to the client to keep as a local copy.
  */
 bool RPCImpl::rpcGetCharacterNames() {
+    cout << ">> Processing RPC: Generating character names." << endl;
+
     // sleep to allow for demonstration of simultaneous activity
     sleep(NIGHT_NIGHT);
-
-    cout << ">> Processing RPC: Generating character names." << endl;
 
     // Generate character list and sent to client.
     cout << ">> Sending character names." << endl;
@@ -240,10 +245,10 @@ string RPCImpl::getCharacterNames() {
  * This function returns the list of possible trait names.
  */
 bool RPCImpl::rpcGetTraitNames() {
+    cout << ">> Processing RPC: Generating list of trait names." << endl;
+
     // sleep to allow for demonstration of simultaneous activity
     sleep(NIGHT_NIGHT);
-
-    cout << ">> Processing RPC: Generating list of trait names." << endl;
 
     // Generate character trait name list and send to client.
     string characterTraits = newGame->traitNamesForDisplay;
@@ -260,9 +265,6 @@ bool RPCImpl::rpcGetTraitNames() {
  * This function returns a list of trait values associated with the character.
  */
 bool RPCImpl::rpcGetTraitValues(vector<string> &arrayTokens) {
-    // sleep to allow for demonstration of simultaneous activity
-    sleep(NIGHT_NIGHT);
-
     const int CHARACTER_NAME = 1;
     string currCharacter = arrayTokens[CHARACTER_NAME];
 
@@ -282,10 +284,10 @@ bool RPCImpl::rpcGetTraitValues(vector<string> &arrayTokens) {
  * This function parses the queryTrait RPC message from client.
  */
 bool RPCImpl::rpcQueryTrait(vector<string> &arrayTokens) {
+    cout << ">> Processing RPC: Query Trait" << endl;
+
     // sleep to allow for demonstration of simultaneous activity
     sleep(NIGHT_NIGHT);
-
-    cout << ">> Processing RPC: Query Trait" << endl;
 
     const int TRAITNAME = 1;
     const int TRAITVALUE = 2;
@@ -319,7 +321,7 @@ bool RPCImpl::queryTraitResponse(string &traitName, string &traitValue) {
         success = expectedTraitValue == traitValue;
         if (!success) {
             cout << ">> Trait query DID NOT match game character traits.\n" << endl;
-            message1 = "Sorry.  " + customizedReply(traitName, traitValue, 2);
+            message1 = "Sorry. " + customizedReply(traitName, traitValue, 2);
         } else {
             cout << ">> Trait query DID match game character traits.\n" << endl;
             message1 = "Nice guess! " + customizedReply(traitName, traitValue, 1);
@@ -378,10 +380,10 @@ void RPCImpl::formatResponse(string &response) {
  * This function processes the final guess and checks if user has won.
  */
 bool RPCImpl::rpcFinalGuess(vector<string> &arrayTokens) {
+    cout << ">> Processing RPC: Final Guess" << endl;
+
     // sleep to allow for demonstration of simultaneous activity
     sleep(NIGHT_NIGHT);
-
-    cout << ">> Processing RPC: Final Guess" << endl;
 
     // Get user final guess
     const int FINAL_GUESS = 1;
@@ -412,10 +414,11 @@ bool RPCImpl::rpcFinalGuess(vector<string> &arrayTokens) {
  * This function sends the leader board info to the client.
  */
 bool RPCImpl::rpcGetLeaderBoard() {
+    cout << ">> Processing RPC: Get leader board" << endl;
+
     // sleep to allow for demonstration of simultaneous activity
     sleep(NIGHT_NIGHT);
 
-    cout << ">> Processing RPC: Get leader board" << endl;
     string response;
 
     // If leader board is empty, send "Empty"
@@ -429,7 +432,6 @@ bool RPCImpl::rpcGetLeaderBoard() {
             ss << leaderNames[i] << ";" << leaderScores[i] << ";";
         response = ss.str();
     }
-
     // Send leader board to client
     if (!sendResponse(&response[0])) {
         perror(">> Error: Failed to send leader board to client.\n");
@@ -443,10 +445,11 @@ bool RPCImpl::rpcGetLeaderBoard() {
  * This function disconnects the client from the server.
  */
 bool RPCImpl::rpcDisconnect() {
+    cout << ">> Processing RPC: Disconnect" << endl << endl;
+
     // sleep to allow for demonstration of simultaneous activity
     sleep(NIGHT_NIGHT);
 
-    cout << ">> Processing RPC: Disconnect" << endl << endl;
     // Send Response back on our socket
     string response = "Disconnect successful.";
     if (!sendResponse(&response[0])) {
