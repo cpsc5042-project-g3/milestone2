@@ -13,6 +13,16 @@
 
 **Milestone 2 already done:**
 
+March 8 second UPDATE: 
+- Fixed client number discrepancy between Client and Server
+- Added "userName" to server output when fit
+- ClientMain >> fixed logic error associated with Menu3 (so that after guessing, user never go back to Menu2)
+- HARD CODED "PHILIP" as our guess character, for testing
+- Cleaned up server console output
+- Deleted RPCImpl::printToken() function as it's no longer necessary
+
+
+
 March 8 UPDATE:
 - ClientMain >> Eliminated menu option 1(start a new game)
 - ClientMain >> added menu option 4: Display leaderboard
