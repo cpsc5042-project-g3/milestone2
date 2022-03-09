@@ -448,20 +448,22 @@ bool Client::getEliminateChoice(vector<int> &rowNumbers) {
         valid = validateNumericInput(count, size);
     } while (!valid);
 
-    do {
-        valid = false;
-        rowNumbers.clear();
-        printf("You want to eliminate %d characters.\n", stoi(count));
-        for (int i = 0; i < stoi(count); i++) {
+    printf("You want to eliminate %d characters.\n", stoi(count));
+
+
+    rowNumbers.clear();
+    for (int i = 0; i < stoi(count); i++) {
+        do {
             cout << "Enter the ROW number of character No. " << i + 1 << ": ";
             cin >> rowChoice;
-            valid = validateNumericInput(count, size);
-            if (!valid)
-                break;
-            rowNumbers.emplace_back(stoi(rowChoice));
-        }
-        sort(rowNumbers.begin(), rowNumbers.end());
-    } while (!valid);
+            valid = validateNumericInput(rowChoice, size);
+            if (valid)
+                rowNumbers.emplace_back(stoi(rowChoice));
+            else
+                valid = false;
+        } while (!valid);
+    }
+    sort(rowNumbers.begin(), rowNumbers.end());
     return true;
 }
 
