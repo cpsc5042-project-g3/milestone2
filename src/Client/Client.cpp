@@ -493,7 +493,7 @@ bool Client::guessName() {
         if (read(socketID, buffer, 1024)) {
             cout << ">> Server response: ";
             if (strcmp(buffer, "Correct") == 0) {
-                printf("Congratulations %s! you have made the right guess!\n", userName);
+                printf("Congratulations %s! You have made the right guess!\n", userName);
                 return true;
             }
         }
@@ -552,7 +552,7 @@ bool Client::disconnectServer() {
 
     // Send disconnect message to server and get response
     if (connected)
-        if (sendMessage("RPC 6: Disconnect", logoffRPC))
+        if (sendMessage("RPC 8: Disconnect", logoffRPC))
             // Get server response
             if (read(socketID, buffer, 1024)) {
                 cout << ">> Server response: " << buffer << endl;

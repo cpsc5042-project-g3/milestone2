@@ -23,7 +23,6 @@ const string ENDOFLINE = "\r\n";
  * This is the default constructor for a Game object
  */
 Game::Game() {
-    gameID = 0;
     gameCharacter = new Character();
     sourceList = new unordered_map<string, Character*>();
 
@@ -31,7 +30,6 @@ Game::Game() {
     srand(time(nullptr));
 
     // initialize game properties
-    setGameID();
     setSourceList();
     setGameCharacter();
 }
@@ -40,18 +38,8 @@ Game::Game() {
  * This is the destructor for a Game object
  */
 Game::~Game() {
-    gameID = 0;
     delete gameCharacter;
     delete sourceList;
-}
-
-/*
- * This function generates a nonzero random number between 1 and MAX_GAMES
- * and assigns it to the game ID.
- */
-void Game::setGameID() {
-    // generate gameID
-    gameID = rand() % MAX_GAMES + 1;
 }
 
 /*
