@@ -1,5 +1,5 @@
 **  Milestone 2 TO DO:**
-- Because I can't type, I entered 2 out of range row numbers when eliminating a character.  This caused the Client to exit.
+- Because I can't type, I entered 2 out of range row numbers when eliminating a character.  This caused the Client to exit. --> FIXED, PLEASE CHECK
 
 
 **- Powerpoint presentation can be started!
