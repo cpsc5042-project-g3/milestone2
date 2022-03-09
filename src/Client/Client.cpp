@@ -55,7 +55,7 @@ bool Client::connectServer(const char *serverIP, int port) {
         perror(">> Error: Socket creation failed");
         return false;
     }
-    printf(">> Socket creation successful. You are Client %d.\n", socketID);
+    printf(">> Socket creation successful.\n");
 
     // Specifies the communication domain for "server address"
     serv_addr.sin_family = AF_INET;

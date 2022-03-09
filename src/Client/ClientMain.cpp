@@ -115,19 +115,19 @@ void displayTraitList(Client *client) {
  */
 void printLeaderBoard(const Client &client) {
     cout << "\nCurrent Leaderboard" << endl;
-    cout << "Name        Score" << endl;
-    cout << "-----------------" << endl;
+    cout << "\tName        Score" << endl;
+    cout << "\t-----------------" << endl;
 
     vector<string> leaderBoard = client.leaderBoard;
 
     // print players in leaderboard
     if (leaderBoard.empty()) {
-        cout << "Leader board is currently empty." << endl;
+        cout << "\tLeader board is currently empty." << endl;
         return;
     }
 
     for (int i = 0; i < leaderBoard.size(); i++) {
-        cout << setw(12) << left << leaderBoard.at(i) << setw(12)
+        cout << "\t" << setw(12) << left << leaderBoard.at(i) << setw(12)
              << left << 100 - stoi(leaderBoard.at(++i)) << endl;
     }
 }
@@ -206,16 +206,18 @@ int main(int argc, char const *argv[]) {
                 client->guessName();
 
                 // After final guess is made and result displayed, display Menu 3
-                displayMenu3(myName);
-                menuPick = getMenuPick(3);
-                if (menuPick == 1) {  // Menu 3: display leader board
-                    client->getLeaderBoard();
-                    printLeaderBoard(*client);
-                }
-                else if (menuPick == 2) {  // Menu 3: disconnect
-                    if (client->disconnectServer())
-                        connected = false;
-                }
+                do {
+                    displayMenu3(myName);
+                    menuPick = getMenuPick(3);
+                    if (menuPick == 1) {  // Menu 3: display leader board
+                        client->getLeaderBoard();
+                        printLeaderBoard(*client);
+                    } else if (menuPick == 2) {  // Menu 3: disconnect
+                        if (client->disconnectServer())
+                            connected = false;
+                        break;
+                    }
+                } while (menuPick == 1);
                 break;
             case 4: // Menu 2: Display leader board
                 client->getLeaderBoard();

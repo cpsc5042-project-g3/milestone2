@@ -94,17 +94,17 @@ bool Server::connectWithClient() {
             perror(">> Error: Connection failed");
             exit(EXIT_FAILURE);
         }
-        printf(">>>>>>> Client %d successfully connected.\n", socketID);
-        printf(">> Waiting for RPCs from Client %d.\n", socketID);
-        cout << ">> Buffer size available: " << BUFFER_SIZE << " bytes. " << endl << endl;
+        printf("\n>>>>>>>>> Client %d successfully connected.\n", socketID - 3);
+        printf(">> Waiting for RPCs from Client %d.\n", socketID - 3);
+        cout << ">> Buffer size available: " << BUFFER_SIZE << " bytes. " << endl;
 
-        // TODO: Launch thread to process RPC ???
         pthread_t thread_id;
         threadIDList.push_back(thread_id);
         int clientID = socketID;
-        pthread_create(&thread_id, nullptr, myThreadFun, (void*)&clientID);
-
-
+        if (pthread_create(&thread_id, nullptr, myThreadFun, (void*)&clientID) != 0) {
+            perror(">> Error: Thread creation unsuccessful.");
+            return false;
+        }
     }
     return true;
 }
@@ -117,11 +117,11 @@ void* Server::myThreadFun(void* vargp) {
     sleep(1);
 
     int clientID = *(int *) vargp;
-    printf(">>----->> Client %d, start thread.\n", clientID);
+    printf(">> Client %d thread started.\n", clientID - 3);
     auto *rpcImplObj = new RPCImpl(clientID);
     rpcImplObj->rpcProcess();   // This will go until client disconnects;
-    printf("<<-----<< Client %d, done with Thread.\n", clientID);
-    printf("<<<<<< Client %d session ended.\n", clientID);
+    printf(">> Client %d done with thread.\n", clientID - 3);
+    printf("<<<<<<<<< Client %d session ended.\n", clientID - 3);
     cout << "\n>> Waiting for next client." << endl;
     return nullptr;
 

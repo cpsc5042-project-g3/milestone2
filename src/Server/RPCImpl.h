@@ -35,11 +35,12 @@ public:
     string getCharacterNames();
 
 private:
-    const int BUFFER_SIZE = 1024;
     int socketID;
+    string userName;
     int queryCount;
     string userID;
     Game *newGame;
+    int traitSent;
 
     bool rpcConnect(vector<std::string>& arrayTokens);
     bool validLogin(const string& userName, const string& password);
@@ -55,7 +56,6 @@ private:
     bool rpcDisconnect();
     bool sendResponse(char* message) const;
     static void parseTokens(char* buffer, vector<string>& a);
-    static void printToken(vector<string>& a);
     void selectionSort();
     void swapScores(int *i, int *j);
     void swapNames(string *i, string *j);
