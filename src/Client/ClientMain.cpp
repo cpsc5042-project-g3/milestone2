@@ -115,8 +115,8 @@ void displayTraitList(Client *client) {
  */
 void printLeaderBoard(const Client &client) {
     cout << "\nCurrent Leaderboard" << endl;
-    cout << "\tName        Score" << endl;
-    cout << "\t-----------------" << endl;
+    cout << "\tName        Queries" << endl;
+    cout << "\t-------------------" << endl;
 
     vector<string> leaderBoard = client.leaderBoard;
 
@@ -128,7 +128,7 @@ void printLeaderBoard(const Client &client) {
 
     for (int i = 0; i < leaderBoard.size(); i++) {
         cout << "\t" << setw(12) << left << leaderBoard.at(i) << setw(12)
-             << left << 100 - stoi(leaderBoard.at(++i)) << endl;
+             << left << stoi(leaderBoard.at(++i)) << endl;
     }
 }
 

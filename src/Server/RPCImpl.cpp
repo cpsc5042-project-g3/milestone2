@@ -17,11 +17,13 @@
 using namespace std;
 
 const int LEADERBOARD_SIZE = 5;
+const int NIGHT_NIGHT = 10;
 vector<string> leaderNames;     // global variable, protected by semaphore
 vector<int> leaderScores;       // global variable, protected by semaphore; holds the queryCounts of each player
 int minScore = 1000000;         // global variable, protected by semaphore
 sem_t sem;
 pthread_mutex_t mutex;
+
 
 
 /*
@@ -127,6 +129,9 @@ bool RPCImpl::rpcProcess() {
  * clients are allowed to continue.
  */
 bool RPCImpl::rpcConnect(vector<string> &arrayTokens) {
+    // sleep to allow for demonstration of simultaneous activity
+    sleep(NIGHT_NIGHT);
+
     cout << ">> Processing RPC: Connect" << endl;
 
     const int USERNAMETOKEN = 1;
@@ -204,6 +209,9 @@ bool RPCImpl::validLogin(const string &userName, const string &password) {
  * and send it to the client to keep as a local copy.
  */
 bool RPCImpl::rpcGetCharacterNames() {
+    // sleep to allow for demonstration of simultaneous activity
+    sleep(NIGHT_NIGHT);
+
     cout << ">> Processing RPC: Generating character names." << endl;
 
     // Generate character list and sent to client.
@@ -232,6 +240,9 @@ string RPCImpl::getCharacterNames() {
  * This function returns the list of possible trait names.
  */
 bool RPCImpl::rpcGetTraitNames() {
+    // sleep to allow for demonstration of simultaneous activity
+    sleep(NIGHT_NIGHT);
+
     cout << ">> Processing RPC: Generating list of trait names." << endl;
 
     // Generate character trait name list and send to client.
@@ -249,6 +260,9 @@ bool RPCImpl::rpcGetTraitNames() {
  * This function returns a list of trait values associated with the character.
  */
 bool RPCImpl::rpcGetTraitValues(vector<string> &arrayTokens) {
+    // sleep to allow for demonstration of simultaneous activity
+    sleep(NIGHT_NIGHT);
+
     const int CHARACTER_NAME = 1;
     string currCharacter = arrayTokens[CHARACTER_NAME];
 
@@ -268,6 +282,9 @@ bool RPCImpl::rpcGetTraitValues(vector<string> &arrayTokens) {
  * This function parses the queryTrait RPC message from client.
  */
 bool RPCImpl::rpcQueryTrait(vector<string> &arrayTokens) {
+    // sleep to allow for demonstration of simultaneous activity
+    sleep(NIGHT_NIGHT);
+
     cout << ">> Processing RPC: Query Trait" << endl;
 
     const int TRAITNAME = 1;
@@ -361,6 +378,9 @@ void RPCImpl::formatResponse(string &response) {
  * This function processes the final guess and checks if user has won.
  */
 bool RPCImpl::rpcFinalGuess(vector<string> &arrayTokens) {
+    // sleep to allow for demonstration of simultaneous activity
+    sleep(NIGHT_NIGHT);
+
     cout << ">> Processing RPC: Final Guess" << endl;
 
     // Get user final guess
@@ -392,6 +412,9 @@ bool RPCImpl::rpcFinalGuess(vector<string> &arrayTokens) {
  * This function sends the leader board info to the client.
  */
 bool RPCImpl::rpcGetLeaderBoard() {
+    // sleep to allow for demonstration of simultaneous activity
+    sleep(NIGHT_NIGHT);
+
     cout << ">> Processing RPC: Get leader board" << endl;
     string response;
 
@@ -420,6 +443,9 @@ bool RPCImpl::rpcGetLeaderBoard() {
  * This function disconnects the client from the server.
  */
 bool RPCImpl::rpcDisconnect() {
+    // sleep to allow for demonstration of simultaneous activity
+    sleep(NIGHT_NIGHT);
+
     cout << ">> Processing RPC: Disconnect" << endl << endl;
     // Send Response back on our socket
     string response = "Disconnect successful.";
@@ -452,7 +478,7 @@ void RPCImpl::parseTokens(char *buffer, vector<string> &a) {
 
 /*
  * This function gets the maximum queryCount from all the players.
- * A max queryCount will lead to a min total score (because finalScore = 100 - queryCount)
+ * A max queryCount will lead to a min total score
  */
 int getMaxQueryCount() {
     int queryCount = 0;
@@ -471,13 +497,12 @@ int getMaxQueryCount() {
 void RPCImpl::printLeaderboard() {
     // print header
     cout << "Current Leaderboard" << endl;
-    cout << "Name        Score" << endl;
-    cout << "-----------------" << endl;
+    cout << "Name        Queries" << endl;
+    cout << "-------------------" << endl;
 
     // print players in leaderboard
     for (int i = 0; i < leaderScores.size(); i++) {
-        int actualScore = 100 - leaderScores[i];
-        cout << setw(12) << left << leaderNames[i] << setw(12) << left << actualScore << endl;
+        cout << setw(12) << left << leaderNames[i] << setw(12) << left << leaderScores[i] << endl;
     }
     cout << endl;
 }

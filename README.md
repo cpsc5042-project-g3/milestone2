@@ -1,7 +1,5 @@
 **  Milestone 2 TO DO:**
-- Found a few bugs we might want to address
-  - Client hung after pressing Enter mistakenly between "Nose" and "size".  Typing "Size" and enter again allowed the client to continue, but the server errored and never
-    never sent back a message so the client was left waiting. --> did not happen to me.. (wonder if has something to do with lack of \r on Mac??)
+- Because I can't type, I entered 2 out of range row numbers when eliminating a character.  This caused the Client to exit.
 
 
 **- Powerpoint presentation can be started!
@@ -12,6 +10,13 @@
 
 
 **Milestone 2 already done:**
+8 Mar 2022 (Andrew) - 
+ - Fixed lack of printout of "Sending trait values:..." on Windows. Trimmed "line" after being read from file.  See line 95 in Game.cpp.
+ - Fixed leaderboard display on Server and Client.  Title now reads "Queries" instead of "Score" and query numbers are listed accordingly for each player.
+ - Removed Philip as hard-coded character server chooses when a game is started.
+ - added waits to RPCs
+ - added a sleep to each of the RPCs.  Length of sleep is controlled by a constant at the top of the RPCImpl.cpp file.
+
 
 March 8 second UPDATE: 
 - Fixed client number discrepancy between Client and Server

@@ -16,6 +16,9 @@
 
 using namespace std;
 
+const string ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const string ENDOFLINE = "\r\n";
+
 /*
  * This is the default constructor for a Game object
  */
@@ -90,6 +93,12 @@ void Game::setSourceList() {
         traitValues.clear();
         // read and parse line
         getline(inFile, line);
+
+        // trim line
+        int first = line.find_first_of(ALPHABET);
+        int last = line.find_first_of(ENDOFLINE);
+        line = line.substr(first, last - first);
+
         rest = strcpy(new char[line.length() + 1], line.c_str());
         parseTokens(rest, traitValues);
 
@@ -148,17 +157,12 @@ bool Game::addCharacter(Character * const characterToAdd) {
  */
 void Game::setGameCharacter() {
     // get selected character
-//    unsigned long index = rand() % sourceList->size();
-//    auto it = sourceList->begin();
-//    for (int i = 0; i < index; i++)
-//        it++;
-//    gameCharacter = &(*it->second);
+    unsigned long index = rand() % sourceList->size();
+    auto it = sourceList->begin();
+    for (int i = 0; i < index; i++)
+        it++;
+    gameCharacter = &(*it->second);
 
-    // *** IF YOU WANT TO HARDCODE A GAME CHARACTER FOR TESTING PURPOSE
-    // COMMENT OUT THE REST OF THE CODE IN THIS FUNCTION
-    // UNCOMMENT THE NEXT LINE OF CODE
-    // MAY SWITCH "Philip" TO ANY OTHER VALID CHARACTER NAME ****
-    gameCharacter = sourceList->find("Philip")->second;
 }
 
 /*
