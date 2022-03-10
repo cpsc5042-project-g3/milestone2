@@ -1,15 +1,16 @@
 **  Milestone 2 TO DO:**
-- Because I can't type, I entered 2 out of range row numbers when eliminating a character.  This caused the Client to exit. --> FIXED, PLEASE CHECK
-
-
-**- Powerpoint presentation can be started!
-**
-- CMakeFile
+ - Powerpoint presentation can be started!
+ - CMakeFile
 
 
 
 
 **Milestone 2 already done:**
+9 March 2022 - 
+ - confirmed out of range selection prohibited when eliminating a character.
+ - fixed bug where user could enter the same row twice when eliminating a character.
+ - added userName to server-side output when sending trait values to client.
+
 8 Mar 2022 (Andrew) - 
  - Fixed lack of printout of "Sending trait values:..." on Windows. Trimmed "line" after being read from file.  See line 95 in Game.cpp.
  - Fixed leaderboard display on Server and Client.  Title now reads "Queries" instead of "Score" and query numbers are listed accordingly for each player.

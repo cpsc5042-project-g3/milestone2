@@ -244,6 +244,9 @@ bool Client::getTraitValuesFromServer() {
         cout << ">> Local copy made." << endl << endl;
         return true;
     }
+    else {
+        return false;
+    }
 
 }
 
@@ -456,7 +459,17 @@ bool Client::getEliminateChoice(vector<int> &rowNumbers) {
         do {
             cout << "Enter the ROW number of character No. " << i + 1 << ": ";
             cin >> rowChoice;
-            valid = validateNumericInput(rowChoice, size);
+
+            // check for duplicate entry
+            if (find(rowNumbers.begin(), rowNumbers.end(), stoi(rowChoice)) != rowNumbers.end()) {
+                cout << "Sorry, that row has already been specified.  Please try again." << endl;
+                valid = false;
+            }
+            else {
+                valid = validateNumericInput(rowChoice, size);
+            }
+
+            // add entry to rowNumbers if valid
             if (valid)
                 rowNumbers.emplace_back(stoi(rowChoice));
             else

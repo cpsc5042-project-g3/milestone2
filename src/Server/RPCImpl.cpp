@@ -265,6 +265,10 @@ bool RPCImpl::rpcGetTraitNames() {
  * This function returns a list of trait values associated with the character.
  */
 bool RPCImpl::rpcGetTraitValues(vector<string> &arrayTokens) {
+    // sleep to allow for demonstration of simultaneous activity
+    // TODO uncomment sleep prior to submitted code to Canvas
+    //sleep(1);
+
     const int CHARACTER_NAME = 1;
     string currCharacter = arrayTokens[CHARACTER_NAME];
 
@@ -272,7 +276,7 @@ bool RPCImpl::rpcGetTraitValues(vector<string> &arrayTokens) {
     string traitInfo = currCharacter + ";";
     traitInfo += newGame->sourceList->find(currCharacter)->second->traitValuesForDisplay;
 
-    printf("\tSending trait values: %s\n", traitInfo.c_str());
+    printf("\tSending trait values to %s: %s\n", userName.c_str(), traitInfo.c_str());
     if (!sendResponse(&traitInfo[0])) {
         printf(">> Error: Failed to send %s's trait values to client.\n", currCharacter.c_str());
         return false;
