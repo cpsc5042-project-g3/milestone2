@@ -18,6 +18,8 @@ using namespace std;
 
 const int LEADERBOARD_SIZE = 5;
 const int NIGHT_NIGHT = 1;
+const string ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const string ENDOFLINE = "\r\n";
 vector<string> leaderNames;     // global variable, protected by semaphore
 vector<int> leaderScores;       // global variable, protected by semaphore; holds the queryCounts of each player
 int minScore = 1000000;         // global variable, protected by semaphore
@@ -167,6 +169,11 @@ bool RPCImpl::validLogin(const string &userName, const string &password) {
     // read approved users and their passwords line by line
     while (inFile.peek() != EOF) {
         getline(inFile, line);
+
+        // trim line
+        int first = line.find_first_of(ALPHABET);
+        int last = line.find_first_of(ENDOFLINE);
+        line = line.substr(first, last - first);
 
         if (line.length() > 1) {
             stringstream ss(line);

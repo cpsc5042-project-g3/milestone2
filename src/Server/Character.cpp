@@ -109,7 +109,7 @@ string Character::checkTraitValue(string trait) {
     // make sure trait exists
     if (traits.find(trait) != traits.end()) {
         // trait found, return value
-        result = traits.find(trait)->second;
+5        result = traits.find(trait)->second;
     }
     else
         perror(">> Error: Trait name provided is invalid.");

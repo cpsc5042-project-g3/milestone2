@@ -62,6 +62,11 @@ void Game::setSourceList() {
     // read first line of file to get trait names
     getline(inFile,line);
 
+    // trim line
+    int first = line.find_first_of(ALPHABET);
+    int last = line.find_first_of(ENDOFLINE);
+    line = line.substr(first, last - first);
+
     // parse first line to store character traits in the traitNames vector
     rest = strcpy(new char[line.length() + 1], line.c_str());
     parseTokens(rest, traitNames);
