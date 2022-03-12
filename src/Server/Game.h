@@ -3,7 +3,7 @@
  * Client-Server Project: Milestone 2
  * Group 3: Andrew Shell, Steph Mills, Zi Wang, Leonardo Levy
  * Professor: Michael McKee
- * Due: 10 Mar 2022
+ * Due: 12 Mar 2022
  */
 
 #ifndef SERVER_GAME_H
@@ -11,14 +11,13 @@
 
 #include "Character.h"
 #include <unordered_map>
-
-const int MAX_GAMES = 10000;
+#include <vector>
 
 class Game {
 public:
-    vector<string> characterNames;
-    unordered_map<string, Character*> *sourceList;
-    string traitNamesForDisplay; // a list of trait names IN ORDER to send to Client
+    vector<string> characterNames;                  // a list of character names
+    unordered_map<string, Character*> *sourceList;  // a map of characters and their traits
+    string traitNamesForDisplay;                    // a list of trait names IN A SPECIFIC ORDER to send to Client
 
     Game();
     ~Game();
@@ -28,11 +27,9 @@ public:
     Character* getGameCharacter();
 
 private:
+    Character *gameCharacter;           // the secret character to be guessed
+
     void parseTokens(char* text, vector<string> &v);
-
-    Character *gameCharacter;
-
 };
-
 
 #endif //SERVER_GAME_H

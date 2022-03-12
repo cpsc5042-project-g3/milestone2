@@ -1,13 +1,11 @@
 /*
  * CPSC 5042: Comp Systems Principles II
- * Client-Server Project: Milestone 1
+ * Client-Server Project: Milestone 2
  * Group 3: Andrew Shell, Steph Mills, Zi Wang, Leonardo Levy
  * Professor: Michael McKee
- * Date: Feb 2022
+ * Due: 12 Mar 2022
  */
 
-#include <cstdio>
-#include <cstring>
 #include <vector>
 #include <iostream>
 #include <iomanip>

@@ -5,3 +5,5 @@ Server/.idea
 Client/cmake-build-debug
 Server/cmake-build-debug
 cmake-build-debug
+Client/Client.exe.stackdump
+

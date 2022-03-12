@@ -3,7 +3,7 @@
  * Client-Server Project: Milestone 2
  * Group 3: Andrew Shell, Steph Mills, Zi Wang, Leonardo Levy
  * Professor: Michael McKee
- * Due: 10 Mar 2022
+ * Due: 12 Mar 2022
  */
 
 #ifndef CLIENT_CLIENT_H
@@ -34,7 +34,7 @@ public:
     bool getTraitNamesFromServer(); // RPC 3
     bool getTraitValuesFromServer(); // RPC 4
     bool queryTrait(); // RPC 5
-    bool eliminatePerson();
+    bool eliminatePerson(); // Locally done
     bool guessName(); // RPC 6
     bool getLeaderBoard(); // RPC 7
     bool disconnectServer(); // RPC 8
