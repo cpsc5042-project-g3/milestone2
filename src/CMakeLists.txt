@@ -1,15 +1,15 @@
-cmake_minimum_required(VERSION 3.19)
-project(Test)
+cmake_minimum_required(VERSION 3.17)
 
+# Set the project name
+project(Guess-Who-Game)
 set(CMAKE_CXX_STANDARD 14)
 
-include_directories(.)
+find_package( Threads )
 
-add_executable(Test
-        Server/ApprovedUsers.txt
-        Client/Client.cpp
-        Client/Client.h
-        Client/ClientMain.cpp
-        Server/Server.cpp
-        Server/Server.h
-        Server/ServerMain.cpp)
+#Add source to this project's executable.
+add_subdirectory(Client)
+add_subdirectory(Server)
+
+
+target_link_libraries( Client ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries( Server ${CMAKE_THREAD_LIBS_INIT})

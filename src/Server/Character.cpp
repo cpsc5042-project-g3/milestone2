@@ -3,12 +3,10 @@
  * Client-Server Project: Milestone 2
  * Group 3: Andrew Shell, Steph Mills, Zi Wang, Leonardo Levy
  * Professor: Michael McKee
- * Due: 10 Mar 2022
+ * Due: 12 Mar 2022
  */
 
 #include "Character.h"
-#include <iostream>
-#include <sstream>
 #include <algorithm>
 
 using namespace std;
@@ -23,15 +21,6 @@ Character::Character() {
     traitValuesForDisplay = "";
     this->clearTraits();
 }
-
-/*
- * This is an alternate constructor for a character object, using a provided
- * name as an argument.
- */
-//Character::Character(string nameIn) { // Not used, commented out for now
-//    name = nameIn;
-//    traits.clear();
-//}
 
 /*
  * This is the copy constructor for a character object.
@@ -77,16 +66,6 @@ bool Character::setName(string characterName) {
         name[i] = characterName[i];
     }
     return true;
-}
-
-/*
- * This function returns all the traits names (not values) for the character
- */
-string Character::getTraitNames() {
-    stringstream traitNames;
-    for (map<string, string>::iterator iter = traits.begin(); iter != traits.end(); ++iter)
-        traitNames << iter->first << ";";
-    return traitNames.str();
 }
 
 /*

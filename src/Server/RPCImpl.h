@@ -1,19 +1,13 @@
-/* RPCServer.cpp : This file contains the 'main' function.Program execution begins and ends there.
- This is a very very simple example of a CPSC5042 Server that will listen to
- a CPSC5042 Client
- Version 1 will have the server handle one client at a time. The server will:
- - Wait for connection from client
- - Process the Connect API  once connect
- - Process all RPC requests until the client does a Disconnect RPC
- - This intial server will handle 3 RPC's:
- -      Connect
- -      HowManyChars (will return HowManyChars are in the input message)
- -      Disconnnect
- server, then run the various RPC's that might happen between the server and
- client
-*/
+/*
+ * CPSC 5042: Comp Systems Principles II
+ * Client-Server Project: Milestone 2
+ * Group 3: Andrew Shell, Steph Mills, Zi Wang, Leonardo Levy
+ * Professor: Michael McKee
+ * Due: 12 Mar 2022
+ */
 
 #pragma once
+#include "Game.h"
 #include <unistd.h>
 #include <cstdio>
 #include <sys/socket.h>
@@ -22,7 +16,6 @@
 #include <cstring>
 #include <vector>
 #include <iterator>
-#include "Game.h"
 
 using namespace std;
 class RPCImpl {
@@ -35,12 +28,12 @@ public:
     string getCharacterNames();
 
 private:
-    int socketID;
-    string userName;
-    int queryCount;
-    string userID;
-    Game *newGame;
-    int traitSent;
+    int socketID;       // connection socket descriptor for each client
+    string userName;    // client login name
+    string userID;      // unique client ID in case of duplicate login name
+    int queryCount;     // number of queries client asked
+    Game *newGame;      // new game object
+    int traitSent;      // keeps track of how many trait values have been sent
 
     bool rpcConnect(vector<std::string>& arrayTokens);
     bool validLogin(const string& userName, const string& password);
@@ -59,7 +52,6 @@ private:
     void selectionSort();
     void swapScores(int *i, int *j);
     void swapNames(string *i, string *j);
-
 
 };
 

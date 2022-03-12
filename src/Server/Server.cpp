@@ -3,9 +3,11 @@
  * Client-Server Project: Milestone 2
  * Group 3: Andrew Shell, Steph Mills, Zi Wang, Leonardo Levy
  * Professor: Michael McKee
- * Due: 10 Mar 2022
+ * Due: 12 Mar 2022
  */
 
+#include "Server.h"
+#include "RPCImpl.h"
 #include <unistd.h>
 #include <cstdio>
 #include <sys/socket.h>
@@ -14,19 +16,21 @@
 #include <vector>
 #include <iterator>
 #include <iostream>
-#include <semaphore.h>
-#include "Server.h"
-#include "RPCImpl.h"
 
 using namespace std;
 
-
+/*
+ * Server constructor.
+ */
 Server::Server(int portIn) {
     server_fd = 0;   // "listening" socket descriptor
     socketID = 0;    // "connection" socket descriptor
     port = portIn;
 }
 
+/*
+ * Server destructor.
+ */
 Server::~Server() = default;
 
 /*
@@ -110,7 +114,7 @@ bool Server::connectWithClient() {
 }
 
 /*
- * A normal C function that is executed as a thread when its name is specified in pthread_create()
+ * This function is executed as a thread when its name is specified in pthread_create()
  */
 void* Server::myThreadFun(void* vargp) {
 

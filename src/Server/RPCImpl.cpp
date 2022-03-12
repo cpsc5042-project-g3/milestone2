@@ -1,3 +1,13 @@
+/*
+ * CPSC 5042: Comp Systems Principles II
+ * Client-Server Project: Milestone 2
+ * Group 3: Andrew Shell, Steph Mills, Zi Wang, Leonardo Levy
+ * Professor: Michael McKee
+ * Due: 12 Mar 2022
+ */
+
+#include "Game.h"
+#include "RPCImpl.h"
 #include <unistd.h>
 #include <cstdio>
 #include <sys/socket.h>
@@ -6,27 +16,24 @@
 #include <iostream>
 #include <fstream>
 #include <map>
-#include "RPCImpl.h"
 #include <bits/stl_map.h>
-#include "LocalContext.h"
-#include "Game.h"
 #include <algorithm>
 #include <semaphore.h>
 #include <iomanip>
 
 using namespace std;
 
-const int LEADERBOARD_SIZE = 5;
-const int NIGHT_NIGHT = 1;
-const string ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const string ENDOFLINE = "\r\n";
+// GLOBAL CONTEXT
+const int LEADERBOARD_SIZE = 5; // size of leader board
+const int NIGHT_NIGHT = 10;     // sleep time to demonstrate multi-threading
 vector<string> leaderNames;     // global variable, protected by semaphore
 vector<int> leaderScores;       // global variable, protected by semaphore; holds the queryCounts of each player
 int minScore = 1000000;         // global variable, protected by semaphore
-sem_t sem;
-pthread_mutex_t mutex;
+sem_t sem;                      // semaphor
+pthread_mutex_t mutex;          // mutex
 
-
+const string ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const string ENDOFLINE = "\r\n";
 
 /*
  * RPC Implementation constructor
@@ -273,8 +280,7 @@ bool RPCImpl::rpcGetTraitNames() {
  */
 bool RPCImpl::rpcGetTraitValues(vector<string> &arrayTokens) {
     // sleep to allow for demonstration of simultaneous activity
-    // TODO uncomment sleep prior to submitted code to Canvas
-    //sleep(1);
+    sleep(3);
 
     const int CHARACTER_NAME = 1;
     string currCharacter = arrayTokens[CHARACTER_NAME];

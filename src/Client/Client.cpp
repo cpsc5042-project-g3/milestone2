@@ -3,7 +3,7 @@
  * Client-Server Project: Milestone 2
  * Group 3: Andrew Shell, Steph Mills, Zi Wang, Leonardo Levy
  * Professor: Michael McKee
- * Due: 10 Mar 2022
+ * Due: 12 Mar 2022
  */
 
 #include "Client.h"
@@ -370,7 +370,10 @@ void Client::getQueryTraitValue() {
     }
 }
 
-
+/*
+ * This function validates user's spelling so that user won't waste a query due to
+ * a simple spelling error.
+ */
 bool Client::validateUserInput(string &answer, int flag) {
     formatAnswer(answer);
     switch (flag) {
@@ -584,7 +587,6 @@ bool Client::disconnectServer() {
  * This function submits a message to the server.  It is used by other functions after they
  * generate the detailed contents of their particular messages.
  */
-// Send message to server
 bool Client::sendMessage(const string &title, char *message) const {
     cout << "\n>> Sending " << title << " message to server." << endl;
 

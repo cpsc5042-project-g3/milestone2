@@ -1,9 +1,9 @@
 /*
  * CPSC 5042: Comp Systems Principles II
- * Client-Server Project: Milestone 1
+ * Client-Server Project: Milestone 2
  * Group 3: Andrew Shell, Steph Mills, Zi Wang, Leonardo Levy
  * Professor: Michael McKee
- * Date: Feb 2022
+ * Due: 12 Mar 2022
  */
 
 #ifndef SERVER_SERVER_H
@@ -29,14 +29,13 @@ public:
     bool connectWithClient();
 
 private:
-    const int BUFFER_SIZE = 1024;
-    int server_fd;
-    int socketID;
-    int port;
-    struct sockaddr_in address{};
+    const int BUFFER_SIZE = 1024;       // max buffer size
+    int server_fd;                      // listening socket descriptor
+    int socketID;                       // connection socket descriptor for each client
+    int port;                           // PORT number
+    struct sockaddr_in address{};       // address struct
 
     static void * myThreadFun(void* vargp);
 };
-
 
 #endif //SERVER_SERVER_H
