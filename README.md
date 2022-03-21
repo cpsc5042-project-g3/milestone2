@@ -1,99 +1,42 @@
-**  Milestone 2 TO DO:**
- - Powerpoint presentation can be started!
- - CMakeFile
+# Client-Server-Group-3-Project
+The project’s Guess Who game is based on the board game “Guess Who”, in which two players ask each other yes-or-no questions about a selected character. Each player tries to be the first to guess the other’s character correctly. For this project, the player (the client) plays by themselves through the server. First, the server picks a random character from a list of characters from a selected text file, then the client asks the server questions in a specific structure about specific character traits that the person to be guessed has. The client/player can use the server’s answers to eliminate characters from the list, which allows room for human error (for example, the client could accidentally eliminate the actual person to be guessed, making it more fun). After the client picks the character(s) they want to eliminate, the character table is updated locally to show only the remaining characters. The client may guess the selected character at any time. If the guess is correct, the client wins and their name is added to the leader board; if it’s incorrect, the client loses and the game ends for that client.
+
+
+The program is written in C++. The client and server output, including error messages, are displayed using the command line interface. A total of 8 Remote Procedure Calls (RPCs) were implemented between the client and the server.
+- connect (with login info)
+- getCharacterNames
+- getTraitNames
+- getTraitValues
+- queryTrait
+- finalGuess
+- getLeaderBoard
+- disconnect 
+
+
+Our game is a single player game, but the program allows multiple clients to play the game at the same time. Each client is considered as a separate thread and is associated with one Game object. In the console output, clients are differentiated by their login usernames. A list of approved username and password combinations can be found in the "ApprovedUsers.txt" file in the Server folder. 
+
+
+Our global context is the game's leaderboard which is updated whenever a client makes a correct guess. The score is based on the number of queries the player took to make the right guess. The less number of queries the higher the player ranks. To prevent race conditions when updating, the leader board is protected by Semaphore and Mutex.
+
+
+In RPCImpl.cpp, sleep() functions are used to simulate delays to all of our RPCs to demonstrate parallel activity when multiple clients are interacting with the server at the same time. The sleep times can be adjusted to control the flow of the game.
+
+
+Throughout the code, there are supporting methods that enable a smooth run of the program. Other than the initial login, user input is considered case-insensitive for user convenience and will be formatted behind the scenes. If user accidentally picks the wrong menu option, user may return to previous menu by entering the escape character “x”.
 
 
 
-
-**Milestone 2 already done:**
-9 March 2022 - 
- - confirmed out of range selection prohibited when eliminating a character.
- - fixed bug where user could enter the same row twice when eliminating a character.
- - added userName to server-side output when sending trait values to client.
-
-8 Mar 2022 (Andrew) - 
- - Fixed lack of printout of "Sending trait values:..." on Windows. Trimmed "line" after being read from file.  See line 95 in Game.cpp.
- - Fixed leaderboard display on Server and Client.  Title now reads "Queries" instead of "Score" and query numbers are listed accordingly for each player.
- - Removed Philip as hard-coded character server chooses when a game is started.
- - added waits to RPCs
- - added a sleep to each of the RPCs.  Length of sleep is controlled by a constant at the top of the RPCImpl.cpp file.
+## Build
+To build, navigate to the Server and Client folder and enter the following commands in the shell:
 
 
-March 8 second UPDATE: 
-- Fixed client number discrepancy between Client and Server
-- Added "userName" to server output when fit
-- ClientMain >> fixed logic error associated with Menu3 (so that after guessing, user never go back to Menu2)
-- HARD CODED "PHILIP" as our guess character, for testing
-- Cleaned up server console output
-- Deleted RPCImpl::printToken() function as it's no longer necessary
+```cmake -S . -B build```
 
 
+```cmake --build build```
 
-March 8 UPDATE:
-- ClientMain >> Eliminated menu option 1(start a new game)
-- ClientMain >> added menu option 4: Display leaderboard
-- ClientMain >> added a third menu to be displayed after Final guess is made so that user can view leader board or disconnect
-- Client.cpp >> Fixed bug so that server response for traitValue query returns correctly
-- Client.cpp >> Added escape character 'x' option so user can return to previous menu as desired
-- Game.cpp >> added option to hardcode "Game Character" for testing purpose
-- PRCImpl.cpp >> changed LEADERBOARD_SIZE from 10 to 5 to make testing easier
-- PRCImpl.cpp >> Added a new RPC: rpcGetLeaderBoard() function to have server send leader board info to client (empty board allowed)
-- RPCImpl.cpp >> Rename getMinScore() to getMaxQueryCount() and edited logic so "minScore" is updated correctly on the leader board
-- RPCImpl.cpp >> Updated printLeaderBoard() function to print score out of 100 instead of queryCount
-- RPCImpl.cpp >> Changed if (score < minScore) to if (score <= minScore) so that if new score == minScore, last player's name is replaced with most recent player
-- RPCImpl.cpp >> Added selectionSort() to sort leader board based on scores in descending order
+## Run
+To run the Server: ```./build/Server 127.0.0.1 8080```
 
-
-PRIOR:
-- RPCImpl.cpp >> created updateLeaderboard() to print out the leaderboard on the server side after a client wins a game.  Would be nice to pass
-  that to the client, but I don't think we have time.
-- Client.cpp >> modified getEliiminateChoice() to sort rowNumbers vector after user input finishes.  Seems to have fixed the bug where inputting
-  row numbers out of order hangs the client.
-- CharacterList.txt >> modified header road to turn "Hair" in "Facial Hair" to lower case.  Looks like it was overlooked when we reverted to lower
-  case titles.  This enables "Facial hair" as a query item.
-- RPCImpl.cpp >> removed double period sent to Client when user queries a trait with wrong value.
-
- - RPCImpl >> added updateLeaderboard() function as well as a couple other supporting functions, was unable to test fully.  Used a semaphore
-   like we did in HW3.  I think that's enough, but we can add a mutex if needed.
-
-- Server >> Game class created on Server side 
-- Server >> Character class created on Server side 
-- added new RPC called ```getCharacterList```
-- renamed getCharacterList function
-- added RPCImpl::rpcGetTraitList()
-- added RPCImpl::getTraitNames()
-- added Character::getTraitNames() to support RPCImpl::getTraitNames()
-- updated Game::setSourceList() to call Game::addCharacter()
-- added RPCImpl::rpcQueryTrait()
-- added new RPC called ```getTraitList```
-
-
-- Finished implementing RPC QueryTrait
-  - Implemented Client::queryTrait() function
-  - Added Client::getQueryTraitName() function
-  - Added Client::getQueryTraitValue() function (Customized user questions based on traitName selected)
-  - Added Client::validateUserInput() function
-  - Added Client::formatAnswer() function to standardize "queryTrait message" to make this RPC easier to process
-  - Added Client::trim() function to trim leading and trailing zeros
-  - Edited RPCImpl::rpcQueryTrait() function to be responsible for parsing "queryTrait" message
-  - Moved query checking to new function RPCImpl::queryTraitResponse()
-  - Added customized server response in RPCImpl::customizedReply() function
-  
-
-- Server: Cleanup up console output for server to group RPCs into logical text blocks in display window
-- Client: Modified displayCharacterList() in ClientMain to display characters and traits as a table
-- Client: Created a 2D vector to hold the trait values for each character.
-
-
-- Populated active list table on Client side
-  - Added Client::getTraitValuesFromServer() function
-  - Added RPCImpl::rpcGetTraitValues() function
-  - Adjusted data types of a couple of fields in Game class, Character class, and Client.h to facilitate RPC process, key value retrieval, and printing.
-- Implemented Eliminate Person 
-  - Added Client::eliminatePerson() function to eliminate character rows locally
-  - Added Client::getEliminateChoice() function to get user choice, user input validation included
-- Implemented RPC-Guess Name 
-  - Added Client::guessName() function to send final guess to server and get response
-  - Added Client::getUserGuess() function to get user guess
-  - Added RPCImpl::rpcFinalGuess() function to process user guess
-  
+To run the Client: 
+```./build/Client 127.0.0.1 8080```
